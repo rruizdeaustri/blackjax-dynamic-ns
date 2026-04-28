@@ -14,13 +14,121 @@
 """Utility functions for Nested Sampling post-processing.
 """
 
-from typing import Callable, Dict, Tuple
+from typing import Any, Callable, Dict, NamedTuple, Optional, Tuple
 
 import jax
 import jax.numpy as jnp
 
 from blackjax.ns.base import NSInfo, NSState
 from blackjax.types import Array, ArrayTree, PRNGKey
+
+
+class NSBatchMetadata(NamedTuple):
+    """Metadata collected while running a bounded NS batch.
+
+    Attributes
+    ----------
+    num_steps
+        Number of NS transitions executed.
+    num_dead
+        Number of dead particles retained in the bounded interval.
+    terminated_reason
+        Integer code describing why the batch ended:
+        0 => reached ``num_steps``
+        1 => crossed ``loglikelihood_upper``
+    reached_loglikelihood_upper
+        Whether an upper bound was specified and reached.
+    """
+
+    num_steps: int
+    num_dead: int
+    terminated_reason: int
+    reached_loglikelihood_upper: bool
+
+
+class NSBatchResult(NamedTuple):
+    """Result container for a bounded nested-sampling batch."""
+
+    dead_points: ArrayTree
+    dead_point_loglikelihoods: Array
+    dead_particles: Any
+    final_live_points: Any
+    num_live_points: int
+    loglikelihood_lower: float
+    loglikelihood_upper: float
+    metadata: NSBatchMetadata
+
+
+def run_bounded_batch(
+    rng_key: PRNGKey,
+    state: NSState,
+    step_fn: Callable,
+    num_steps: int,
+    loglikelihood_lower: float,
+    loglikelihood_upper: Optional[float] = None,
+) -> tuple[NSState, NSBatchResult]:
+    """Run a bounded nested-sampling batch.
+
+    This orchestrates repeated calls to an existing NS transition kernel while
+    retaining only dead particles with death log-likelihoods in the interval
+    ``[loglikelihood_lower, loglikelihood_upper)``. If ``loglikelihood_upper``
+    is not provided, only the lower bound is enforced.
+
+    Notes
+    -----
+    - The constrained replacement-kernel interface is reused unchanged:
+      ``step_fn(rng_key, state) -> (new_state, info)``.
+    - Python-level orchestration is used for dynamic bookkeeping; each inner
+      NS step remains JAX-compatible.
+    """
+    if num_steps < 0:
+        raise ValueError("num_steps must be non-negative")
+
+    upper = jnp.inf if loglikelihood_upper is None else float(loglikelihood_upper)
+    dead_batches = []
+    num_executed_steps = 0
+    reached_upper = False
+
+    for _ in range(num_steps):
+        rng_key, step_key = jax.random.split(rng_key)
+        state, info = step_fn(step_key, state)
+        num_executed_steps += 1
+
+        dead_loglik = info.particles.loglikelihood
+        within_bounds = (dead_loglik >= loglikelihood_lower) & (dead_loglik < upper)
+        dead_batches.append(jax.tree.map(lambda x: x[within_bounds], info.particles))
+
+        if loglikelihood_upper is not None:
+            min_live = jnp.min(state.particles.loglikelihood)
+            if bool(min_live >= upper):
+                reached_upper = True
+                break
+
+    if dead_batches:
+        dead_particles = jax.tree.map(
+            lambda *xs: jnp.concatenate(xs, axis=0), *dead_batches
+        )
+    else:
+        dead_particles = jax.tree.map(lambda x: x[:0], state.particles)
+
+    metadata = NSBatchMetadata(
+        num_steps=num_executed_steps,
+        num_dead=int(dead_particles.loglikelihood.shape[0]),
+        terminated_reason=1 if reached_upper else 0,
+        reached_loglikelihood_upper=reached_upper,
+    )
+
+    result = NSBatchResult(
+        dead_points=dead_particles.position,
+        dead_point_loglikelihoods=dead_particles.loglikelihood,
+        dead_particles=dead_particles,
+        final_live_points=state.particles,
+        num_live_points=int(state.particles.loglikelihood.shape[0]),
+        loglikelihood_lower=float(loglikelihood_lower),
+        loglikelihood_upper=float(upper),
+        metadata=metadata,
+    )
+    return state, result
 
 
 def log1mexp(x: Array) -> Array:

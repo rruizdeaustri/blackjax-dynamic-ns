@@ -372,6 +372,83 @@ class NestedSliceSamplingTest(chex.TestCase):
         self.assertTrue(callable(kernel))
 
 
+class NestedSamplingBatchTest(chex.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.key = jax.random.key(31415)
+
+    def test_run_bounded_batch_lower_bound(self):
+        num_live = 40
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-4.0,
+            maxval=4.0,
+        )
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=6,
+            num_delete=2,
+        )
+        state = algorithm.init(positions, rng_key=self.key)
+
+        _, batch = utils.run_bounded_batch(
+            rng_key=jax.random.key(1234),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=25,
+            loglikelihood_lower=-6.0,
+        )
+
+        self.assertGreaterEqual(batch.metadata.num_steps, 1)
+        self.assertEqual(batch.num_live_points, num_live)
+        self.assertEqual(batch.final_live_points.loglikelihood.shape[0], num_live)
+        self.assertTrue(jnp.all(batch.dead_point_loglikelihoods >= -6.0))
+        self.assertEqual(batch.loglikelihood_lower, -6.0)
+        self.assertTrue(jnp.isinf(batch.loglikelihood_upper))
+        self.assertEqual(batch.dead_points.shape[-1], 2)
+        self.assertEqual(batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0])
+
+    def test_run_bounded_batch_upper_bound(self):
+        num_live = 35
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-3.0,
+            maxval=3.0,
+        )
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=5,
+            num_delete=3,
+        )
+        state = algorithm.init(positions, rng_key=self.key)
+        logL_lower = -8.0
+        logL_upper = -2.0
+
+        final_state, batch = utils.run_bounded_batch(
+            rng_key=jax.random.key(2222),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=50,
+            loglikelihood_lower=logL_lower,
+            loglikelihood_upper=logL_upper,
+        )
+
+        self.assertEqual(batch.loglikelihood_lower, logL_lower)
+        self.assertEqual(batch.loglikelihood_upper, logL_upper)
+        self.assertEqual(batch.num_live_points, num_live)
+        self.assertTrue(jnp.all(batch.dead_point_loglikelihoods >= logL_lower))
+        self.assertTrue(jnp.all(batch.dead_point_loglikelihoods < logL_upper))
+        self.assertGreaterEqual(batch.metadata.num_steps, 1)
+        self.assertEqual(batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0])
+        if batch.metadata.reached_loglikelihood_upper:
+            self.assertEqual(batch.metadata.terminated_reason, 1)
+            self.assertTrue(jnp.min(final_state.particles.loglikelihood) >= logL_upper)
+
+
 class NestedSamplingStatisticalTest(chex.TestCase):
     """Statistical correctness tests for nested sampling algorithms."""
 
