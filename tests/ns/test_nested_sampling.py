@@ -448,6 +448,92 @@ class NestedSamplingBatchTest(chex.TestCase):
             self.assertEqual(batch.metadata.terminated_reason, 1)
             self.assertTrue(jnp.min(final_state.particles.loglikelihood) >= logL_upper)
 
+    def test_merge_single_bounded_batch(self):
+        num_live = 40
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-4.0,
+            maxval=4.0,
+        )
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=6,
+            num_delete=2,
+        )
+        state = algorithm.init(positions, rng_key=self.key)
+        _, batch = utils.run_bounded_batch(
+            rng_key=jax.random.key(9001),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=30,
+            loglikelihood_lower=-8.0,
+        )
+        merged = utils.merge_bounded_batches([batch])
+
+        self.assertEqual(merged.metadata.num_batches, 1)
+        self.assertEqual(merged.metadata.num_dead, batch.metadata.num_dead)
+        self.assertTrue(
+            jnp.all(
+                merged.dead_point_loglikelihoods[1:]
+                >= merged.dead_point_loglikelihoods[:-1]
+            )
+        )
+        self.assertTrue(jnp.all(merged.num_live_points > 0.0))
+        self.assertTrue(jnp.all(merged.logX[1:] <= merged.logX[:-1]))
+        self.assertTrue(jnp.isfinite(merged.logZ))
+        self.assertAlmostEqual(float(jnp.sum(merged.posterior_weights)), 1.0, places=5)
+        self.assertGreater(float(merged.ess), 1.0)
+
+    def test_merge_two_bounded_batches(self):
+        num_live = 40
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-4.0,
+            maxval=4.0,
+        )
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=6,
+            num_delete=2,
+        )
+        state = algorithm.init(positions, rng_key=self.key)
+        state, batch1 = utils.run_bounded_batch(
+            rng_key=jax.random.key(7001),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=30,
+            loglikelihood_lower=-10.0,
+            loglikelihood_upper=-3.5,
+        )
+        _, batch2 = utils.run_bounded_batch(
+            rng_key=jax.random.key(7002),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=30,
+            loglikelihood_lower=-3.5,
+        )
+        merged_two = utils.merge_bounded_batches([batch1, batch2])
+        merged_one = utils.merge_bounded_batches([batch1])
+
+        expected_dead = batch1.metadata.num_dead + batch2.metadata.num_dead
+        self.assertEqual(merged_two.metadata.num_batches, 2)
+        self.assertEqual(merged_two.metadata.num_dead, expected_dead)
+        self.assertEqual(merged_two.dead_point_loglikelihoods.shape[0], expected_dead)
+        self.assertTrue(
+            jnp.all(
+                merged_two.dead_point_loglikelihoods[1:]
+                >= merged_two.dead_point_loglikelihoods[:-1]
+            )
+        )
+        self.assertAlmostEqual(
+            float(jnp.sum(merged_two.posterior_weights)), 1.0, places=5
+        )
+        self.assertGreaterEqual(float(merged_two.ess), float(merged_one.ess))
+
 
 class NestedSamplingStatisticalTest(chex.TestCase):
     """Statistical correctness tests for nested sampling algorithms."""
