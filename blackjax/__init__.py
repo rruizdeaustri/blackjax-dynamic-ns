@@ -32,6 +32,7 @@ from .mcmc.random_walk import (
     normal_random_walk,
     rmh_as_top_level_api,
 )
+from .ns import ggns as _ggns
 from .ns import nss as _nss
 from .optimizers import dual_averaging, lbfgs
 from .sgmcmc import csgld as _csgld
@@ -148,8 +149,9 @@ smc_family = [
 
 # NS
 nss = generate_top_level_api_from(_nss)
+ggns = generate_top_level_api_from(_ggns)
 
-ns_family = [nss]
+ns_family = [nss, ggns]
 
 # stochastic gradient mcmc
 sgld = generate_top_level_api_from(_sgld)

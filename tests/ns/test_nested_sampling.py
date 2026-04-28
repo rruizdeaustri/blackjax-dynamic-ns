@@ -8,7 +8,7 @@ import jax.numpy as jnp
 import jax.scipy.stats as stats
 from absl.testing import absltest, parameterized
 
-from blackjax.ns import adaptive, base, nss, utils
+from blackjax.ns import adaptive, base, ggns, nss, utils
 
 
 def gaussian_logprior(x):
@@ -44,6 +44,12 @@ def make_mock_nsinfo(positions, loglikelihood, loglikelihood_birth, logdensity):
 def uniform_logprior_2d(x):
     """Uniform prior on [-5, 5]^2"""
     return jnp.where(jnp.all(jnp.abs(x) <= 5.0), 0.0, -jnp.inf)
+
+
+def gaussian_loglikelihood_2d(x):
+    """2D Gaussian likelihood centered at [1, -1]."""
+    center = jnp.array([1.0, -1.0])
+    return stats.norm.logpdf(x - center).sum()
 
 
 def gaussian_mixture_loglikelihood(x):
@@ -212,6 +218,92 @@ class NestedSamplingTest(chex.TestCase):
 
         # Check logX is decreasing
         self.assertTrue(jnp.all(logX_seq[1:] <= logX_seq[:-1]))
+
+class GradientGuidedNestedSamplingTest(chex.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.key = jax.random.key(2026)
+
+    def _init_state(self, key, num_live, logprior_fn, loglikelihood_fn):
+        positions = jax.random.normal(key, (num_live, 2))
+        algorithm = ggns.as_top_level_api(
+            logprior_fn=logprior_fn,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=8,
+            num_delete=3,
+            step_size=0.05,
+            momentum_weight=0.5,
+        )
+        state = algorithm.init(positions, rng_key=key)
+        return algorithm, state
+
+    @parameterized.parameters(
+        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+    )
+    def test_ggns_replacement_satisfies_constraint(self, loglikelihood_fn):
+        key = jax.random.key(999)
+        algorithm, state = self._init_state(
+            key, 40, uniform_logprior_2d, loglikelihood_fn
+        )
+
+        step_key = jax.random.key(1001)
+        new_state, info = algorithm.step(step_key, state)
+
+        dead_threshold = info.particles.loglikelihood.max()
+        self.assertTrue(jnp.all(info.particles.loglikelihood <= dead_threshold))
+
+        updated_mask = jnp.isclose(
+            new_state.particles.loglikelihood_birth, dead_threshold, atol=1e-6
+        )
+        updated_birth = new_state.particles.loglikelihood_birth[updated_mask]
+        self.assertGreater(updated_birth.shape[0], 0)
+        self.assertTrue(
+            jnp.all(
+                new_state.particles.loglikelihood[updated_mask] > dead_threshold
+            )
+        )
+
+    @parameterized.parameters(
+        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+    )
+    def test_ggns_vs_nss_constraint_validity(self, loglikelihood_fn):
+        num_live = 60
+        positions = jax.random.normal(self.key, (num_live, 2))
+
+        ggns_algo = ggns.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=8,
+            num_delete=4,
+            step_size=0.05,
+        )
+        nss_algo = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=8,
+            num_delete=4,
+        )
+
+        g_state = ggns_algo.init(positions, rng_key=self.key)
+        n_state = nss_algo.init(positions, rng_key=self.key)
+
+        g_key, n_key = jax.random.split(jax.random.key(12345))
+        g_new_state, _ = ggns_algo.step(g_key, g_state)
+        n_new_state, _ = nss_algo.step(n_key, n_state)
+
+        g_replaced = jnp.isfinite(g_new_state.particles.loglikelihood_birth)
+        n_replaced = jnp.isfinite(n_new_state.particles.loglikelihood_birth)
+        g_valid = (
+            g_new_state.particles.loglikelihood[g_replaced]
+            > g_new_state.particles.loglikelihood_birth[g_replaced]
+        )
+        n_valid = (
+            n_new_state.particles.loglikelihood[n_replaced]
+            > n_new_state.particles.loglikelihood_birth[n_replaced]
+        )
+
+        self.assertTrue(jnp.all(g_valid))
+        self.assertTrue(jnp.all(n_valid))
 
 
 class AdaptiveNestedSamplingTest(chex.TestCase):
