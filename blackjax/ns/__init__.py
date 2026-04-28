@@ -32,13 +32,14 @@ Available modules:
 - `from_mcmc`: Utilities to build Nested Sampling algorithms from MCMC kernels.
 
 """
-from . import adaptive, base, from_mcmc, integrator, nss, utils
+from . import adaptive, base, from_mcmc, ggns, integrator, nss, utils
 
 __all__ = [
     "base",
     "adaptive",
     "integrator",
     "nss",
+    "ggns",
     "utils",
     "from_mcmc",
 ]
