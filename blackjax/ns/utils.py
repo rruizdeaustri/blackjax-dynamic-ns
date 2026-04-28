@@ -11,10 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Utility functions for Nested Sampling post-processing.
-"""
+"""Utility functions for Nested Sampling post-processing."""
 
-from typing import Any, Callable, Dict, NamedTuple, Optional, Tuple
+from typing import Any, Callable, Dict, NamedTuple, Optional, Sequence, Tuple
 
 import jax
 import jax.numpy as jnp
@@ -57,6 +56,34 @@ class NSBatchResult(NamedTuple):
     loglikelihood_lower: float
     loglikelihood_upper: float
     metadata: NSBatchMetadata
+
+
+class NSMergedMetadata(NamedTuple):
+    """Metadata produced when reweighting one or more bounded NS batches."""
+
+    num_batches: int
+    num_dead: int
+    loglikelihood_min: float
+    loglikelihood_max: float
+    min_num_live: float
+    max_num_live: float
+
+
+class NSMergedResult(NamedTuple):
+    """Merged and reweighted dead-point information from bounded NS batches."""
+
+    dead_points: ArrayTree
+    dead_point_loglikelihoods: Array
+    dead_particles: Any
+    num_live_points: Array
+    logX: Array
+    logdX: Array
+    log_weights: Array
+    logZ: Array
+    posterior_log_weights: Array
+    posterior_weights: Array
+    ess: Array
+    metadata: NSMergedMetadata
 
 
 def run_bounded_batch(
@@ -129,6 +156,69 @@ def run_bounded_batch(
         metadata=metadata,
     )
     return state, result
+
+
+def merge_bounded_batches(
+    batches: Sequence[NSBatchResult],
+    beta: float = 1.0,
+) -> NSMergedResult:
+    """Merge and reweight one or more bounded NS batches.
+
+    The merged dead points are sorted by death log-likelihood, effective live-point
+    counts are recomputed from the birth/death process, and deterministic
+    shrinkage-based log-weights are recomputed.
+    """
+    if len(batches) == 0:
+        raise ValueError("Expected at least one NSBatchResult")
+
+    dead_particles = jax.tree.map(
+        lambda *xs: jnp.concatenate(xs, axis=0),
+        *[batch.dead_particles for batch in batches],
+    )
+    if dead_particles.loglikelihood.shape[0] == 0:
+        raise ValueError("Cannot merge empty batches with zero dead points")
+
+    sort_idx = jnp.argsort(dead_particles.loglikelihood)
+    dead_particles = jax.tree.map(lambda x: x[sort_idx], dead_particles)
+    merged_info = NSInfo(particles=dead_particles, update_info={})
+    num_live = compute_num_live(merged_info).astype(jnp.float32)
+
+    # Deterministic nested-sampling shrinkage approximation:
+    # E[log t_i] = -1 / n_live,i  and  dX_i = X_{i-1} - X_i.
+    delta_logX = -1.0 / num_live
+    logX = jnp.cumsum(delta_logX)
+    logX_prev = jnp.concatenate([jnp.array([0.0], dtype=logX.dtype), logX[:-1]])
+    logdX = logX_prev + log1mexp(logX - logX_prev)
+
+    log_weights = logdX + beta * dead_particles.loglikelihood
+    logZ = jax.scipy.special.logsumexp(log_weights)
+    posterior_log_weights = log_weights - logZ
+    posterior_weights = jnp.exp(posterior_log_weights)
+    ess = jnp.exp(-jax.scipy.special.logsumexp(2.0 * posterior_log_weights))
+
+    metadata = NSMergedMetadata(
+        num_batches=len(batches),
+        num_dead=int(dead_particles.loglikelihood.shape[0]),
+        loglikelihood_min=float(dead_particles.loglikelihood[0]),
+        loglikelihood_max=float(dead_particles.loglikelihood[-1]),
+        min_num_live=float(jnp.min(num_live)),
+        max_num_live=float(jnp.max(num_live)),
+    )
+
+    return NSMergedResult(
+        dead_points=dead_particles.position,
+        dead_point_loglikelihoods=dead_particles.loglikelihood,
+        dead_particles=dead_particles,
+        num_live_points=num_live,
+        logX=logX,
+        logdX=logdX,
+        log_weights=log_weights,
+        logZ=logZ,
+        posterior_log_weights=posterior_log_weights,
+        posterior_weights=posterior_weights,
+        ess=ess,
+        metadata=metadata,
+    )
 
 
 def log1mexp(x: Array) -> Array:
