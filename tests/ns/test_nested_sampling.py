@@ -573,6 +573,84 @@ class NestedSamplingBatchTest(chex.TestCase):
         )
         self.assertGreater(float(dynamic_result.ess), 1.0)
 
+    @parameterized.parameters(
+        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+    )
+    def test_static_vs_dynamic_nss_and_ggns(self, loglikelihood_fn):
+        num_live = 60
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-4.0,
+            maxval=4.0,
+        )
+
+        def run_static(algorithm, rng_key):
+            state = algorithm.init(positions, rng_key=rng_key)
+            _, batch = utils.run_bounded_batch(
+                rng_key=rng_key,
+                state=state,
+                step_fn=algorithm.step,
+                num_steps=40,
+                loglikelihood_lower=-jnp.inf,
+            )
+            merged = utils.merge_bounded_batches([batch])
+            return merged, (batch,)
+
+        def run_dynamic(algorithm, rng_key):
+            state = algorithm.init(positions, rng_key=rng_key)
+            _, result = utils.run_dynamic_posterior_scheduler(
+                rng_key=rng_key,
+                state=state,
+                step_fn=algorithm.step,
+                initial_num_steps=25,
+                refinement_num_steps=20,
+                max_batches=3,
+                objective="posterior",
+            )
+            return result.merged, result.batches
+
+        static_nss_algo = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=8,
+            num_delete=2,
+        )
+        static_ggns_algo = ggns.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=8,
+            num_delete=2,
+            step_size=0.05,
+        )
+
+        static_nss, static_nss_batches = run_static(static_nss_algo, jax.random.key(501))
+        static_ggns, static_ggns_batches = run_static(
+            static_ggns_algo, jax.random.key(502)
+        )
+        dynamic_nss, dynamic_nss_batches = run_dynamic(
+            static_nss_algo, jax.random.key(503)
+        )
+        dynamic_ggns, dynamic_ggns_batches = run_dynamic(
+            static_ggns_algo, jax.random.key(504)
+        )
+
+        for merged, batches in (
+            (static_nss, static_nss_batches),
+            (static_ggns, static_ggns_batches),
+            (dynamic_nss, dynamic_nss_batches),
+            (dynamic_ggns, dynamic_ggns_batches),
+        ):
+            self.assertTrue(jnp.isfinite(merged.logZ))
+            self.assertAlmostEqual(float(jnp.sum(merged.posterior_weights)), 1.0, places=5)
+            self.assertGreater(float(merged.ess), 0.0)
+            self.assertGreaterEqual(merged.metadata.num_batches, 1)
+            self.assertGreater(merged.metadata.num_dead, 0)
+            for batch in batches:
+                self.assertLessEqual(batch.loglikelihood_lower, batch.loglikelihood_upper)
+                self.assertGreaterEqual(batch.metadata.num_steps, 1)
+                self.assertGreaterEqual(batch.metadata.num_dead, 0)
+
 
 class NestedSamplingStatisticalTest(chex.TestCase):
     """Statistical correctness tests for nested sampling algorithms."""
