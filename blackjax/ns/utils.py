@@ -86,6 +86,93 @@ class NSMergedResult(NamedTuple):
     metadata: NSMergedMetadata
 
 
+class NSDynamicMetadata(NamedTuple):
+    """Metadata for the posterior-focused dynamic NS scheduler."""
+
+    objective: str
+    max_batches: int
+    initial_num_steps: int
+    refinement_num_steps: int
+
+
+class NSDynamicResult(NamedTuple):
+    """Structured result for dynamic nested sampling orchestration."""
+
+    batches: tuple[NSBatchResult, ...]
+    merged: NSMergedResult
+    logZ: Array
+    posterior_weights: Array
+    ess: Array
+    metadata: NSDynamicMetadata
+
+
+def run_dynamic_posterior_scheduler(
+    rng_key: PRNGKey,
+    state: NSState,
+    step_fn: Callable,
+    initial_num_steps: int,
+    refinement_num_steps: int,
+    max_batches: int,
+    objective: str = "posterior",
+) -> tuple[NSState, NSDynamicResult]:
+    """Run a posterior-focused dynamic bounded nested-sampling schedule."""
+    if objective != "posterior":
+        raise NotImplementedError(
+            "Only objective='posterior' is currently supported"
+        )
+    if max_batches < 1:
+        raise ValueError("max_batches must be >= 1")
+
+    batches = []
+    rng_key, batch_key = jax.random.split(rng_key)
+    state, first_batch = run_bounded_batch(
+        rng_key=batch_key,
+        state=state,
+        step_fn=step_fn,
+        num_steps=initial_num_steps,
+        loglikelihood_lower=-jnp.inf,
+        loglikelihood_upper=None,
+    )
+    batches.append(first_batch)
+    merged = merge_bounded_batches(batches)
+
+    for _ in range(1, max_batches):
+        posterior_weights = merged.posterior_weights
+        max_idx = int(jnp.argmax(posterior_weights))
+        logL = merged.dead_point_loglikelihoods
+        lower = float(logL[max_idx])
+        upper = None
+        if max_idx + 1 < logL.shape[0]:
+            upper = float(logL[max_idx + 1])
+
+        rng_key, batch_key = jax.random.split(rng_key)
+        state, new_batch = run_bounded_batch(
+            rng_key=batch_key,
+            state=state,
+            step_fn=step_fn,
+            num_steps=refinement_num_steps,
+            loglikelihood_lower=lower,
+            loglikelihood_upper=upper,
+        )
+        batches.append(new_batch)
+        merged = merge_bounded_batches(batches)
+
+    dynamic_result = NSDynamicResult(
+        batches=tuple(batches),
+        merged=merged,
+        logZ=merged.logZ,
+        posterior_weights=merged.posterior_weights,
+        ess=merged.ess,
+        metadata=NSDynamicMetadata(
+            objective=objective,
+            max_batches=max_batches,
+            initial_num_steps=initial_num_steps,
+            refinement_num_steps=refinement_num_steps,
+        ),
+    )
+    return state, dynamic_result
+
+
 def run_bounded_batch(
     rng_key: PRNGKey,
     state: NSState,
