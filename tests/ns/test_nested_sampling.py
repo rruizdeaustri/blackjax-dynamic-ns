@@ -534,6 +534,45 @@ class NestedSamplingBatchTest(chex.TestCase):
         )
         self.assertGreaterEqual(float(merged_two.ess), float(merged_one.ess))
 
+    @parameterized.parameters(
+        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+    )
+    def test_dynamic_posterior_scheduler_runs(self, loglikelihood_fn):
+        num_live = 50
+        positions = jax.random.uniform(
+            self.key,
+            shape=(num_live, 2),
+            minval=-4.0,
+            maxval=4.0,
+        )
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=6,
+            num_delete=2,
+        )
+        state = algorithm.init(positions, rng_key=self.key)
+
+        _, dynamic_result = utils.run_dynamic_posterior_scheduler(
+            rng_key=jax.random.key(8080),
+            state=state,
+            step_fn=algorithm.step,
+            initial_num_steps=25,
+            refinement_num_steps=20,
+            max_batches=3,
+            objective="posterior",
+        )
+
+        self.assertEqual(dynamic_result.metadata.objective, "posterior")
+        self.assertEqual(dynamic_result.metadata.max_batches, 3)
+        self.assertLen(dynamic_result.batches, 3)
+        self.assertEqual(dynamic_result.merged.metadata.num_batches, 3)
+        self.assertTrue(jnp.isfinite(dynamic_result.logZ))
+        self.assertAlmostEqual(
+            float(jnp.sum(dynamic_result.posterior_weights)), 1.0, places=5
+        )
+        self.assertGreater(float(dynamic_result.ess), 1.0)
+
 
 class NestedSamplingStatisticalTest(chex.TestCase):
     """Statistical correctness tests for nested sampling algorithms."""
