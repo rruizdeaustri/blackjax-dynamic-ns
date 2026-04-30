@@ -1,4 +1,5 @@
 """Minimal demo for static/dynamic nested sampling with NSS and GGNS kernels."""
+import time
 
 import jax
 import jax.numpy as jnp
@@ -28,7 +29,11 @@ def summarize(name, merged, batches):
         print(
             "  "
             f"batch {i}: [{batch.loglikelihood_lower:.3f}, {batch.loglikelihood_upper:.3f}) "
-            f"dead={batch.metadata.num_dead}"
+            f"dead={batch.metadata.num_dead} empty={batch.metadata.is_empty} "
+            f"req_steps={batch.metadata.requested_num_steps} "
+            f"exec_steps={batch.metadata.num_steps} "
+            f"width={batch.metadata.interval_width:.3e} "
+            f"term={batch.metadata.terminated_reason}"
         )
 
 
@@ -53,6 +58,7 @@ def main():
     )
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(1))
+    t0 = time.perf_counter()
     _, static_nss_batch = utils.run_bounded_batch(
         rng_key=jax.random.key(2),
         state=nss_state,
@@ -61,9 +67,12 @@ def main():
         loglikelihood_lower=-jnp.inf,
     )
     static_nss_merged = utils.merge_bounded_batches([static_nss_batch])
+    static_nss_dt = time.perf_counter() - t0
     summarize("Static NSS", static_nss_merged, (static_nss_batch,))
+    print(f"  runtime: {static_nss_dt:.3f}s")
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(3))
+    t0 = time.perf_counter()
     _, dynamic_nss = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(4),
         state=nss_state,
@@ -72,9 +81,13 @@ def main():
         refinement_num_steps=20,
         max_batches=3,
     )
+    dynamic_nss_dt = time.perf_counter() - t0
     summarize("Dynamic NSS", dynamic_nss.merged, dynamic_nss.batches)
+    print(utils.summarize_dynamic_result(dynamic_nss))
+    print(f"  runtime: {dynamic_nss_dt:.3f}s")
 
     ggns_state = ggns_algo.init(positions, rng_key=jax.random.key(5))
+    t0 = time.perf_counter()
     _, dynamic_ggns = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(6),
         state=ggns_state,
@@ -83,7 +96,10 @@ def main():
         refinement_num_steps=20,
         max_batches=3,
     )
+    dynamic_ggns_dt = time.perf_counter() - t0
     summarize("Dynamic GGNS", dynamic_ggns.merged, dynamic_ggns.batches)
+    print(utils.summarize_dynamic_result(dynamic_ggns))
+    print(f"  runtime: {dynamic_ggns_dt:.3f}s")
 
 
 if __name__ == "__main__":

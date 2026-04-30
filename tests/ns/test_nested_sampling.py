@@ -651,6 +651,11 @@ class NestedSamplingBatchTest(chex.TestCase):
                 self.assertGreaterEqual(batch.metadata.num_steps, 1)
                 self.assertGreaterEqual(batch.metadata.num_dead, 0)
 
+        for batches in (dynamic_nss_batches, dynamic_ggns_batches):
+            # Posterior-focused refinement should avoid empty bounded intervals in
+            # the current 2D Gaussian(-mixture) setup.
+            self.assertTrue(all(batch.metadata.num_dead > 0 for batch in batches[1:]))
+
 
 class NestedSamplingStatisticalTest(chex.TestCase):
     """Statistical correctness tests for nested sampling algorithms."""

@@ -40,7 +40,10 @@ class NSBatchMetadata(NamedTuple):
     """
 
     num_steps: int
+    requested_num_steps: int
     num_dead: int
+    is_empty: bool
+    interval_width: float
     terminated_reason: int
     reached_loglikelihood_upper: bool
 
@@ -93,6 +96,9 @@ class NSDynamicMetadata(NamedTuple):
     max_batches: int
     initial_num_steps: int
     refinement_num_steps: int
+    num_requested_batches: int
+    num_executed_batches: int
+    num_empty_batches: int
 
 
 class NSDynamicResult(NamedTuple):
@@ -114,6 +120,7 @@ def run_dynamic_posterior_scheduler(
     refinement_num_steps: int,
     max_batches: int,
     objective: str = "posterior",
+    min_loglikelihood_interval_width: float = 1e-6,
 ) -> tuple[NSState, NSDynamicResult]:
     """Run a posterior-focused dynamic bounded nested-sampling schedule."""
     if objective != "posterior":
@@ -136,6 +143,9 @@ def run_dynamic_posterior_scheduler(
     batches.append(first_batch)
     merged = merge_bounded_batches(batches)
 
+    if min_loglikelihood_interval_width < 0.0:
+        raise ValueError("min_loglikelihood_interval_width must be non-negative")
+
     for _ in range(1, max_batches):
         posterior_weights = merged.posterior_weights
         max_idx = int(jnp.argmax(posterior_weights))
@@ -143,7 +153,13 @@ def run_dynamic_posterior_scheduler(
         lower = float(logL[max_idx])
         upper = None
         if max_idx + 1 < logL.shape[0]:
-            upper = float(logL[max_idx + 1])
+            candidate_upper = float(logL[max_idx + 1])
+            if (candidate_upper - lower) >= min_loglikelihood_interval_width:
+                upper = candidate_upper
+
+        # If we can already detect an invalid scheduling range, stop early.
+        if not jnp.isfinite(lower):
+            break
 
         rng_key, batch_key = jax.random.split(rng_key)
         state, new_batch = run_bounded_batch(
@@ -154,6 +170,20 @@ def run_dynamic_posterior_scheduler(
             loglikelihood_lower=lower,
             loglikelihood_upper=upper,
         )
+
+        # Fallback to a broader lower-tail interval when a selected interval is
+        # effectively empty in finite runs.
+        if new_batch.metadata.num_dead == 0:
+            state, new_batch = run_bounded_batch(
+                rng_key=batch_key,
+                state=state,
+                step_fn=step_fn,
+                num_steps=refinement_num_steps,
+                loglikelihood_lower=lower,
+                loglikelihood_upper=None,
+            )
+            if new_batch.metadata.num_dead == 0:
+                break
         batches.append(new_batch)
         merged = merge_bounded_batches(batches)
 
@@ -168,9 +198,32 @@ def run_dynamic_posterior_scheduler(
             max_batches=max_batches,
             initial_num_steps=initial_num_steps,
             refinement_num_steps=refinement_num_steps,
+            num_requested_batches=max_batches,
+            num_executed_batches=len(batches),
+            num_empty_batches=sum(int(batch.metadata.is_empty) for batch in batches),
         ),
     )
     return state, dynamic_result
+
+
+def summarize_dynamic_result(result: NSDynamicResult) -> str:
+    """Return a compact human-readable summary for dynamic NS results."""
+    lines = [
+        "Dynamic nested sampling summary:",
+        f"- logZ: {float(result.logZ):.6f}",
+        f"- ESS: {float(result.ess):.2f}",
+        f"- batches: {result.metadata.num_executed_batches}/{result.metadata.num_requested_batches}",
+        f"- empty batches: {result.metadata.num_empty_batches}",
+    ]
+    for idx, batch in enumerate(result.batches):
+        lines.append(
+            "  "
+            f"batch {idx}: requested_steps={batch.metadata.requested_num_steps}, "
+            f"executed_steps={batch.metadata.num_steps}, dead={batch.metadata.num_dead}, "
+            f"empty={batch.metadata.is_empty}, width={batch.metadata.interval_width:.3e}, "
+            f"term_reason={batch.metadata.terminated_reason}"
+        )
+    return "\n".join(lines)
 
 
 def run_bounded_batch(
@@ -227,7 +280,10 @@ def run_bounded_batch(
 
     metadata = NSBatchMetadata(
         num_steps=num_executed_steps,
+        requested_num_steps=num_steps,
         num_dead=int(dead_particles.loglikelihood.shape[0]),
+        is_empty=bool(dead_particles.loglikelihood.shape[0] == 0),
+        interval_width=float(upper - loglikelihood_lower),
         terminated_reason=1 if reached_upper else 0,
         reached_loglikelihood_upper=reached_upper,
     )
