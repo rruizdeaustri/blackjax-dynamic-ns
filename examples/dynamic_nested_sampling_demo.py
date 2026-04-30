@@ -37,6 +37,18 @@ def summarize(name, merged, batches):
         )
 
 
+def print_profile_summary(name, run_only_seconds, executed_steps, num_batches):
+    avg_step_ms = 1e3 * run_only_seconds / max(executed_steps, 1)
+    avg_batch_ms = 1e3 * run_only_seconds / max(num_batches, 1)
+    print(
+        f"{name} profiling:\n"
+        f"  executed steps: {executed_steps}\n"
+        f"  run-only wall time: {run_only_seconds:.3f}s\n"
+        f"  avg time / NS step: {avg_step_ms:.2f}ms\n"
+        f"  avg time / bounded batch: {avg_batch_ms:.2f}ms"
+    )
+
+
 def main():
     print(f"JAX backend: {jax.default_backend()}")
     print(f"JAX devices: {jax.devices()}")
@@ -61,15 +73,17 @@ def main():
     )
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(1))
+
     # Warm-up compile + run timing.
     t0 = time.perf_counter()
-    _, _ = utils.run_bounded_batch(
+    _, static_warmup_batch = utils.run_bounded_batch(
         rng_key=jax.random.key(21),
         state=nss_state,
         step_fn=nss_algo.step,
         num_steps=20,
         loglikelihood_lower=-jnp.inf,
     )
+    jax.block_until_ready(static_warmup_batch.dead_point_loglikelihoods)
     static_compile_dt = time.perf_counter() - t0
 
     # Second call approximates run-only timing.
@@ -81,15 +95,24 @@ def main():
         num_steps=20,
         loglikelihood_lower=-jnp.inf,
     )
-    static_nss_merged = utils.merge_bounded_batches([static_nss_batch])
+    jax.block_until_ready(static_nss_batch.dead_point_loglikelihoods)
     static_nss_dt = time.perf_counter() - t0
+
+    static_nss_merged = utils.merge_bounded_batches([static_nss_batch])
     summarize("Static NSS", static_nss_merged, (static_nss_batch,))
     print(f"  compile+run: {static_compile_dt:.3f}s")
     print(f"  run-only: {static_nss_dt:.3f}s")
+    print_profile_summary(
+        "Static NSS",
+        run_only_seconds=static_nss_dt,
+        executed_steps=static_nss_batch.metadata.num_steps,
+        num_batches=1,
+    )
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(3))
+
     t0 = time.perf_counter()
-    _, _ = utils.run_dynamic_posterior_scheduler(
+    _, dynamic_nss_warmup = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(31),
         state=nss_state,
         step_fn=nss_algo.step,
@@ -97,6 +120,7 @@ def main():
         refinement_num_steps=8,
         max_batches=2,
     )
+    jax.block_until_ready(dynamic_nss_warmup.merged.logZ)
     dynamic_nss_compile_dt = time.perf_counter() - t0
 
     t0 = time.perf_counter()
@@ -108,15 +132,26 @@ def main():
         refinement_num_steps=8,
         max_batches=2,
     )
+    jax.block_until_ready(dynamic_nss.merged.logZ)
     dynamic_nss_dt = time.perf_counter() - t0
+
     summarize("Dynamic NSS", dynamic_nss.merged, dynamic_nss.batches)
     print(utils.summarize_dynamic_result(dynamic_nss))
     print(f"  compile+run: {dynamic_nss_compile_dt:.3f}s")
     print(f"  run-only: {dynamic_nss_dt:.3f}s")
 
+    dynamic_nss_steps = sum(batch.metadata.num_steps for batch in dynamic_nss.batches)
+    print_profile_summary(
+        "Dynamic NSS",
+        run_only_seconds=dynamic_nss_dt,
+        executed_steps=dynamic_nss_steps,
+        num_batches=dynamic_nss.merged.metadata.num_batches,
+    )
+
     ggns_state = ggns_algo.init(positions, rng_key=jax.random.key(5))
+
     t0 = time.perf_counter()
-    _, _ = utils.run_dynamic_posterior_scheduler(
+    _, dynamic_ggns_warmup = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(41),
         state=ggns_state,
         step_fn=ggns_algo.step,
@@ -124,6 +159,7 @@ def main():
         refinement_num_steps=8,
         max_batches=2,
     )
+    jax.block_until_ready(dynamic_ggns_warmup.merged.logZ)
     dynamic_ggns_compile_dt = time.perf_counter() - t0
 
     t0 = time.perf_counter()
@@ -135,11 +171,21 @@ def main():
         refinement_num_steps=8,
         max_batches=2,
     )
+    jax.block_until_ready(dynamic_ggns.merged.logZ)
     dynamic_ggns_dt = time.perf_counter() - t0
+
     summarize("Dynamic GGNS", dynamic_ggns.merged, dynamic_ggns.batches)
     print(utils.summarize_dynamic_result(dynamic_ggns))
     print(f"  compile+run: {dynamic_ggns_compile_dt:.3f}s")
     print(f"  run-only: {dynamic_ggns_dt:.3f}s")
+
+    dynamic_ggns_steps = sum(batch.metadata.num_steps for batch in dynamic_ggns.batches)
+    print_profile_summary(
+        "Dynamic GGNS",
+        run_only_seconds=dynamic_ggns_dt,
+        executed_steps=dynamic_ggns_steps,
+        num_batches=dynamic_ggns.merged.metadata.num_batches,
+    )
 
 
 if __name__ == "__main__":
