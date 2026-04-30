@@ -38,7 +38,10 @@ def summarize(name, merged, batches):
 
 
 def main():
-    num_live = 80
+    print(f"JAX backend: {jax.default_backend()}")
+    print(f"JAX devices: {jax.devices()}")
+
+    num_live = 40
     positions = jax.random.uniform(
         jax.random.key(0), shape=(num_live, 2), minval=-4.0, maxval=4.0
     )
@@ -46,60 +49,97 @@ def main():
     nss_algo = nss.as_top_level_api(
         logprior_fn=uniform_logprior_2d,
         loglikelihood_fn=gaussian_mixture_loglikelihood,
-        num_inner_steps=8,
+        num_inner_steps=4,
         num_delete=2,
     )
     ggns_algo = ggns.as_top_level_api(
         logprior_fn=uniform_logprior_2d,
         loglikelihood_fn=gaussian_mixture_loglikelihood,
-        num_inner_steps=8,
+        num_inner_steps=4,
         num_delete=2,
         step_size=0.05,
     )
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(1))
+    # Warm-up compile + run timing.
+    t0 = time.perf_counter()
+    _, _ = utils.run_bounded_batch(
+        rng_key=jax.random.key(21),
+        state=nss_state,
+        step_fn=nss_algo.step,
+        num_steps=20,
+        loglikelihood_lower=-jnp.inf,
+    )
+    static_compile_dt = time.perf_counter() - t0
+
+    # Second call approximates run-only timing.
     t0 = time.perf_counter()
     _, static_nss_batch = utils.run_bounded_batch(
         rng_key=jax.random.key(2),
         state=nss_state,
         step_fn=nss_algo.step,
-        num_steps=50,
+        num_steps=20,
         loglikelihood_lower=-jnp.inf,
     )
     static_nss_merged = utils.merge_bounded_batches([static_nss_batch])
     static_nss_dt = time.perf_counter() - t0
     summarize("Static NSS", static_nss_merged, (static_nss_batch,))
-    print(f"  runtime: {static_nss_dt:.3f}s")
+    print(f"  compile+run: {static_compile_dt:.3f}s")
+    print(f"  run-only: {static_nss_dt:.3f}s")
 
     nss_state = nss_algo.init(positions, rng_key=jax.random.key(3))
+    t0 = time.perf_counter()
+    _, _ = utils.run_dynamic_posterior_scheduler(
+        rng_key=jax.random.key(31),
+        state=nss_state,
+        step_fn=nss_algo.step,
+        initial_num_steps=12,
+        refinement_num_steps=8,
+        max_batches=2,
+    )
+    dynamic_nss_compile_dt = time.perf_counter() - t0
+
     t0 = time.perf_counter()
     _, dynamic_nss = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(4),
         state=nss_state,
         step_fn=nss_algo.step,
-        initial_num_steps=30,
-        refinement_num_steps=20,
-        max_batches=3,
+        initial_num_steps=12,
+        refinement_num_steps=8,
+        max_batches=2,
     )
     dynamic_nss_dt = time.perf_counter() - t0
     summarize("Dynamic NSS", dynamic_nss.merged, dynamic_nss.batches)
     print(utils.summarize_dynamic_result(dynamic_nss))
-    print(f"  runtime: {dynamic_nss_dt:.3f}s")
+    print(f"  compile+run: {dynamic_nss_compile_dt:.3f}s")
+    print(f"  run-only: {dynamic_nss_dt:.3f}s")
 
     ggns_state = ggns_algo.init(positions, rng_key=jax.random.key(5))
+    t0 = time.perf_counter()
+    _, _ = utils.run_dynamic_posterior_scheduler(
+        rng_key=jax.random.key(41),
+        state=ggns_state,
+        step_fn=ggns_algo.step,
+        initial_num_steps=12,
+        refinement_num_steps=8,
+        max_batches=2,
+    )
+    dynamic_ggns_compile_dt = time.perf_counter() - t0
+
     t0 = time.perf_counter()
     _, dynamic_ggns = utils.run_dynamic_posterior_scheduler(
         rng_key=jax.random.key(6),
         state=ggns_state,
         step_fn=ggns_algo.step,
-        initial_num_steps=30,
-        refinement_num_steps=20,
-        max_batches=3,
+        initial_num_steps=12,
+        refinement_num_steps=8,
+        max_batches=2,
     )
     dynamic_ggns_dt = time.perf_counter() - t0
     summarize("Dynamic GGNS", dynamic_ggns.merged, dynamic_ggns.batches)
     print(utils.summarize_dynamic_result(dynamic_ggns))
-    print(f"  runtime: {dynamic_ggns_dt:.3f}s")
+    print(f"  compile+run: {dynamic_ggns_compile_dt:.3f}s")
+    print(f"  run-only: {dynamic_ggns_dt:.3f}s")
 
 
 if __name__ == "__main__":

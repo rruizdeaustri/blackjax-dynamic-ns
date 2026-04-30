@@ -157,7 +157,6 @@ def run_dynamic_posterior_scheduler(
             if (candidate_upper - lower) >= min_loglikelihood_interval_width:
                 upper = candidate_upper
 
-
         # If we can already detect an invalid scheduling range, stop early.
         if not jnp.isfinite(lower):
             break
