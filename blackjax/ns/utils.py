@@ -114,6 +114,7 @@ def run_dynamic_posterior_scheduler(
     refinement_num_steps: int,
     max_batches: int,
     objective: str = "posterior",
+    min_loglikelihood_interval_width: float = 1e-6,
 ) -> tuple[NSState, NSDynamicResult]:
     """Run a posterior-focused dynamic bounded nested-sampling schedule."""
     if objective != "posterior":
@@ -136,6 +137,9 @@ def run_dynamic_posterior_scheduler(
     batches.append(first_batch)
     merged = merge_bounded_batches(batches)
 
+    if min_loglikelihood_interval_width < 0.0:
+        raise ValueError("min_loglikelihood_interval_width must be non-negative")
+
     for _ in range(1, max_batches):
         posterior_weights = merged.posterior_weights
         max_idx = int(jnp.argmax(posterior_weights))
@@ -143,7 +147,9 @@ def run_dynamic_posterior_scheduler(
         lower = float(logL[max_idx])
         upper = None
         if max_idx + 1 < logL.shape[0]:
-            upper = float(logL[max_idx + 1])
+            candidate_upper = float(logL[max_idx + 1])
+            if (candidate_upper - lower) >= min_loglikelihood_interval_width:
+                upper = candidate_upper
 
         rng_key, batch_key = jax.random.split(rng_key)
         state, new_batch = run_bounded_batch(
@@ -154,6 +160,18 @@ def run_dynamic_posterior_scheduler(
             loglikelihood_lower=lower,
             loglikelihood_upper=upper,
         )
+
+        # Fallback to a broader lower-tail interval when a selected interval is
+        # effectively empty in finite runs.
+        if new_batch.metadata.num_dead == 0:
+            state, new_batch = run_bounded_batch(
+                rng_key=batch_key,
+                state=state,
+                step_fn=step_fn,
+                num_steps=refinement_num_steps,
+                loglikelihood_lower=lower,
+                loglikelihood_upper=None,
+            )
         batches.append(new_batch)
         merged = merge_bounded_batches(batches)
 
