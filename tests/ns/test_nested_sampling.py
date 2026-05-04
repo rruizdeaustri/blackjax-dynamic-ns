@@ -59,6 +59,11 @@ def gaussian_mixture_loglikelihood(x):
     return jnp.logaddexp(mixture1, mixture2)
 
 
+def rosenbrock_loglikelihood_2d(x):
+    """Negative Rosenbrock energy as a curved 2D loglikelihood."""
+    return -((1.0 - x[0]) ** 2 + 100.0 * (x[1] - x[0] ** 2) ** 2)
+
+
 class NestedSamplingTest(chex.TestCase):
     def setUp(self):
         super().setUp()
@@ -233,12 +238,17 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
             num_delete=3,
             step_size=0.05,
             momentum_weight=0.5,
+            num_integration_steps=5,
         )
         state = algorithm.init(positions, rng_key=key)
         return algorithm, state
 
     @parameterized.parameters(
-        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+        [
+            gaussian_loglikelihood_2d,
+            gaussian_mixture_loglikelihood,
+            rosenbrock_loglikelihood_2d,
+        ]
     )
     def test_ggns_replacement_satisfies_constraint(self, loglikelihood_fn):
         key = jax.random.key(999)
@@ -264,7 +274,11 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
         )
 
     @parameterized.parameters(
-        [gaussian_loglikelihood_2d, gaussian_mixture_loglikelihood]
+        [
+            gaussian_loglikelihood_2d,
+            gaussian_mixture_loglikelihood,
+            rosenbrock_loglikelihood_2d,
+        ]
     )
     def test_ggns_vs_nss_constraint_validity(self, loglikelihood_fn):
         num_live = 60
@@ -276,6 +290,7 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
             num_inner_steps=8,
             num_delete=4,
             step_size=0.05,
+            num_integration_steps=5,
         )
         nss_algo = nss.as_top_level_api(
             logprior_fn=uniform_logprior_2d,
@@ -304,6 +319,16 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
 
         self.assertTrue(jnp.all(g_valid))
         self.assertTrue(jnp.all(n_valid))
+
+    def test_ggns_info_contains_hamiltonian_diagnostics(self):
+        algorithm, state = self._init_state(
+            jax.random.key(8675309), 30, uniform_logprior_2d, gaussian_loglikelihood_2d
+        )
+        _, info = algorithm.step(jax.random.key(123), state)
+        self.assertTrue(hasattr(info.update_info, "accepted"))
+        self.assertTrue(hasattr(info.update_info, "crossed_boundary"))
+        self.assertTrue(hasattr(info.update_info, "final_loglikelihood"))
+        self.assertTrue(hasattr(info.update_info, "num_integration_steps"))
 
 
 class AdaptiveNestedSamplingTest(chex.TestCase):
