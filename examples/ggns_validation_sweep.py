@@ -262,7 +262,13 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Smoke validation sweep for static/dynamic NSS and GGNS.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Smoke validation sweep for static/dynamic NSS and GGNS. "
+            "For current Hamiltonian-style GGNS, conservative settings "
+            "step_size=0.001 and num_inner_steps=1 are recommended."
+        )
+    )
     parser.add_argument("--num-live", type=int, default=40)
     parser.add_argument("--initial-num-steps", type=int, default=10)
     parser.add_argument("--refinement-num-steps", type=int, default=6)
@@ -271,9 +277,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num-seeds", type=int, default=2)
     parser.add_argument("--samplers", type=str, default="nss,ggns")
     parser.add_argument("--modes", type=str, default="static,dynamic")
-    parser.add_argument("--ggns-step-size", type=float, default=0.05)
+    parser.add_argument("--ggns-step-size", type=float, default=0.001)
     parser.add_argument("--ggns-num-integration-steps", type=int, default=None)
-    parser.add_argument("--ggns-num-inner-steps", type=int, default=4)
+    parser.add_argument("--ggns-num-inner-steps", type=int, default=1)
     return parser.parse_args()
 
 
@@ -295,6 +301,11 @@ def main() -> None:
         f"step_size={args.ggns_step_size}, "
         f"num_integration_steps={args.ggns_num_integration_steps}, "
         f"num_inner_steps={args.ggns_num_inner_steps}"
+    )
+    print(
+        "Note: with conservative GGNS smoke settings "
+        "(step_size=0.001, num_inner_steps=1), delta_logL is often ~0, "
+        "so proposals are not expected to be strong likelihood climbers."
     )
 
     for mode in modes:
