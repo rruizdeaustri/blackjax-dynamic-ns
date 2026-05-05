@@ -26,6 +26,13 @@ class RunMetrics:
     mean_constraint_gap: float = float("nan")
     median_constraint_gap: float = float("nan")
     max_constraint_gap: float = float("nan")
+    mean_start_constraint_gap: float = float("nan")
+    median_start_constraint_gap: float = float("nan")
+    mean_accepted_constraint_gap: float = float("nan")
+    median_accepted_constraint_gap: float = float("nan")
+    mean_delta_logl: float = float("nan")
+    median_delta_logl: float = float("nan")
+    fallback_rejection_gap: float = float("nan")
 
 
 def uniform_logprior_2d(x: jax.Array) -> jax.Array:
@@ -85,16 +92,42 @@ def run_one(
     ggns_accepted = []
     ggns_crossed = []
     ggns_gap = []
+    ggns_start_gap = []
+    ggns_accepted_gap = []
+    ggns_delta_logl = []
+    ggns_fallback_gap = []
 
     def instrumented_step(rng_key, ns_state):
         new_state, info = algo.step(rng_key, ns_state)
         if sampler_name == "ggns":
-            inner_info = getattr(info.update_info, 'mcmc_infos', info.update_info)
+            update_info = getattr(info, "update_info", None)
+            inner_info = getattr(update_info, "mcmc_infos", update_info)
             # For GGNS update_with_mcmc_take_last, mcmc_infos has shape
             # [num_delete, num_inner_steps] and fields from ConstrainedGradientGuidedInfo.
-            ggns_accepted.append(jnp.ravel(inner_info.accepted))
-            ggns_crossed.append(jnp.ravel(inner_info.crossed_boundary))
-            ggns_gap.append(jnp.ravel(inner_info.final_loglikelihood) - info.particles.loglikelihood.max())
+            accepted = getattr(inner_info, "accepted", None)
+            crossed_boundary = getattr(inner_info, "crossed_boundary", None)
+            start_logl = getattr(inner_info, "start_loglikelihood", None)
+            final_logl = getattr(inner_info, "final_loglikelihood", None)
+            constraint = getattr(info.particles, "loglikelihood", None)
+            if accepted is not None:
+                accepted_flat = jnp.ravel(accepted).astype(bool)
+                ggns_accepted.append(accepted_flat)
+            else:
+                accepted_flat = None
+            if crossed_boundary is not None:
+                ggns_crossed.append(jnp.ravel(crossed_boundary))
+            if final_logl is not None and constraint is not None:
+                constraint_threshold = jnp.max(constraint)
+                final_gap = jnp.ravel(final_logl) - constraint_threshold
+                ggns_gap.append(final_gap)
+                if accepted_flat is not None:
+                    ggns_accepted_gap.append(final_gap[accepted_flat])
+                    ggns_fallback_gap.append(final_gap[~accepted_flat])
+            if start_logl is not None and constraint is not None:
+                constraint_threshold = jnp.max(constraint)
+                ggns_start_gap.append(jnp.ravel(start_logl) - constraint_threshold)
+            if start_logl is not None and final_logl is not None:
+                ggns_delta_logl.append(jnp.ravel(final_logl) - jnp.ravel(start_logl))
         return new_state, info
 
     t0 = time.perf_counter()
@@ -137,17 +170,37 @@ def run_one(
     )
 
     if sampler_name == "ggns" and ggns_accepted:
-        accepted = jnp.concatenate(ggns_accepted)
-        crossed = jnp.concatenate(ggns_crossed)
-        gaps = jnp.concatenate(ggns_gap)
-        metrics.acceptance_rate = float(jnp.mean(accepted.astype(jnp.float32)))
-        metrics.boundary_crossing_rate = float(jnp.mean(crossed.astype(jnp.float32)))
-        metrics.fallback_rejection_rate = float(
-            jnp.mean((~accepted.astype(bool)).astype(jnp.float32))
-        )
-        metrics.mean_constraint_gap = float(jnp.mean(gaps))
-        metrics.median_constraint_gap = float(jnp.median(gaps))
-        metrics.max_constraint_gap = float(jnp.max(gaps))
+        accepted = jnp.concatenate(ggns_accepted) if ggns_accepted else None
+        crossed = jnp.concatenate(ggns_crossed) if ggns_crossed else None
+        gaps = jnp.concatenate(ggns_gap) if ggns_gap else None
+        if accepted is not None:
+            metrics.acceptance_rate = float(jnp.mean(accepted.astype(jnp.float32)))
+            metrics.fallback_rejection_rate = float(
+                jnp.mean((~accepted.astype(bool)).astype(jnp.float32))
+            )
+        if crossed is not None:
+            metrics.boundary_crossing_rate = float(jnp.mean(crossed.astype(jnp.float32)))
+        if gaps is not None:
+            metrics.mean_constraint_gap = float(jnp.mean(gaps))
+            metrics.median_constraint_gap = float(jnp.median(gaps))
+            metrics.max_constraint_gap = float(jnp.max(gaps))
+        if ggns_start_gap:
+            start_gaps = jnp.concatenate(ggns_start_gap)
+            metrics.mean_start_constraint_gap = float(jnp.mean(start_gaps))
+            metrics.median_start_constraint_gap = float(jnp.median(start_gaps))
+        if ggns_accepted_gap:
+            accepted_gaps = jnp.concatenate(ggns_accepted_gap)
+            if accepted_gaps.size > 0:
+                metrics.mean_accepted_constraint_gap = float(jnp.mean(accepted_gaps))
+                metrics.median_accepted_constraint_gap = float(jnp.median(accepted_gaps))
+        if ggns_delta_logl:
+            delta_logl = jnp.concatenate(ggns_delta_logl)
+            metrics.mean_delta_logl = float(jnp.mean(delta_logl))
+            metrics.median_delta_logl = float(jnp.median(delta_logl))
+        if ggns_fallback_gap:
+            fallback_gaps = jnp.concatenate(ggns_fallback_gap)
+            if fallback_gaps.size > 0:
+                metrics.fallback_rejection_gap = float(jnp.mean(fallback_gaps))
     elif sampler_name == "ggns":
         # TODO(ns-ggns): expose per-batch GGNS diagnostics in NSBatchMetadata/NSDynamicMetadata
         # so diagnostics do not require step-function instrumentation from this script.
@@ -183,11 +236,28 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
         mean_gap = jnp.array([r.mean_constraint_gap for r in ok])
         med_gap = jnp.array([r.median_constraint_gap for r in ok])
         max_gap = jnp.array([r.max_constraint_gap for r in ok])
+        start_mean_gap = jnp.array([r.mean_start_constraint_gap for r in ok])
+        start_median_gap = jnp.array([r.median_start_constraint_gap for r in ok])
+        accepted_mean_gap = jnp.array([r.mean_accepted_constraint_gap for r in ok])
+        accepted_median_gap = jnp.array([r.median_accepted_constraint_gap for r in ok])
+        mean_delta = jnp.array([r.mean_delta_logl for r in ok])
+        median_delta = jnp.array([r.median_delta_logl for r in ok])
+        fallback_gap = jnp.array([r.fallback_rejection_gap for r in ok])
+        def fmt_nanmean(arr: jax.Array, precision: int = 6) -> str:
+            value = float(jnp.nanmean(arr))
+            return "n/a" if jnp.isnan(value) else f"{value:.{precision}f}"
         print(f"  mean acceptance rate: {float(jnp.nanmean(ar)):.4f}")
         print(f"  mean boundary-crossing rate: {float(jnp.nanmean(bcr)):.4f}")
         print(f"  mean fallback/rejection rate: {float(jnp.nanmean(fr)):.4f}")
+        print(f"  mean(start_logL - constraint): {fmt_nanmean(start_mean_gap)}")
+        print(f"  median(start_logL - constraint): {fmt_nanmean(start_median_gap)}")
         print(f"  mean(final_logL - constraint): {float(jnp.nanmean(mean_gap)):.6f}")
         print(f"  median(final_logL - constraint): {float(jnp.nanmean(med_gap)):.6f}")
+        print(f"  mean(final_logL - constraint, accepted): {fmt_nanmean(accepted_mean_gap)}")
+        print(f"  median(final_logL - constraint, accepted): {fmt_nanmean(accepted_median_gap)}")
+        print(f"  mean(delta_logL = final_logL - start_logL): {fmt_nanmean(mean_delta)}")
+        print(f"  median(delta_logL): {fmt_nanmean(median_delta)}")
+        print(f"  fallback/rejection gap: {fmt_nanmean(fallback_gap)}")
         print(f"  max(final_logL - constraint): {float(jnp.nanmean(max_gap)):.6f}")
 
 
