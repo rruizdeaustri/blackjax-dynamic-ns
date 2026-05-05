@@ -47,6 +47,7 @@ class ConstrainedGradientGuidedInfo(NamedTuple):
 
     accepted: jnp.ndarray
     crossed_boundary: jnp.ndarray
+    start_loglikelihood: jnp.ndarray
     final_loglikelihood: jnp.ndarray
     num_integration_steps: jnp.ndarray
 
@@ -135,6 +136,7 @@ def build_kernel(
             xs=None,
             length=num_integration_steps,
         )
+        start_loglikelihood = state.loglikelihood
         final_loglikelihood = ll_history[-1]
         proposed_state = init_state_fn(final_position, loglikelihood_birth=loglikelihood_0)
 
@@ -143,6 +145,7 @@ def build_kernel(
         info = ConstrainedGradientGuidedInfo(
             accepted=accepted,
             crossed_boundary=~boundary_ok,
+            start_loglikelihood=start_loglikelihood,
             final_loglikelihood=final_loglikelihood,
             num_integration_steps=jnp.asarray(num_integration_steps),
         )
