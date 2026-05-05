@@ -53,6 +53,9 @@ def run_one(
     refinement_num_steps: int,
     max_batches: int,
     static_num_steps: int,
+    ggns_step_size: float,
+    ggns_num_integration_steps: int | None,
+    ggns_num_inner_steps: int,
 ) -> RunMetrics:
     positions = make_positions(seed, num_live)
 
@@ -64,13 +67,16 @@ def run_one(
             num_delete=2,
         )
     elif sampler_name == "ggns":
-        algo = ggns.as_top_level_api(
+        ggns_kwargs = dict(
             logprior_fn=uniform_logprior_2d,
             loglikelihood_fn=gaussian_mixture_loglikelihood,
-            num_inner_steps=4,
+            num_inner_steps=ggns_num_inner_steps,
             num_delete=2,
-            step_size=0.05,
         )
+        ggns_kwargs["step_size"] = ggns_step_size
+        if ggns_num_integration_steps is not None:
+            ggns_kwargs["num_integration_steps"] = ggns_num_integration_steps
+        algo = ggns.as_top_level_api(**ggns_kwargs)
     else:
         raise ValueError(f"Unknown sampler '{sampler_name}'")
 
@@ -195,6 +201,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num-seeds", type=int, default=2)
     parser.add_argument("--samplers", type=str, default="nss,ggns")
     parser.add_argument("--modes", type=str, default="static,dynamic")
+    parser.add_argument("--ggns-step-size", type=float, default=0.05)
+    parser.add_argument("--ggns-num-integration-steps", type=int, default=None)
+    parser.add_argument("--ggns-num-inner-steps", type=int, default=4)
     return parser.parse_args()
 
 
@@ -211,6 +220,12 @@ def main() -> None:
         f"static_num_steps={args.static_num_steps}, num_seeds={args.num_seeds}, "
         f"samplers={samplers}, modes={modes}"
     )
+    print(
+        "GGNS config: "
+        f"step_size={args.ggns_step_size}, "
+        f"num_integration_steps={args.ggns_num_integration_steps}, "
+        f"num_inner_steps={args.ggns_num_inner_steps}"
+    )
 
     for mode in modes:
         for sampler in samplers:
@@ -226,6 +241,9 @@ def main() -> None:
                         refinement_num_steps=args.refinement_num_steps,
                         max_batches=args.max_batches,
                         static_num_steps=args.static_num_steps,
+                        ggns_step_size=args.ggns_step_size,
+                        ggns_num_integration_steps=args.ggns_num_integration_steps,
+                        ggns_num_inner_steps=args.ggns_num_inner_steps,
                     )
                     results.append(metrics)
                     print(
