@@ -19,7 +19,7 @@ propose moves that stay above the current NS likelihood contour.
 """
 
 from functools import partial
-from typing import Callable, Dict, NamedTuple, Optional
+from typing import Callable, Dict, NamedTuple, Optional, Tuple
 
 import jax
 import jax.numpy as jnp
@@ -50,6 +50,8 @@ class ConstrainedGradientGuidedInfo(NamedTuple):
     start_loglikelihood: jnp.ndarray
     final_loglikelihood: jnp.ndarray
     num_integration_steps: jnp.ndarray
+    num_reflections: jnp.ndarray
+    reflection_failures: jnp.ndarray
 
 
 def _sample_tree_normal(rng_key: PRNGKey, tree: ArrayTree, scale: float) -> ArrayTree:
@@ -60,6 +62,45 @@ def _sample_tree_normal(rng_key: PRNGKey, tree: ArrayTree, scale: float) -> Arra
         for k, leaf in zip(keys, leaves)
     ]
     return jax.tree_util.tree_unflatten(treedef, sampled)
+
+
+def _tree_dot(x: ArrayTree, y: ArrayTree) -> jnp.ndarray:
+    return sum(jnp.sum(a * b) for a, b in zip(jax.tree.leaves(x), jax.tree.leaves(y)))
+
+
+def _tree_l2_norm(x: ArrayTree) -> jnp.ndarray:
+    return jnp.sqrt(_tree_dot(x, x))
+
+
+def _interpolate_tree(start: ArrayTree, end: ArrayTree, alpha: jnp.ndarray) -> ArrayTree:
+    return jax.tree.map(lambda a, b: a + alpha * (b - a), start, end)
+
+
+def _find_boundary_point(
+    loglikelihood_fn: Callable,
+    start_position: ArrayTree,
+    end_position: ArrayTree,
+    loglikelihood_0: jnp.ndarray,
+    num_bisection_steps: int = 8,
+) -> Tuple[ArrayTree, jnp.ndarray]:
+    lo = jnp.asarray(0.0)
+    hi = jnp.asarray(1.0)
+
+    def body(carry, _):
+        lo_t, hi_t = carry
+        mid = 0.5 * (lo_t + hi_t)
+        theta_mid = _interpolate_tree(start_position, end_position, mid)
+        ll_mid = loglikelihood_fn(theta_mid)
+        above = ll_mid > loglikelihood_0
+        lo_new = jnp.where(above, mid, lo_t)
+        hi_new = jnp.where(above, hi_t, mid)
+        return (lo_new, hi_new), None
+
+    (lo, hi), _ = jax.lax.scan(body, (lo, hi), xs=None, length=num_bisection_steps)
+    alpha = 0.5 * (lo + hi)
+    theta_boundary = _interpolate_tree(start_position, end_position, alpha)
+    ll_boundary = loglikelihood_fn(theta_boundary)
+    return theta_boundary, ll_boundary
 
 
 def update_inner_kernel_params(
@@ -106,7 +147,7 @@ def build_kernel(
         momentum = _sample_tree_normal(rng_key, state.position, momentum_scale)
 
         def leapfrog_step(carry, _):
-            position, momentum_t, boundary_ok = carry
+            position, momentum_t, boundary_ok, num_reflections, reflection_failures, crossed_boundary = carry
             grad_ll = loglikelihood_grad_fn(position)
 
             momentum_half = jax.tree.map(
@@ -114,25 +155,67 @@ def build_kernel(
                 momentum_t,
                 grad_ll,
             )
-            position_new = jax.tree.map(
+            proposed_position = jax.tree.map(
                 lambda q, p: q + step_size * p,
                 position,
                 momentum_half,
             )
-            ll_new = loglikelihood_fn(position_new)
-            step_ok = ll_new > loglikelihood_0
+            ll_new = loglikelihood_fn(proposed_position)
+            crossed = ll_new <= loglikelihood_0
 
-            grad_new = loglikelihood_grad_fn(position_new)
+            def reflect(_):
+                theta_boundary, ll_boundary = _find_boundary_point(
+                    loglikelihood_fn, position, proposed_position, loglikelihood_0
+                )
+                grad_boundary = loglikelihood_grad_fn(theta_boundary)
+                grad_norm = _tree_l2_norm(grad_boundary)
+                finite_norm = jnp.isfinite(grad_norm) & (grad_norm > 0.0)
+
+                n_hat = jax.tree.map(lambda g: g / grad_norm, grad_boundary)
+                projection = _tree_dot(momentum_half, n_hat)
+                reflected_momentum = jax.tree.map(
+                    lambda p, n: p - 2.0 * projection * n, momentum_half, n_hat
+                )
+                alpha = jnp.asarray(1.0)
+                theta_reflected = jax.tree.map(
+                    lambda qb, pr: qb + alpha * step_size * pr, theta_boundary, reflected_momentum
+                )
+                ll_reflected = loglikelihood_fn(theta_reflected)
+                reflected_valid = ll_reflected > loglikelihood_0
+                reflection_success = finite_norm & reflected_valid & jnp.isfinite(ll_boundary)
+
+                new_position = jax.tree.map(
+                    lambda qr, qp: jnp.where(reflection_success, qr, qp), theta_reflected, position
+                )
+                new_momentum = jax.tree.map(
+                    lambda mr, mp: jnp.where(reflection_success, mr, mp), reflected_momentum, momentum_half
+                )
+                new_ll = jnp.where(reflection_success, ll_reflected, loglikelihood_fn(position))
+                return (new_position, new_momentum, new_ll, reflection_success)
+
+            def no_reflect(_):
+                return (proposed_position, momentum_half, ll_new, jnp.asarray(True))
+
+            position_after, momentum_after, ll_after, step_ok = jax.lax.cond(crossed, reflect, no_reflect, operand=None)
+
+            grad_new = loglikelihood_grad_fn(position_after)
             momentum_new = jax.tree.map(
                 lambda p, g: p + 0.5 * step_size * g,
-                momentum_half,
+                momentum_after,
                 grad_new,
             )
-            return (position_new, momentum_new, boundary_ok & step_ok), ll_new
+            return (
+                position_after,
+                momentum_new,
+                boundary_ok & step_ok & (ll_after > loglikelihood_0),
+                num_reflections + crossed.astype(jnp.int32) * step_ok.astype(jnp.int32),
+                reflection_failures + crossed.astype(jnp.int32) * (~step_ok).astype(jnp.int32),
+                crossed_boundary | crossed,
+            ), ll_after
 
-        (final_position, _, boundary_ok), ll_history = jax.lax.scan(
+        (final_position, _, boundary_ok, num_reflections, reflection_failures, crossed_boundary), ll_history = jax.lax.scan(
             leapfrog_step,
-            (state.position, momentum, jnp.asarray(True)),
+            (state.position, momentum, jnp.asarray(True), jnp.asarray(0, dtype=jnp.int32), jnp.asarray(0, dtype=jnp.int32), jnp.asarray(False)),
             xs=None,
             length=num_integration_steps,
         )
@@ -144,10 +227,12 @@ def build_kernel(
         new_state = jax.lax.cond(accepted, lambda _: proposed_state, lambda _: state, operand=None)
         info = ConstrainedGradientGuidedInfo(
             accepted=accepted,
-            crossed_boundary=~boundary_ok,
+            crossed_boundary=crossed_boundary,
             start_loglikelihood=start_loglikelihood,
             final_loglikelihood=final_loglikelihood,
             num_integration_steps=jnp.asarray(num_integration_steps),
+            num_reflections=num_reflections,
+            reflection_failures=reflection_failures,
         )
         return new_state, info
 

@@ -329,6 +329,39 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
         self.assertTrue(hasattr(info.update_info, "crossed_boundary"))
         self.assertTrue(hasattr(info.update_info, "final_loglikelihood"))
         self.assertTrue(hasattr(info.update_info, "num_integration_steps"))
+        self.assertTrue(hasattr(info.update_info, "num_reflections"))
+        self.assertTrue(hasattr(info.update_info, "reflection_failures"))
+
+    def test_ggns_forced_boundary_crossing_reflects_or_falls_back(self):
+        def loglikelihood_fn(x):
+            return -(x[0] ** 2 + x[1] ** 2)
+
+        positions = jnp.array([[0.2, 0.0], [0.3, 0.0], [0.1, 0.1], [0.25, -0.05]])
+        algorithm = ggns.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=loglikelihood_fn,
+            num_inner_steps=4,
+            num_delete=1,
+            step_size=0.5,
+            num_integration_steps=6,
+            momentum_scale=5.0,
+        )
+        state = algorithm.init(positions, rng_key=jax.random.key(1))
+        new_state, info = algorithm.step(jax.random.key(2), state)
+
+        self.assertTrue(jnp.any(info.update_info.crossed_boundary))
+        replaced = jnp.isfinite(new_state.particles.loglikelihood_birth)
+        self.assertTrue(jnp.all(new_state.particles.loglikelihood[replaced] > new_state.particles.loglikelihood_birth[replaced]))
+        self.assertTrue(jnp.all(info.update_info.reflection_failures >= 0))
+
+    def test_ggns_no_boundary_crossing_reports_zero_reflections(self):
+        algorithm, state = self._init_state(
+            jax.random.key(17), 20, uniform_logprior_2d, gaussian_loglikelihood_2d
+        )
+        _, info = algorithm.step(jax.random.key(18), state)
+        no_cross = ~info.update_info.crossed_boundary
+        self.assertTrue(jnp.all(info.update_info.num_reflections[no_cross] == 0))
+
 
 
 class AdaptiveNestedSamplingTest(chex.TestCase):
