@@ -33,6 +33,10 @@ class RunMetrics:
     mean_delta_logl: float = float("nan")
     median_delta_logl: float = float("nan")
     fallback_rejection_gap: float = float("nan")
+    mean_reflections_per_proposal: float = float("nan")
+    max_reflections_per_proposal: float = float("nan")
+    fraction_proposals_with_reflection: float = float("nan")
+    reflection_failure_rate: float = float("nan")
 
 
 def uniform_logprior_2d(x: jax.Array) -> jax.Array:
@@ -96,6 +100,8 @@ def run_one(
     ggns_accepted_gap = []
     ggns_delta_logl = []
     ggns_fallback_gap = []
+    ggns_num_reflections = []
+    ggns_reflection_failures = []
 
     def instrumented_step(rng_key, ns_state):
         new_state, info = algo.step(rng_key, ns_state)
@@ -109,6 +115,10 @@ def run_one(
             start_logl = getattr(inner_info, "start_loglikelihood", None)
             final_logl = getattr(inner_info, "final_loglikelihood", None)
             constraint = getattr(info.particles, "loglikelihood", None)
+            num_reflections = getattr(inner_info, "num_reflections", None)
+            reflection_failures = getattr(inner_info, "reflection_failures", None)
+            if reflection_failures is None:
+                reflection_failures = getattr(inner_info, "reflection_failed", None)
             if accepted is not None:
                 accepted_flat = jnp.ravel(accepted).astype(bool)
                 ggns_accepted.append(accepted_flat)
@@ -116,6 +126,10 @@ def run_one(
                 accepted_flat = None
             if crossed_boundary is not None:
                 ggns_crossed.append(jnp.ravel(crossed_boundary))
+            if num_reflections is not None:
+                ggns_num_reflections.append(jnp.ravel(num_reflections))
+            if reflection_failures is not None:
+                ggns_reflection_failures.append(jnp.ravel(reflection_failures))
             if final_logl is not None and constraint is not None:
                 constraint_threshold = jnp.max(constraint)
                 final_gap = jnp.ravel(final_logl) - constraint_threshold
@@ -201,6 +215,21 @@ def run_one(
             fallback_gaps = jnp.concatenate(ggns_fallback_gap)
             if fallback_gaps.size > 0:
                 metrics.fallback_rejection_gap = float(jnp.mean(fallback_gaps))
+        if ggns_num_reflections:
+            reflections = jnp.concatenate(ggns_num_reflections)
+            if reflections.size > 0:
+                reflections_f = reflections.astype(jnp.float32)
+                metrics.mean_reflections_per_proposal = float(jnp.mean(reflections_f))
+                metrics.max_reflections_per_proposal = float(jnp.max(reflections_f))
+                metrics.fraction_proposals_with_reflection = float(
+                    jnp.mean((reflections > 0).astype(jnp.float32))
+                )
+        if ggns_reflection_failures:
+            reflection_failures = jnp.concatenate(ggns_reflection_failures)
+            if reflection_failures.size > 0:
+                metrics.reflection_failure_rate = float(
+                    jnp.mean((reflection_failures > 0).astype(jnp.float32))
+                )
     elif sampler_name == "ggns":
         # TODO(ns-ggns): expose per-batch GGNS diagnostics in NSBatchMetadata/NSDynamicMetadata
         # so diagnostics do not require step-function instrumentation from this script.
@@ -243,8 +272,18 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
         mean_delta = jnp.array([r.mean_delta_logl for r in ok])
         median_delta = jnp.array([r.median_delta_logl for r in ok])
         fallback_gap = jnp.array([r.fallback_rejection_gap for r in ok])
+        mean_reflections = jnp.array([r.mean_reflections_per_proposal for r in ok])
+        max_reflections = jnp.array([r.max_reflections_per_proposal for r in ok])
+        frac_reflected = jnp.array([r.fraction_proposals_with_reflection for r in ok])
+        refl_fail_rate = jnp.array([r.reflection_failure_rate for r in ok])
         def fmt_nanmean(arr: jax.Array, precision: int = 6) -> str:
             value = float(jnp.nanmean(arr))
+            return "n/a" if jnp.isnan(value) else f"{value:.{precision}f}"
+
+        def fmt_nanmax(arr: jax.Array, precision: int = 4) -> str:
+            if bool(jnp.all(jnp.isnan(arr))):
+                return "n/a"
+            value = float(jnp.nanmax(arr))
             return "n/a" if jnp.isnan(value) else f"{value:.{precision}f}"
         print(f"  mean acceptance rate: {float(jnp.nanmean(ar)):.4f}")
         print(f"  mean boundary-crossing rate: {float(jnp.nanmean(bcr)):.4f}")
@@ -258,6 +297,10 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
         print(f"  mean(delta_logL = final_logL - start_logL): {fmt_nanmean(mean_delta)}")
         print(f"  median(delta_logL): {fmt_nanmean(median_delta)}")
         print(f"  fallback/rejection gap: {fmt_nanmean(fallback_gap)}")
+        print(f"  mean reflections per proposal: {fmt_nanmean(mean_reflections, precision=4)}")
+        print(f"  max reflections per proposal: {fmt_nanmax(max_reflections, precision=4)}")
+        print(f"  fraction proposals with reflection: {fmt_nanmean(frac_reflected, precision=4)}")
+        print(f"  reflection failure rate: {fmt_nanmean(refl_fail_rate, precision=4)}")
         print(f"  max(final_logL - constraint): {float(jnp.nanmean(max_gap)):.6f}")
 
 
