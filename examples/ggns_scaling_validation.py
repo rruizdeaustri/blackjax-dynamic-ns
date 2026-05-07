@@ -229,7 +229,11 @@ def summarize(sampler: str, results: list[RunMetrics]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Scaling/statistical validation for NSS vs reflected GGNS.")
-    parser.add_argument("--target", default="gaussian_mixture", choices=["gaussian_mixture", "correlated_gaussian", "banana", "rosenbrock"])
+    parser.add_argument(
+        "--target",
+        default="gaussian_mixture",
+        choices=["gaussian_mixture", "correlated_gaussian", "banana", "rosenbrock", "all"],
+    )
     parser.add_argument("--dimension", type=int, default=2)
     parser.add_argument("--num-live", type=int, default=40)
     parser.add_argument("--num-seeds", type=int, default=2)
@@ -246,23 +250,36 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    target_spec = build_target(args.target, args.dimension)
     samplers = [s.strip() for s in args.samplers.split(",") if s.strip()]
 
-    print(f"Target={target_spec.name}, dimension={target_spec.dimension}, mode={args.mode}")
-    print(f"num_live={args.num_live}, num_seeds={args.num_seeds}, samplers={samplers}")
+    print(f"mode={args.mode}, num_live={args.num_live}, num_seeds={args.num_seeds}, samplers={samplers}")
     print(f"GGNS: step_size={args.ggns_step_size}, num_inner_steps={args.ggns_num_inner_steps}")
 
-    for sampler in samplers:
-        results = []
-        for seed in range(args.num_seeds):
-            result = run_one(target_spec, sampler, args.mode, seed, args)
-            results.append(result)
-            print(
-                f"  {sampler} seed={seed}: logZ={result.logz:.5f}, ESS={result.ess:.2f}, "
-                f"runtime={result.run_seconds:.3f}s, ms/step={result.ms_per_step:.3f}"
-            )
-        summarize(sampler, results)
+    if args.target == "all":
+        target_grid = [
+            ("gaussian_mixture", 2),
+            ("correlated_gaussian", 2),
+            ("correlated_gaussian", 5),
+            ("correlated_gaussian", 10),
+            ("banana", 2),
+        ]
+    else:
+        target_grid = [(args.target, args.dimension)]
+
+    for target_name, dimension in target_grid:
+        target_spec = build_target(target_name, dimension)
+        print(f"\n=== Target={target_spec.name}, dimension={target_spec.dimension} ===")
+
+        for sampler in samplers:
+            results = []
+            for seed in range(args.num_seeds):
+                result = run_one(target_spec, sampler, args.mode, seed, args)
+                results.append(result)
+                print(
+                    f"  {sampler} seed={seed}: logZ={result.logz:.5f}, ESS={result.ess:.2f}, "
+                    f"runtime={result.run_seconds:.3f}s, ms/step={result.ms_per_step:.3f}"
+                )
+            summarize(sampler, results)
 
 
 if __name__ == "__main__":
