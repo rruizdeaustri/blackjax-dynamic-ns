@@ -4,10 +4,13 @@ from __future__ import annotations
 import argparse
 import time
 from dataclasses import dataclass
+from typing import Optional
 
 import jax
 import jax.numpy as jnp
 import jax.scipy.stats as stats
+import numpy as np
+from scipy.stats import multivariate_normal
 
 from blackjax.ns import ggns, nss, utils
 
@@ -32,6 +35,24 @@ class TargetSpec:
     logprior_fn: callable
     loglikelihood_fn: callable
     init_fn: callable
+
+
+def correlated_gaussian_reference_logz(dimension: int, bound: float = 6.0) -> float:
+    """Reference logZ for correlated Gaussian under box prior indicator.
+
+    The script's log-prior is 0 inside [-bound, bound]^d and -inf outside,
+    so Z = ∫_{box} N(x; 0, Σ) dx = P(X in box), not divided by box volume.
+    """
+    idx = np.arange(dimension)
+    cov = 0.7 ** np.abs(idx[:, None] - idx[None, :]) + 1e-3 * np.eye(dimension)
+    lower = -bound * np.ones(dimension)
+    upper = bound * np.ones(dimension)
+    # SciPy evaluates this rectangular probability using MVN CDF integration.
+    box_prob = multivariate_normal(mean=np.zeros(dimension), cov=cov).cdf(
+        upper,
+        lower_limit=lower,
+    )
+    return float(np.log(box_prob))
 
 
 def uniform_box_logprior(x: jax.Array, bound: float = 6.0) -> jax.Array:
@@ -205,7 +226,7 @@ def run_one(target_spec: TargetSpec, sampler_name: str, mode: str, seed: int, ar
     return metrics
 
 
-def summarize(sampler: str, results: list[RunMetrics]) -> None:
+def summarize(sampler: str, results: list[RunMetrics], reference_logz: Optional[float] = None) -> float:
     ok = [r for r in results if not r.failed]
     logz = jnp.array([r.logz for r in ok])
     ess = jnp.array([r.ess for r in ok])
@@ -214,6 +235,7 @@ def summarize(sampler: str, results: list[RunMetrics]) -> None:
 
     print(f"\n{sampler.upper()} summary ({len(ok)}/{len(results)} successful)")
     print(f"  mean/std logZ: {float(jnp.mean(logz)):.6f} / {float(jnp.std(logz)):.6f}")
+    mean_logz = float(jnp.mean(logz))
     print(f"  mean ESS: {float(jnp.mean(ess)):.3f}")
     print(f"  mean runtime (s): {float(jnp.mean(runtime)):.4f}")
     print(f"  mean ms per NS step: {float(jnp.mean(mstep)):.4f}")
@@ -226,10 +248,20 @@ def summarize(sampler: str, results: list[RunMetrics]) -> None:
         print(f"  fraction proposals with reflection: {float(jnp.nanmean(frac_ref)):.6f}")
         print(f"  reflection failure rate: {float(jnp.nanmean(fail)):.6f}")
 
+    if reference_logz is not None:
+        print(f"  reference logZ: {reference_logz:.6f}")
+        print(f"  mean logZ error (logZ - reference): {mean_logz - reference_logz:.6f}")
+
+    return mean_logz
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Scaling/statistical validation for NSS vs reflected GGNS.")
-    parser.add_argument("--target", default="gaussian_mixture", choices=["gaussian_mixture", "correlated_gaussian", "banana", "rosenbrock"])
+    parser.add_argument(
+        "--target",
+        default="gaussian_mixture",
+        choices=["gaussian_mixture", "correlated_gaussian", "banana", "rosenbrock", "all"],
+    )
     parser.add_argument("--dimension", type=int, default=2)
     parser.add_argument("--num-live", type=int, default=40)
     parser.add_argument("--num-seeds", type=int, default=2)
@@ -246,23 +278,68 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    target_spec = build_target(args.target, args.dimension)
     samplers = [s.strip() for s in args.samplers.split(",") if s.strip()]
 
-    print(f"Target={target_spec.name}, dimension={target_spec.dimension}, mode={args.mode}")
-    print(f"num_live={args.num_live}, num_seeds={args.num_seeds}, samplers={samplers}")
+    print(f"mode={args.mode}, num_live={args.num_live}, num_seeds={args.num_seeds}, samplers={samplers}")
     print(f"GGNS: step_size={args.ggns_step_size}, num_inner_steps={args.ggns_num_inner_steps}")
+    print("Note: default settings are smoke-test oriented and not intended for accurate evidence estimation.")
 
-    for sampler in samplers:
-        results = []
-        for seed in range(args.num_seeds):
-            result = run_one(target_spec, sampler, args.mode, seed, args)
-            results.append(result)
+    if args.target == "all":
+        target_grid = [
+            ("gaussian_mixture", 2),
+            ("correlated_gaussian", 2),
+            ("correlated_gaussian", 5),
+            ("correlated_gaussian", 10),
+            ("banana", 2),
+        ]
+    else:
+        target_grid = [(args.target, args.dimension)]
+
+    for target_name, dimension in target_grid:
+        target_spec = build_target(target_name, dimension)
+        print(f"\n=== Target={target_spec.name}, dimension={target_spec.dimension} ===")
+        reference_logz = None
+        if target_spec.name == "correlated_gaussian":
+            reference_logz = correlated_gaussian_reference_logz(target_spec.dimension)
+            print("Reference note: prior is an indicator on [-6, 6]^d (unnormalized), so logZ=log P(X in box).")
+            print(f"Reference logZ (SciPy MVN box probability): {reference_logz:.6f}")
             print(
-                f"  {sampler} seed={seed}: logZ={result.logz:.5f}, ESS={result.ess:.2f}, "
-                f"runtime={result.run_seconds:.3f}s, ms/step={result.ms_per_step:.3f}"
+                "Suggested evidence-check configuration: "
+                "--num-live 100 --initial-num-steps 50 --refinement-num-steps 50 "
+                "--static-num-steps 100 --num-seeds 3"
             )
-        summarize(sampler, results)
+
+        mean_logz_by_sampler = {}
+        for sampler in samplers:
+            results = []
+            for seed in range(args.num_seeds):
+                result = run_one(target_spec, sampler, args.mode, seed, args)
+                results.append(result)
+                print(
+                    f"  {sampler} seed={seed}: logZ={result.logz:.5f}, ESS={result.ess:.2f}, "
+                    f"runtime={result.run_seconds:.3f}s, ms/step={result.ms_per_step:.3f}"
+                )
+            mean_logz_by_sampler[sampler] = summarize(sampler, results, reference_logz=reference_logz)
+
+        if (
+            reference_logz is not None
+            and target_spec.name == "correlated_gaussian"
+            and target_spec.dimension == 2
+            and "nss" in mean_logz_by_sampler
+            and "ggns" in mean_logz_by_sampler
+        ):
+            nss_err = abs(mean_logz_by_sampler["nss"] - reference_logz)
+            ggns_err = abs(mean_logz_by_sampler["ggns"] - reference_logz)
+            closer = "NSS" if nss_err < ggns_err else "GGNS"
+            print(
+                f"Closer to reference in d=2 by |mean error|: {closer} "
+                f"(NSS={nss_err:.6f}, GGNS={ggns_err:.6f})"
+            )
+            if nss_err > 1.0 and ggns_err > 1.0:
+                print(
+                    "WARNING: both samplers are far from reference (|mean logZ - reference| > 1). "
+                    "Increase live points/steps/seeds for a stronger evidence check."
+                )
 
 
 if __name__ == "__main__":
