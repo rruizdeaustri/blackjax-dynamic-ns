@@ -43,25 +43,30 @@ __all__ = [
 
 
 class ConstrainedGradientGuidedInfo(NamedTuple):
-    """Info for one constrained Hamiltonian-style constrained proposal."""
+    """Info for one constrained GGNS proposal."""
 
     accepted: jnp.ndarray
     crossed_boundary: jnp.ndarray
     start_loglikelihood: jnp.ndarray
     final_loglikelihood: jnp.ndarray
+    delta_loglikelihood: jnp.ndarray
+    sampled_path_index: jnp.ndarray
+    valid_path_fraction: jnp.ndarray
     num_integration_steps: jnp.ndarray
     num_reflections: jnp.ndarray
     reflection_failures: jnp.ndarray
 
 
-def _sample_tree_normal(rng_key: PRNGKey, tree: ArrayTree, scale: float) -> ArrayTree:
+def _sample_tree_normalized_velocity(
+    rng_key: PRNGKey, tree: ArrayTree, scale: float
+) -> ArrayTree:
     leaves, treedef = jax.tree_util.tree_flatten(tree)
     keys = jax.random.split(rng_key, len(leaves))
-    sampled = [
-        scale * jax.random.normal(k, leaf.shape, dtype=leaf.dtype)
-        for k, leaf in zip(keys, leaves)
-    ]
-    return jax.tree_util.tree_unflatten(treedef, sampled)
+    sampled = [jax.random.normal(k, leaf.shape, dtype=leaf.dtype) for k, leaf in zip(keys, leaves)]
+    velocity = jax.tree_util.tree_unflatten(treedef, sampled)
+    norm = _tree_l2_norm(velocity)
+    safe_norm = jnp.where((norm > 0.0) & jnp.isfinite(norm), norm, jnp.asarray(1.0, dtype=norm.dtype))
+    return jax.tree.map(lambda v: scale * v / safe_norm, velocity)
 
 
 def _tree_dot(x: ArrayTree, y: ArrayTree) -> jnp.ndarray:
@@ -129,36 +134,30 @@ def build_kernel(
     update_strategy: Callable = update_with_mcmc_take_last,
     update_inner_kernel_params_fn: Callable = update_inner_kernel_params,
 ) -> Callable:
-    """Build a constrained Hamiltonian-style NS replacement kernel.
-
-    Notes
-    -----
-    This uses a safe intermediate strategy: if any leapfrog point crosses the
-    nested-sampling likelihood boundary, the full trajectory is rejected.
-    True reflective boundary handling is future work.
-    """
+    """Build a constrained GGNS-style NS replacement kernel."""
 
     loglikelihood_grad_fn = jax.grad(loglikelihood_fn)
     _ = momentum_weight
 
     def constrained_gradient_guided_step_fn(rng_key, state, loglikelihood_0, **params):
         del params
+        key_velocity, key_select = jax.random.split(rng_key)
+        velocity = _sample_tree_normalized_velocity(
+            key_velocity, state.position, momentum_scale
+        )
 
-        momentum = _sample_tree_normal(rng_key, state.position, momentum_scale)
-
-        def leapfrog_step(carry, _):
-            position, momentum_t, boundary_ok, num_reflections, reflection_failures, crossed_boundary = carry
-            grad_ll = loglikelihood_grad_fn(position)
-
-            momentum_half = jax.tree.map(
-                lambda p, g: p + 0.5 * step_size * g,
-                momentum_t,
-                grad_ll,
-            )
-            proposed_position = jax.tree.map(
-                lambda q, p: q + step_size * p,
+        def trajectory_step(carry, _):
+            (
                 position,
-                momentum_half,
+                velocity_t,
+                num_reflections,
+                reflection_failures,
+                crossed_boundary,
+            ) = carry
+            proposed_position = jax.tree.map(
+                lambda q, v: q + step_size * v,
+                position,
+                velocity_t,
             )
             ll_new = loglikelihood_fn(proposed_position)
             crossed = ll_new <= loglikelihood_0
@@ -172,13 +171,15 @@ def build_kernel(
                 finite_norm = jnp.isfinite(grad_norm) & (grad_norm > 0.0)
 
                 n_hat = jax.tree.map(lambda g: g / grad_norm, grad_boundary)
-                projection = _tree_dot(momentum_half, n_hat)
-                reflected_momentum = jax.tree.map(
-                    lambda p, n: p - 2.0 * projection * n, momentum_half, n_hat
+                projection = _tree_dot(velocity_t, n_hat)
+                reflected_velocity = jax.tree.map(
+                    lambda v, n: v - 2.0 * projection * n, velocity_t, n_hat
                 )
                 alpha = jnp.asarray(1.0)
                 theta_reflected = jax.tree.map(
-                    lambda qb, pr: qb + alpha * step_size * pr, theta_boundary, reflected_momentum
+                    lambda qb, vr: qb + alpha * step_size * vr,
+                    theta_boundary,
+                    reflected_velocity,
                 )
                 ll_reflected = loglikelihood_fn(theta_reflected)
                 reflected_valid = ll_reflected > loglikelihood_0
@@ -187,49 +188,81 @@ def build_kernel(
                 new_position = jax.tree.map(
                     lambda qr, qp: jnp.where(reflection_success, qr, qp), theta_reflected, position
                 )
-                new_momentum = jax.tree.map(
-                    lambda mr, mp: jnp.where(reflection_success, mr, mp), reflected_momentum, momentum_half
+                new_velocity = jax.tree.map(
+                    lambda vr, vp: jnp.where(reflection_success, vr, vp),
+                    reflected_velocity,
+                    velocity_t,
                 )
-                new_ll = jnp.where(reflection_success, ll_reflected, loglikelihood_fn(position))
-                return (new_position, new_momentum, new_ll, reflection_success)
+                new_ll = jnp.where(reflection_success, ll_reflected, state.loglikelihood)
+                return (new_position, new_velocity, new_ll, reflection_success)
 
             def no_reflect(_):
-                return (proposed_position, momentum_half, ll_new, jnp.asarray(True))
+                return (proposed_position, velocity_t, ll_new, jnp.asarray(True))
 
-            position_after, momentum_after, ll_after, step_ok = jax.lax.cond(crossed, reflect, no_reflect, operand=None)
-
-            grad_new = loglikelihood_grad_fn(position_after)
-            momentum_new = jax.tree.map(
-                lambda p, g: p + 0.5 * step_size * g,
-                momentum_after,
-                grad_new,
+            position_after, velocity_after, ll_after, step_ok = jax.lax.cond(
+                crossed, reflect, no_reflect, operand=None
             )
             return (
                 position_after,
-                momentum_new,
-                boundary_ok & step_ok & (ll_after > loglikelihood_0),
+                velocity_after,
                 num_reflections + crossed.astype(jnp.int32) * step_ok.astype(jnp.int32),
                 reflection_failures + crossed.astype(jnp.int32) * (~step_ok).astype(jnp.int32),
                 crossed_boundary | crossed,
-            ), ll_after
+            ), (position_after, ll_after)
 
-        (final_position, _, boundary_ok, num_reflections, reflection_failures, crossed_boundary), ll_history = jax.lax.scan(
-            leapfrog_step,
-            (state.position, momentum, jnp.asarray(True), jnp.asarray(0, dtype=jnp.int32), jnp.asarray(0, dtype=jnp.int32), jnp.asarray(False)),
+        (
+            _,
+            _,
+            num_reflections,
+            reflection_failures,
+            crossed_boundary,
+        ), (position_traj, ll_history) = jax.lax.scan(
+            trajectory_step,
+            (
+                state.position,
+                velocity,
+                jnp.asarray(0, dtype=jnp.int32),
+                jnp.asarray(0, dtype=jnp.int32),
+                jnp.asarray(False),
+            ),
             xs=None,
             length=num_integration_steps,
         )
         start_loglikelihood = state.loglikelihood
-        final_loglikelihood = ll_history[-1]
-        proposed_state = init_state_fn(final_position, loglikelihood_birth=loglikelihood_0)
+        valid_mask = (ll_history > loglikelihood_0) & jnp.isfinite(ll_history)
+        valid_count = jnp.sum(valid_mask.astype(jnp.int32))
+        valid_path_fraction = valid_count / jnp.asarray(
+            num_integration_steps, dtype=ll_history.dtype
+        )
+        has_valid = valid_count > 0
+        draw = jax.random.randint(
+            key_select, (), 0, jnp.maximum(valid_count, jnp.asarray(1, dtype=jnp.int32))
+        )
+        valid_prefix = jnp.cumsum(valid_mask.astype(jnp.int32))
+        is_selected = valid_mask & (valid_prefix == (draw + 1))
+        fallback_index = jnp.asarray(num_integration_steps, dtype=jnp.int32)
+        sampled_path_index = jnp.min(
+            jnp.where(is_selected, jnp.arange(num_integration_steps), fallback_index)
+        )
+        sampled_path_index = jnp.where(
+            has_valid, sampled_path_index, jnp.asarray(-1, dtype=jnp.int32)
+        )
+        selected_index = jnp.clip(sampled_path_index, 0, num_integration_steps - 1)
+        selected_position = jax.tree.map(lambda x: x[selected_index], position_traj)
+        selected_loglikelihood = ll_history[selected_index]
+        proposed_state = init_state_fn(selected_position, loglikelihood_birth=loglikelihood_0)
 
-        accepted = boundary_ok & (final_loglikelihood > loglikelihood_0)
+        accepted = has_valid & (selected_loglikelihood > loglikelihood_0)
         new_state = jax.lax.cond(accepted, lambda _: proposed_state, lambda _: state, operand=None)
+        final_loglikelihood = jnp.where(accepted, selected_loglikelihood, state.loglikelihood)
         info = ConstrainedGradientGuidedInfo(
             accepted=accepted,
             crossed_boundary=crossed_boundary,
             start_loglikelihood=start_loglikelihood,
             final_loglikelihood=final_loglikelihood,
+            delta_loglikelihood=final_loglikelihood - start_loglikelihood,
+            sampled_path_index=sampled_path_index,
+            valid_path_fraction=valid_path_fraction,
             num_integration_steps=jnp.asarray(num_integration_steps),
             num_reflections=num_reflections,
             reflection_failures=reflection_failures,
