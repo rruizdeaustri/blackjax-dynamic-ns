@@ -99,6 +99,20 @@ class NSDynamicMetadata(NamedTuple):
     num_requested_batches: int
     num_executed_batches: int
     num_empty_batches: int
+    refinement_interval_diagnostics: tuple["NSRefinementIntervalDiagnostics", ...]
+
+
+class NSRefinementIntervalDiagnostics(NamedTuple):
+    """Diagnostics for dynamic interval selection per refinement batch."""
+
+    selected_lower_threshold: float
+    selected_upper_threshold: float
+    selected_upper_is_finite: bool
+    interval_width: float
+    upper_none_reason_code: str
+    posterior_weight_at_selected_dead_point: float
+    selected_dead_point_index: int
+    num_candidate_dead_points_considered: int
 
 
 class NSDynamicResult(NamedTuple):
@@ -146,19 +160,26 @@ def run_dynamic_posterior_scheduler(
     if min_loglikelihood_interval_width < 0.0:
         raise ValueError("min_loglikelihood_interval_width must be non-negative")
 
+    interval_diagnostics = []
     for _ in range(1, max_batches):
         posterior_weights = merged.posterior_weights
         max_idx = int(jnp.argmax(posterior_weights))
         logL = merged.dead_point_loglikelihoods
         lower = float(logL[max_idx])
         upper = None
+        upper_none_reason_code = "unknown"
         if max_idx + 1 < logL.shape[0]:
             candidate_upper = float(logL[max_idx + 1])
             if (candidate_upper - lower) >= min_loglikelihood_interval_width:
                 upper = candidate_upper
+            else:
+                upper_none_reason_code = "next_gap_below_min_width"
+        else:
+            upper_none_reason_code = "posterior_peak_at_last_dead_point"
 
         # If we can already detect an invalid scheduling range, stop early.
         if not jnp.isfinite(lower):
+            upper_none_reason_code = "no_valid_candidate_interval"
             break
 
         rng_key, batch_key = jax.random.split(rng_key)
@@ -182,8 +203,26 @@ def run_dynamic_posterior_scheduler(
                 loglikelihood_lower=lower,
                 loglikelihood_upper=None,
             )
+            upper = None
+            upper_none_reason_code = "finite_window_empty_fallback"
             if new_batch.metadata.num_dead == 0:
                 break
+        elif upper is None and upper_none_reason_code == "unknown":
+            upper_none_reason_code = "upper_tail_by_design"
+
+        selected_upper_threshold = float(jnp.inf if upper is None else upper)
+        interval_diagnostics.append(
+            NSRefinementIntervalDiagnostics(
+                selected_lower_threshold=float(lower),
+                selected_upper_threshold=selected_upper_threshold,
+                selected_upper_is_finite=bool(jnp.isfinite(selected_upper_threshold)),
+                interval_width=float(selected_upper_threshold - lower),
+                upper_none_reason_code=upper_none_reason_code,
+                posterior_weight_at_selected_dead_point=float(posterior_weights[max_idx]),
+                selected_dead_point_index=max_idx,
+                num_candidate_dead_points_considered=int(logL.shape[0]),
+            )
+        )
         batches.append(new_batch)
         merged = merge_bounded_batches(batches)
 
@@ -201,6 +240,7 @@ def run_dynamic_posterior_scheduler(
             num_requested_batches=max_batches,
             num_executed_batches=len(batches),
             num_empty_batches=sum(int(batch.metadata.is_empty) for batch in batches),
+            refinement_interval_diagnostics=tuple(interval_diagnostics),
         ),
     )
     return state, dynamic_result
