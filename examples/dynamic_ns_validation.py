@@ -133,6 +133,21 @@ def print_dynamic_summary(seed: int, result: utils.NSDynamicResult, dt: float):
     print(f"  number of empty batches: {result.metadata.num_empty_batches}")
     widths = [batch.metadata.interval_width for batch in result.batches]
     print(f"  dynamic batch widths: {[float(w) for w in widths]}")
+    print("  refinement interval diagnostics:")
+    if result.metadata.refinement_interval_diagnostics:
+        for i, diag in enumerate(result.metadata.refinement_interval_diagnostics):
+            print(
+                f"    batch {i + 1}: lower={diag.selected_lower_threshold:.6f}, "
+                f"upper={diag.selected_upper_threshold:.6f}, "
+                f"upper_is_finite={diag.selected_upper_is_finite}, "
+                f"width={diag.interval_width:.6f}, "
+                f"upper_none_reason={diag.upper_none_reason_code}, "
+                f"posterior_weight={diag.posterior_weight_at_selected_dead_point:.8f}, "
+                f"dead_point_idx={diag.selected_dead_point_index}, "
+                f"candidate_dead_points={diag.num_candidate_dead_points_considered}"
+            )
+    else:
+        print("    none")
 
 
 def parse_args() -> argparse.Namespace:
