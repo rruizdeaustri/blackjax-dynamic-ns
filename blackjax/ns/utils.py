@@ -121,6 +121,11 @@ class NSRefinementIntervalDiagnostics(NamedTuple):
     widened_upper_threshold: float
     finite_retry_used: bool
     finite_retry_succeeded: bool
+    no_wider_finite_upper_available: bool
+    attempted_finite_dead_within: int
+    attempted_finite_dead_above: int
+    attempted_finite_dead_min_logL: float
+    attempted_finite_dead_max_logL: float
 
 
 class NSDynamicResult(NamedTuple):
@@ -209,6 +214,11 @@ def run_dynamic_posterior_scheduler(
         finite_interval_selected = False
         finite_retry_used = False
         finite_retry_succeeded = False
+        no_wider_finite_upper_available = False
+        attempted_finite_dead_within = 0
+        attempted_finite_dead_above = 0
+        attempted_finite_dead_min_logL = float(jnp.nan)
+        attempted_finite_dead_max_logL = float(jnp.nan)
         original_attempted_upper_threshold = float(logL[original_upper_idx])
         candidate_upper = float(logL[upper_idx])
         if (candidate_upper - lower) >= min_loglikelihood_interval_width:
@@ -251,29 +261,48 @@ def run_dynamic_posterior_scheduler(
             loglikelihood_upper=upper,
         )
 
-        # Fallback to a broader lower-tail interval when a selected interval is
-        # effectively empty in finite runs.
-        if (
-            new_batch.metadata.num_dead == 0
-            and attempted_upper is not None
-            and new_batch.metadata.reached_loglikelihood_upper
-            and upper_idx < (num_dead - 1)
-        ):
-            finite_retry_used = True
-            retry_upper_idx = min(num_dead - 1, upper_idx + max(1, finite_upper_idx_margin))
-            retry_upper = float(logL[retry_upper_idx])
-            upper_idx = retry_upper_idx
-            upper = retry_upper
-            state, new_batch = run_bounded_batch(
-                rng_key=batch_key,
-                state=state,
-                step_fn=step_fn,
-                num_steps=refinement_num_steps,
-                loglikelihood_lower=lower,
-                loglikelihood_upper=upper,
+        if attempted_upper is not None and new_batch.metadata.num_dead > 0:
+            attempted_dead_logL = new_batch.dead_point_loglikelihoods
+            attempted_finite_dead_within = int(
+                jnp.sum((attempted_dead_logL >= lower) & (attempted_dead_logL < attempted_upper))
             )
-            finite_retry_succeeded = new_batch.metadata.num_dead > 0
-            upper_none_reason_code = "finite_window_retry_widened"
+            attempted_finite_dead_above = int(jnp.sum(attempted_dead_logL >= attempted_upper))
+            attempted_finite_dead_min_logL = float(jnp.min(attempted_dead_logL))
+            attempted_finite_dead_max_logL = float(jnp.max(attempted_dead_logL))
+
+        finite_attempt_failed_above_upper = (
+            attempted_upper is not None
+            and new_batch.metadata.num_dead == 0
+            and new_batch.metadata.reached_loglikelihood_upper
+        )
+        if finite_attempt_failed_above_upper:
+            attempted_finite_dead_within = 0
+            attempted_finite_dead_above = max(attempted_finite_dead_above, 1)
+            retry_upper = None
+            if upper_idx < (num_dead - 1):
+                retry_upper_idx = min(num_dead - 1, upper_idx + max(1, finite_upper_idx_margin))
+                retry_upper = float(logL[retry_upper_idx])
+                upper_idx = retry_upper_idx
+            else:
+                if jnp.isfinite(attempted_finite_dead_max_logL):
+                    retry_upper = float(attempted_finite_dead_max_logL + 1e-6)
+                    upper_none_reason_code = "finite_window_retry_synthetic_upper"
+                else:
+                    no_wider_finite_upper_available = True
+                    upper_none_reason_code = "no_wider_finite_upper_available"
+            if retry_upper is not None and retry_upper > attempted_upper:
+                finite_retry_used = True
+                upper = retry_upper
+                state, new_batch = run_bounded_batch(
+                    rng_key=batch_key,
+                    state=state,
+                    step_fn=step_fn,
+                    num_steps=refinement_num_steps,
+                    loglikelihood_lower=lower,
+                    loglikelihood_upper=upper,
+                )
+                finite_retry_succeeded = new_batch.metadata.num_dead > 0
+                upper_none_reason_code = "finite_window_retry_widened"
 
         if new_batch.metadata.num_dead == 0:
             state, new_batch = run_bounded_batch(
@@ -285,7 +314,8 @@ def run_dynamic_posterior_scheduler(
                 loglikelihood_upper=None,
             )
             upper = None
-            upper_none_reason_code = "finite_window_empty_fallback"
+            if not no_wider_finite_upper_available:
+                upper_none_reason_code = "finite_window_empty_fallback"
             if new_batch.metadata.num_dead == 0:
                 break
 
@@ -311,6 +341,11 @@ def run_dynamic_posterior_scheduler(
                 widened_upper_threshold=float(jnp.inf if attempted_upper is None else attempted_upper),
                 finite_retry_used=finite_retry_used,
                 finite_retry_succeeded=finite_retry_succeeded,
+                no_wider_finite_upper_available=no_wider_finite_upper_available,
+                attempted_finite_dead_within=attempted_finite_dead_within,
+                attempted_finite_dead_above=attempted_finite_dead_above,
+                attempted_finite_dead_min_logL=attempted_finite_dead_min_logL,
+                attempted_finite_dead_max_logL=attempted_finite_dead_max_logL,
             )
         )
         batches.append(new_batch)
