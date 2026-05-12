@@ -152,7 +152,12 @@ def print_dynamic_summary(seed: int, result: utils.NSDynamicResult, dt: float):
                 f"orig_upper={diag.original_attempted_upper_threshold:.6f}, "
                 f"widened_upper={diag.widened_upper_threshold:.6f}, "
                 f"finite_retry_used={diag.finite_retry_used}, "
-                f"finite_retry_succeeded={diag.finite_retry_succeeded}"
+                f"finite_retry_succeeded={diag.finite_retry_succeeded}, "
+                f"no_wider_finite_upper_available={diag.no_wider_finite_upper_available}, "
+                f"attempted_finite_dead_within={diag.attempted_finite_dead_within}, "
+                f"attempted_finite_dead_above={diag.attempted_finite_dead_above}, "
+                f"attempted_finite_dead_min_logL={diag.attempted_finite_dead_min_logL:.6f}, "
+                f"attempted_finite_dead_max_logL={diag.attempted_finite_dead_max_logL:.6f}"
             )
     else:
         print("    none")
