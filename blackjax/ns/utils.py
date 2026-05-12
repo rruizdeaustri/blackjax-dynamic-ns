@@ -113,6 +113,10 @@ class NSRefinementIntervalDiagnostics(NamedTuple):
     posterior_weight_at_selected_dead_point: float
     selected_dead_point_index: int
     num_candidate_dead_points_considered: int
+    finite_interval_selected: bool
+    posterior_mass_in_interval: float
+    selected_lower_index: int
+    selected_upper_index: int
 
 
 class NSDynamicResult(NamedTuple):
@@ -163,19 +167,54 @@ def run_dynamic_posterior_scheduler(
     interval_diagnostics = []
     for _ in range(1, max_batches):
         posterior_weights = merged.posterior_weights
-        max_idx = int(jnp.argmax(posterior_weights))
         logL = merged.dead_point_loglikelihoods
-        lower = float(logL[max_idx])
+        num_dead = int(logL.shape[0])
+        if num_dead < 2:
+            break
+
+        max_idx = int(jnp.argmax(posterior_weights))
+        sorted_weight_idx = jnp.argsort(posterior_weights)[::-1]
+        target_mass = 0.80
+        selected_mask = jnp.zeros(num_dead, dtype=bool)
+        cumulative_mass = 0.0
+        for idx in sorted_weight_idx:
+            idx = int(idx)
+            selected_mask = selected_mask.at[idx].set(True)
+            cumulative_mass += float(posterior_weights[idx])
+            if cumulative_mass >= target_mass:
+                break
+
+        selected_idxs = jnp.where(selected_mask)[0]
+        lower_idx = int(jnp.min(selected_idxs))
+        upper_idx = int(jnp.max(selected_idxs))
+        if lower_idx >= num_dead - 1:
+            lower_idx = max(num_dead - 2, 0)
+        if upper_idx <= lower_idx:
+            upper_idx = min(lower_idx + 1, num_dead - 1)
+        if lower_idx == num_dead - 1:
+            lower_idx = max(num_dead - 2, 0)
+            upper_idx = num_dead - 1
+
+        lower = float(logL[lower_idx])
         upper = None
         upper_none_reason_code = "unknown"
-        if max_idx + 1 < logL.shape[0]:
-            candidate_upper = float(logL[max_idx + 1])
-            if (candidate_upper - lower) >= min_loglikelihood_interval_width:
-                upper = candidate_upper
-            else:
-                upper_none_reason_code = "next_gap_below_min_width"
+        finite_interval_selected = False
+        candidate_upper = float(logL[upper_idx])
+        if (candidate_upper - lower) >= min_loglikelihood_interval_width:
+            upper = candidate_upper
+            finite_interval_selected = True
+            upper_none_reason_code = "finite_mass_window"
         else:
-            upper_none_reason_code = "posterior_peak_at_last_dead_point"
+            for expanded_upper_idx in range(upper_idx + 1, num_dead):
+                candidate_upper = float(logL[expanded_upper_idx])
+                if (candidate_upper - lower) >= min_loglikelihood_interval_width:
+                    upper = candidate_upper
+                    upper_idx = expanded_upper_idx
+                    finite_interval_selected = True
+                    upper_none_reason_code = "finite_mass_window_expanded"
+                    break
+            if not finite_interval_selected:
+                upper_none_reason_code = "finite_window_below_min_width"
 
         # If we can already detect an invalid scheduling range, stop early.
         if not jnp.isfinite(lower):
@@ -207,10 +246,11 @@ def run_dynamic_posterior_scheduler(
             upper_none_reason_code = "finite_window_empty_fallback"
             if new_batch.metadata.num_dead == 0:
                 break
-        elif upper is None and upper_none_reason_code == "unknown":
-            upper_none_reason_code = "upper_tail_by_design"
 
         selected_upper_threshold = float(jnp.inf if upper is None else upper)
+        posterior_mass_in_interval = float(
+            jnp.sum(posterior_weights[lower_idx : upper_idx + 1])
+        )
         interval_diagnostics.append(
             NSRefinementIntervalDiagnostics(
                 selected_lower_threshold=float(lower),
@@ -221,6 +261,10 @@ def run_dynamic_posterior_scheduler(
                 posterior_weight_at_selected_dead_point=float(posterior_weights[max_idx]),
                 selected_dead_point_index=max_idx,
                 num_candidate_dead_points_considered=int(logL.shape[0]),
+                finite_interval_selected=finite_interval_selected,
+                posterior_mass_in_interval=posterior_mass_in_interval,
+                selected_lower_index=lower_idx,
+                selected_upper_index=upper_idx,
             )
         )
         batches.append(new_batch)

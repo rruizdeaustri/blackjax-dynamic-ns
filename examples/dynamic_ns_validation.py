@@ -144,7 +144,11 @@ def print_dynamic_summary(seed: int, result: utils.NSDynamicResult, dt: float):
                 f"upper_none_reason={diag.upper_none_reason_code}, "
                 f"posterior_weight={diag.posterior_weight_at_selected_dead_point:.8f}, "
                 f"dead_point_idx={diag.selected_dead_point_index}, "
-                f"candidate_dead_points={diag.num_candidate_dead_points_considered}"
+                f"candidate_dead_points={diag.num_candidate_dead_points_considered}, "
+                f"finite_interval_selected={diag.finite_interval_selected}, "
+                f"posterior_mass_in_interval={diag.posterior_mass_in_interval:.8f}, "
+                f"lower_idx={diag.selected_lower_index}, "
+                f"upper_idx={diag.selected_upper_index}"
             )
     else:
         print("    none")
