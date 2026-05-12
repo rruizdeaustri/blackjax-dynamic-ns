@@ -117,6 +117,10 @@ class NSRefinementIntervalDiagnostics(NamedTuple):
     posterior_mass_in_interval: float
     selected_lower_index: int
     selected_upper_index: int
+    original_attempted_upper_threshold: float
+    widened_upper_threshold: float
+    finite_retry_used: bool
+    finite_retry_succeeded: bool
 
 
 class NSDynamicResult(NamedTuple):
@@ -139,6 +143,7 @@ def run_dynamic_posterior_scheduler(
     max_batches: int,
     objective: str = "posterior",
     min_loglikelihood_interval_width: float = 1e-6,
+    finite_upper_idx_margin: int = 2,
 ) -> tuple[NSState, NSDynamicResult]:
     """Run a posterior-focused dynamic bounded nested-sampling schedule."""
     if objective != "posterior":
@@ -163,6 +168,8 @@ def run_dynamic_posterior_scheduler(
 
     if min_loglikelihood_interval_width < 0.0:
         raise ValueError("min_loglikelihood_interval_width must be non-negative")
+    if finite_upper_idx_margin < 0:
+        raise ValueError("finite_upper_idx_margin must be non-negative")
 
     interval_diagnostics = []
     for _ in range(1, max_batches):
@@ -196,9 +203,13 @@ def run_dynamic_posterior_scheduler(
             upper_idx = num_dead - 1
 
         lower = float(logL[lower_idx])
+        original_upper_idx = upper_idx
         upper = None
         upper_none_reason_code = "unknown"
         finite_interval_selected = False
+        finite_retry_used = False
+        finite_retry_succeeded = False
+        original_attempted_upper_threshold = float(logL[original_upper_idx])
         candidate_upper = float(logL[upper_idx])
         if (candidate_upper - lower) >= min_loglikelihood_interval_width:
             upper = candidate_upper
@@ -216,12 +227,21 @@ def run_dynamic_posterior_scheduler(
             if not finite_interval_selected:
                 upper_none_reason_code = "finite_window_below_min_width"
 
+        if finite_interval_selected and finite_upper_idx_margin > 0:
+            widened_upper_idx = min(upper_idx + finite_upper_idx_margin, num_dead - 1)
+            widened_upper = float(logL[widened_upper_idx])
+            if widened_upper > float(upper):
+                upper = widened_upper
+                upper_idx = widened_upper_idx
+                upper_none_reason_code = "finite_mass_window_margin_widened"
+
         # If we can already detect an invalid scheduling range, stop early.
         if not jnp.isfinite(lower):
             upper_none_reason_code = "no_valid_candidate_interval"
             break
 
         rng_key, batch_key = jax.random.split(rng_key)
+        attempted_upper = upper
         state, new_batch = run_bounded_batch(
             rng_key=batch_key,
             state=state,
@@ -233,6 +253,28 @@ def run_dynamic_posterior_scheduler(
 
         # Fallback to a broader lower-tail interval when a selected interval is
         # effectively empty in finite runs.
+        if (
+            new_batch.metadata.num_dead == 0
+            and attempted_upper is not None
+            and new_batch.metadata.reached_loglikelihood_upper
+            and upper_idx < (num_dead - 1)
+        ):
+            finite_retry_used = True
+            retry_upper_idx = min(num_dead - 1, upper_idx + max(1, finite_upper_idx_margin))
+            retry_upper = float(logL[retry_upper_idx])
+            upper_idx = retry_upper_idx
+            upper = retry_upper
+            state, new_batch = run_bounded_batch(
+                rng_key=batch_key,
+                state=state,
+                step_fn=step_fn,
+                num_steps=refinement_num_steps,
+                loglikelihood_lower=lower,
+                loglikelihood_upper=upper,
+            )
+            finite_retry_succeeded = new_batch.metadata.num_dead > 0
+            upper_none_reason_code = "finite_window_retry_widened"
+
         if new_batch.metadata.num_dead == 0:
             state, new_batch = run_bounded_batch(
                 rng_key=batch_key,
@@ -265,6 +307,10 @@ def run_dynamic_posterior_scheduler(
                 posterior_mass_in_interval=posterior_mass_in_interval,
                 selected_lower_index=lower_idx,
                 selected_upper_index=upper_idx,
+                original_attempted_upper_threshold=original_attempted_upper_threshold,
+                widened_upper_threshold=float(jnp.inf if attempted_upper is None else attempted_upper),
+                finite_retry_used=finite_retry_used,
+                finite_retry_succeeded=finite_retry_succeeded,
             )
         )
         batches.append(new_batch)

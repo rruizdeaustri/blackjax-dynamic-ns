@@ -148,7 +148,11 @@ def print_dynamic_summary(seed: int, result: utils.NSDynamicResult, dt: float):
                 f"finite_interval_selected={diag.finite_interval_selected}, "
                 f"posterior_mass_in_interval={diag.posterior_mass_in_interval:.8f}, "
                 f"lower_idx={diag.selected_lower_index}, "
-                f"upper_idx={diag.selected_upper_index}"
+                f"upper_idx={diag.selected_upper_index}, "
+                f"orig_upper={diag.original_attempted_upper_threshold:.6f}, "
+                f"widened_upper={diag.widened_upper_threshold:.6f}, "
+                f"finite_retry_used={diag.finite_retry_used}, "
+                f"finite_retry_succeeded={diag.finite_retry_succeeded}"
             )
     else:
         print("    none")
