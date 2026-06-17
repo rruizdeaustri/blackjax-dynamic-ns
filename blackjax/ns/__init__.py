@@ -29,13 +29,16 @@ Available modules:
 - `integrator`: Provides NSIntegrator for tracking evidence integration.
 - `utils`: Contains utility functions for processing and analyzing Nested
            Sampling results.
+- `diagnostics`: Optional non-invasive live-point diagnostics.
 - `from_mcmc`: Utilities to build Nested Sampling algorithms from MCMC kernels.
 
 """
-from . import adaptive, base, from_mcmc, ggns, integrator, nss, utils
+
+from . import adaptive, base, diagnostics, from_mcmc, ggns, integrator, nss, utils
 
 __all__ = [
     "base",
+    "diagnostics",
     "adaptive",
     "integrator",
     "nss",

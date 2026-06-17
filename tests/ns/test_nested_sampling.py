@@ -8,7 +8,7 @@ import jax.numpy as jnp
 import jax.scipy.stats as stats
 from absl.testing import absltest, parameterized
 
-from blackjax.ns import adaptive, base, ggns, nss, utils
+from blackjax.ns import adaptive, base, diagnostics, ggns, nss, utils
 
 
 def gaussian_logprior(x):
@@ -1121,6 +1121,73 @@ class NestedSamplingStatisticalTest(chex.TestCase):
             ess_value, n_dead, "ESS should not exceed number of samples"
         )
         self.assertFalse(jnp.isnan(ess_value), "ESS should not be NaN")
+
+
+class LivePointClusteringDiagnosticsTest(chex.TestCase):
+    def test_one_gaussian_like_cluster(self):
+        angles = jnp.linspace(0.0, 2.0 * jnp.pi, 24, endpoint=False)
+        positions = jnp.column_stack(
+            (0.05 * jnp.cos(angles), 0.05 * jnp.sin(angles))
+        )
+        loglikelihood = -jnp.sum(positions**2, axis=1)
+
+        result = diagnostics.diagnose_live_point_clusters(
+            positions,
+            loglikelihood,
+            radius=0.05,
+            include_covariance_condition=True,
+        )
+
+        self.assertEqual(result.num_clusters, 1)
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([24]))
+        chex.assert_trees_all_close(
+            result.loglikelihood_min[0], jnp.min(loglikelihood)
+        )
+        chex.assert_trees_all_close(
+            result.loglikelihood_mean[0], jnp.mean(loglikelihood)
+        )
+        chex.assert_trees_all_close(
+            result.loglikelihood_max[0], jnp.max(loglikelihood)
+        )
+        self.assertTrue(jnp.isfinite(result.covariance_condition_number[0]))
+
+    def test_two_separated_clusters(self):
+        left = jnp.array(
+            [[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]]
+        )
+        right = jnp.array(
+            [[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]]
+        )
+        positions = jnp.concatenate([left, right], axis=0)
+        loglikelihood = jnp.array([-4.0, -3.0, -2.0, -1.0, 1.0, 2.0, 3.0, 4.0])
+
+        result = diagnostics.diagnose_live_point_clusters(
+            positions, loglikelihood, radius=0.08
+        )
+
+        self.assertEqual(result.num_clusters, 2)
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([4, 4]))
+        chex.assert_trees_all_close(result.loglikelihood_min, jnp.array([-4.0, 1.0]))
+        chex.assert_trees_all_close(result.loglikelihood_mean, jnp.array([-2.5, 2.5]))
+        chex.assert_trees_all_close(result.loglikelihood_max, jnp.array([-1.0, 4.0]))
+
+    def test_narrow_separated_clusters_from_state(self):
+        left = jnp.array([[-1.0, 0.0], [-0.999, 0.0], [-1.0, 0.001]])
+        right = jnp.array([[1.0, 0.0], [1.001, 0.0], [1.0, -0.001]])
+        positions = jnp.concatenate([left, right], axis=0)
+        loglikelihood = -jnp.sum(positions**2, axis=1)
+        particles = base.StateWithLogLikelihood(
+            position=positions,
+            logdensity=jnp.zeros(6),
+            loglikelihood=loglikelihood,
+            loglikelihood_birth=jnp.full(6, -jnp.inf),
+        )
+        state = base.NSState(particles=particles)
+
+        result = diagnostics.diagnose_live_point_clusters(state, radius=0.002)
+
+        self.assertEqual(result.num_clusters, 2)
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([3, 3]))
 
 
 if __name__ == "__main__":
