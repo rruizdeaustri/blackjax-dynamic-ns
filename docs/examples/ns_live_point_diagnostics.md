@@ -69,3 +69,34 @@ cluster_id = 0
 centered = point - whitening.mean[cluster_id]
 whitened = whitening.whitening_matrix[cluster_id] @ centered
 ```
+
+## Toy validation: global versus cluster-local whitening
+
+`blackjax.ns.diagnostics.compare_global_and_cluster_whitening` is a small
+validation helper for labelled live-point clouds. It computes one global
+whitening transform from all live points, computes separate whitening transforms
+inside each cluster, and reports both sets of covariance condition numbers and
+per-cluster whitened covariance errors relative to the identity matrix.
+
+These toy diagnostics are useful for separated modes. A single global covariance
+contains both within-mode geometry and between-mode separation. For narrow or
+elongated clusters this can make the globally whitened covariance of each mode
+far from identity and can compress the distance between separated mode centres in
+whitened space. Cluster-local whitening instead measures each mode around its own
+mean, so it better reflects the local anisotropy that a future cluster-aware
+replacement proposal would need to navigate.
+
+The comparison helper is intentionally not wired into the sampler. It is a
+validation and documentation utility only: it does not change nested-sampling
+kernels, replacement sampling, evidence calculation, or sampler state.
+
+```python
+comparison = diagnostics.compare_global_and_cluster_whitening(
+    state,
+    summary.labels,
+)
+print(comparison.global_condition_number)
+print(comparison.cluster_condition_number)
+print(comparison.global_identity_error)
+print(comparison.local_identity_error)
+```

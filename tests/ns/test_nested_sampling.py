@@ -1281,6 +1281,91 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
         self.assertTrue(jnp.isfinite(result.condition_number[0]))
         self.assert_whitens_covariance(result, 0)
 
+    def test_whitening_comparison_unimodal_cloud_global_matches_local(self):
+        angles = jnp.linspace(0.0, 2.0 * jnp.pi, 32, endpoint=False)
+        positions = jnp.column_stack((jnp.cos(angles), jnp.sin(angles)))
+        labels = jnp.zeros(positions.shape[0], dtype=int)
+
+        result = diagnostics.compare_global_and_cluster_whitening(positions, labels)
+
+        self.assertEqual(result.cluster_local_whitening.cluster_labels.size, 1)
+        chex.assert_trees_all_close(
+            result.global_condition_number,
+            result.cluster_condition_number[0],
+            atol=1e-10,
+        )
+        chex.assert_trees_all_close(
+            result.global_identity_error,
+            result.local_identity_error,
+            atol=1e-10,
+        )
+        self.assertLess(result.local_identity_error[0], 1e-8)
+
+    def test_whitening_comparison_two_isotropic_clusters(self):
+        angles = jnp.linspace(0.0, 2.0 * jnp.pi, 24, endpoint=False)
+        offsets = 0.1 * jnp.column_stack((jnp.cos(angles), jnp.sin(angles)))
+        left = offsets + jnp.array([-3.0, 0.0])
+        right = offsets + jnp.array([3.0, 0.0])
+        positions = jnp.concatenate([left, right], axis=0)
+        labels = jnp.concatenate(
+            [jnp.zeros(left.shape[0], dtype=int), jnp.ones(right.shape[0], dtype=int)]
+        )
+
+        result = diagnostics.compare_global_and_cluster_whitening(positions, labels)
+
+        self.assertGreater(result.global_condition_number, 1e3)
+        self.assertTrue(jnp.all(result.cluster_condition_number < 2.0))
+        self.assertTrue(jnp.all(result.local_identity_error < 1e-8))
+        self.assertTrue(jnp.all(result.global_identity_error > 0.9))
+
+    def test_whitening_comparison_anisotropic_clusters_prefers_local(self):
+        t = jnp.linspace(-1.0, 1.0, 31)
+        width = 0.02 * jnp.where(jnp.arange(t.shape[0]) % 2 == 0, -1.0, 1.0)
+        left = jnp.column_stack((-4.0 + 0.08 * t + width, 1.2 * t))
+        right = jnp.column_stack((4.0 + 0.08 * t + width, -1.2 * t))
+        positions = jnp.concatenate([left, right], axis=0)
+        labels = jnp.concatenate(
+            [jnp.zeros(left.shape[0], dtype=int), jnp.ones(right.shape[0], dtype=int)]
+        )
+
+        result = diagnostics.compare_global_and_cluster_whitening(
+            positions,
+            labels,
+            absolute_jitter=1e-9,
+            relative_jitter=0.0,
+            minimum_eigenvalue=1e-8,
+        )
+
+        self.assertGreater(result.global_condition_number, 10.0)
+        self.assertTrue(jnp.all(result.cluster_condition_number > 1e3))
+        self.assertTrue(
+            jnp.all(result.local_identity_error < 0.05 * result.global_identity_error)
+        )
+        self.assertLess(result.global_whitened_cluster_mean_distance[0, 1], 2.1)
+
+    def test_whitening_comparison_narrow_separated_clusters(self):
+        t = jnp.linspace(-1.0, 1.0, 21)
+        width = 0.0005 * jnp.where(jnp.arange(t.shape[0]) % 2 == 0, -1.0, 1.0)
+        left = jnp.column_stack((-2.0 + 0.002 * t + width, 0.04 * t))
+        right = jnp.column_stack((2.0 + 0.002 * t + width, -0.04 * t))
+        positions = jnp.concatenate([left, right], axis=0)
+        labels = jnp.concatenate(
+            [jnp.zeros(left.shape[0], dtype=int), jnp.ones(right.shape[0], dtype=int)]
+        )
+
+        result = diagnostics.compare_global_and_cluster_whitening(
+            positions,
+            labels,
+            absolute_jitter=1e-12,
+            relative_jitter=0.0,
+            minimum_eigenvalue=1e-10,
+        )
+
+        self.assertGreater(result.global_condition_number, 1e3)
+        self.assertTrue(jnp.all(result.local_identity_error < 0.05))
+        self.assertTrue(jnp.all(result.global_identity_error > 0.9))
+        self.assertLess(result.global_whitened_cluster_mean_distance[0, 1], 2.1)
+
 
 if __name__ == "__main__":
     absltest.main()
