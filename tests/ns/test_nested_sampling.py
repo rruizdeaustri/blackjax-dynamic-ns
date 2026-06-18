@@ -1124,6 +1124,16 @@ class NestedSamplingStatisticalTest(chex.TestCase):
 
 
 class LivePointClusteringDiagnosticsTest(chex.TestCase):
+    def assert_whitens_covariance(self, whitening_result, cluster_id):
+        whitened_covariance = (
+            whitening_result.whitening_matrix[cluster_id]
+            @ whitening_result.regularized_covariance[cluster_id]
+            @ whitening_result.whitening_matrix[cluster_id].T
+        )
+        chex.assert_trees_all_close(
+            whitened_covariance, jnp.eye(whitened_covariance.shape[0]), atol=1e-8
+        )
+
     def test_one_gaussian_like_cluster(self):
         angles = jnp.linspace(0.0, 2.0 * jnp.pi, 24, endpoint=False)
         positions = jnp.column_stack(
@@ -1188,6 +1198,88 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
 
         self.assertEqual(result.num_clusters, 2)
         chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([3, 3]))
+
+    def test_whitening_one_well_conditioned_cluster(self):
+        positions = jnp.array(
+            [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
+        )
+        labels = jnp.zeros(4, dtype=int)
+
+        result = diagnostics.cluster_local_whitening_diagnostics(positions, labels)
+
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([4]))
+        chex.assert_trees_all_close(result.mean[0], jnp.array([0.0, 0.0]))
+        self.assertTrue(jnp.all(jnp.isfinite(result.condition_number)))
+        self.assert_whitens_covariance(result, 0)
+
+    def test_whitening_elongated_narrow_cluster(self):
+        x = jnp.linspace(-2.0, 2.0, 9)
+        positions = jnp.column_stack((x, 0.01 * x))
+        labels = jnp.zeros(positions.shape[0], dtype=int)
+
+        result = diagnostics.cluster_local_whitening_diagnostics(
+            positions,
+            labels,
+            absolute_jitter=1e-9,
+            relative_jitter=0.0,
+            minimum_eigenvalue=1e-8,
+        )
+
+        self.assertGreater(result.condition_number[0], 1e6)
+        self.assertTrue(jnp.all(result.eigenvalues[0] >= 1e-8))
+        self.assert_whitens_covariance(result, 0)
+
+    def test_whitening_two_clusters_with_different_covariance_scales(self):
+        small = jnp.array(
+            [[-1.0, 0.0], [-0.9, 0.0], [-1.0, 0.1], [-0.9, 0.1]]
+        )
+        large = jnp.array([[8.0, 0.0], [12.0, 0.0], [10.0, 2.0], [10.0, -2.0]])
+        positions = jnp.concatenate([small, large], axis=0)
+        labels = jnp.array([0, 0, 0, 0, 1, 1, 1, 1])
+
+        result = diagnostics.cluster_local_whitening_diagnostics(positions, labels)
+
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([4, 4]))
+        self.assertLess(
+            jnp.trace(result.covariance[0]), jnp.trace(result.covariance[1])
+        )
+        self.assert_whitens_covariance(result, 0)
+        self.assert_whitens_covariance(result, 1)
+
+    def test_whitening_one_point_cluster(self):
+        positions = jnp.array([[3.0, -2.0]])
+        labels = jnp.array([0])
+
+        result = diagnostics.cluster_local_whitening_diagnostics(
+            positions,
+            labels,
+            absolute_jitter=1e-6,
+            relative_jitter=0.0,
+            minimum_eigenvalue=1e-8,
+        )
+
+        chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([1]))
+        chex.assert_trees_all_close(result.mean[0], positions[0])
+        chex.assert_trees_all_close(result.covariance[0], jnp.zeros((2, 2)))
+        self.assertTrue(jnp.all(jnp.isfinite(result.whitening_matrix)))
+        self.assert_whitens_covariance(result, 0)
+
+    def test_whitening_nearly_singular_covariance(self):
+        x = jnp.linspace(-1.0, 1.0, 7)
+        positions = jnp.column_stack((x, x + 1e-9 * jnp.arange(7)))
+        labels = jnp.zeros(positions.shape[0], dtype=int)
+
+        result = diagnostics.cluster_local_whitening_diagnostics(
+            positions,
+            labels,
+            absolute_jitter=0.0,
+            relative_jitter=0.0,
+            minimum_eigenvalue=1e-7,
+        )
+
+        self.assertTrue(jnp.all(result.eigenvalues[0] >= 1e-7))
+        self.assertTrue(jnp.isfinite(result.condition_number[0]))
+        self.assert_whitens_covariance(result, 0)
 
 
 if __name__ == "__main__":
