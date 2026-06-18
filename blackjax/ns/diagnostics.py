@@ -63,6 +63,43 @@ class LivePointClusterDiagnostics(NamedTuple):
     radius: float
 
 
+class ClusterLocalWhiteningDiagnostics(NamedTuple):
+    """Per-cluster covariance and whitening diagnostics.
+
+    Attributes
+    ----------
+    cluster_labels
+        Cluster label values in the order used by all per-cluster arrays.
+    cluster_sizes
+        Number of live points in each cluster.
+    mean
+        Per-cluster mean vectors in flattened live-point coordinates.
+    covariance
+        Empirical per-cluster covariance matrices before regularization.
+    regularized_covariance
+        Covariance matrices after diagonal jitter and eigenvalue flooring.
+    eigenvalues
+        Eigenvalues of the regularized covariance matrices.
+    condition_number
+        Ratio of largest to smallest regularized covariance eigenvalue.
+    whitening_matrix
+        Matrices that map centered flattened coordinates to whitened
+        coordinates by ``whitening_matrix @ (x - mean)``.
+    unwhitening_matrix
+        Inverse maps for ``whitening_matrix``.
+    """
+
+    cluster_labels: np.ndarray
+    cluster_sizes: np.ndarray
+    mean: np.ndarray
+    covariance: np.ndarray
+    regularized_covariance: np.ndarray
+    eigenvalues: np.ndarray
+    condition_number: np.ndarray
+    whitening_matrix: np.ndarray
+    unwhitening_matrix: np.ndarray
+
+
 def _as_live_point_matrix(position) -> np.ndarray:
     """Flatten a live-point position PyTree into an ``(n_live, n_dim)`` array."""
     leaves = jax.tree.leaves(position)
@@ -115,6 +152,125 @@ def _connected_component_labels(points: np.ndarray, radius: float) -> np.ndarray
             stack.extend(neighbours.tolist())
         cluster_id += 1
     return labels
+
+
+def cluster_local_whitening_diagnostics(
+    live_points,
+    labels: np.ndarray,
+    *,
+    absolute_jitter: float = 1e-12,
+    relative_jitter: float = 1e-10,
+    minimum_eigenvalue: float = 1e-12,
+) -> ClusterLocalWhiteningDiagnostics:
+    """Compute covariance regularization and whitening summaries per cluster.
+
+    Parameters
+    ----------
+    live_points
+        Raw live-point position PyTree, or an object carrying ``.position`` or
+        ``.particles.position``. Position leaves are flattened and concatenated
+        in the same way as :func:`diagnose_live_point_clusters`.
+    labels
+        Integer cluster label for each live point, for example the ``labels``
+        returned by :func:`diagnose_live_point_clusters`.
+    absolute_jitter
+        Non-negative diagonal jitter added to every cluster covariance.
+    relative_jitter
+        Non-negative diagonal jitter multiplier. The added amount is
+        ``relative_jitter * covariance_scale``, where ``covariance_scale`` is
+        the mean covariance diagonal. Degenerate zero-scale clusters therefore
+        rely on ``absolute_jitter`` and ``minimum_eigenvalue``.
+    minimum_eigenvalue
+        Non-negative floor applied to eigenvalues after diagonal jitter.
+
+    Returns
+    -------
+    ClusterLocalWhiteningDiagnostics
+        Per-cluster means, empirical and regularized covariances, regularized
+        eigenvalues, condition numbers, and whitening/unwhitening matrices.
+
+    Notes
+    -----
+    This helper is diagnostics-only and is not called by nested-sampling
+    kernels. Clusters with fewer than two points use a zero empirical
+    covariance, then the requested jitter and eigenvalue floor produce a finite
+    positive-definite fallback covariance. Singular and nearly singular
+    covariances are handled the same way by flooring the jittered eigenvalues.
+    """
+    if absolute_jitter < 0.0:
+        raise ValueError("absolute_jitter must be non-negative")
+    if relative_jitter < 0.0:
+        raise ValueError("relative_jitter must be non-negative")
+    if minimum_eigenvalue < 0.0:
+        raise ValueError("minimum_eigenvalue must be non-negative")
+
+    particles = getattr(live_points, "particles", live_points)
+    position = getattr(particles, "position", particles)
+    points = _as_live_point_matrix(position)
+    labels_array = np.asarray(labels)
+    if labels_array.shape[0] != points.shape[0]:
+        raise ValueError("labels must have one value per live point")
+
+    cluster_labels = np.unique(labels_array)
+    cluster_labels = cluster_labels[cluster_labels >= 0]
+    num_clusters = int(cluster_labels.size)
+    num_dim = int(points.shape[1])
+
+    cluster_sizes = np.zeros(num_clusters, dtype=int)
+    means = np.zeros((num_clusters, num_dim), dtype=points.dtype)
+    covariances = np.zeros((num_clusters, num_dim, num_dim), dtype=float)
+    regularized_covariances = np.zeros_like(covariances)
+    eigenvalues = np.zeros((num_clusters, num_dim), dtype=float)
+    condition_numbers = np.full(num_clusters, np.inf, dtype=float)
+    whitening_matrices = np.zeros_like(covariances)
+    unwhitening_matrices = np.zeros_like(covariances)
+
+    identity = np.eye(num_dim)
+    for output_id, cluster_label in enumerate(cluster_labels):
+        cluster_points = points[labels_array == cluster_label]
+        cluster_sizes[output_id] = int(cluster_points.shape[0])
+        means[output_id] = np.mean(cluster_points, axis=0)
+
+        if cluster_points.shape[0] > 1:
+            covariance = np.atleast_2d(np.cov(cluster_points, rowvar=False))
+        else:
+            covariance = np.zeros((num_dim, num_dim), dtype=float)
+        covariance = np.asarray(covariance, dtype=float).reshape(num_dim, num_dim)
+        covariances[output_id] = covariance
+
+        covariance_scale = float(np.trace(covariance) / num_dim) if num_dim else 0.0
+        jitter = absolute_jitter + relative_jitter * max(covariance_scale, 0.0)
+        jittered_covariance = covariance + jitter * identity
+        raw_eigenvalues, eigenvectors = np.linalg.eigh(jittered_covariance)
+        clipped_eigenvalues = np.maximum(raw_eigenvalues, minimum_eigenvalue)
+        regularized_covariance = (
+            eigenvectors * clipped_eigenvalues
+        ) @ eigenvectors.T
+
+        regularized_covariances[output_id] = regularized_covariance
+        eigenvalues[output_id] = clipped_eigenvalues
+        if clipped_eigenvalues[0] > 0.0:
+            condition_numbers[output_id] = float(
+                clipped_eigenvalues[-1] / clipped_eigenvalues[0]
+            )
+        whitening_matrices[output_id] = (
+            np.diag(1.0 / np.sqrt(clipped_eigenvalues)) @ eigenvectors.T
+        )
+        unwhitening_matrices[output_id] = eigenvectors @ np.diag(
+            np.sqrt(clipped_eigenvalues)
+        )
+
+    return ClusterLocalWhiteningDiagnostics(
+        cluster_labels=cluster_labels,
+        cluster_sizes=cluster_sizes,
+        mean=means,
+        covariance=covariances,
+        regularized_covariance=regularized_covariances,
+        eigenvalues=eigenvalues,
+        condition_number=condition_numbers,
+        whitening_matrix=whitening_matrices,
+        unwhitening_matrix=unwhitening_matrices,
+    )
 
 
 def diagnose_live_point_clusters(
