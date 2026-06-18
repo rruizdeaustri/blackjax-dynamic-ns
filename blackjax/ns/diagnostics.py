@@ -100,6 +100,50 @@ class ClusterLocalWhiteningDiagnostics(NamedTuple):
     unwhitening_matrix: np.ndarray
 
 
+class WhiteningComparisonDiagnostics(NamedTuple):
+    """Compare global and cluster-local whitening on a live-point cloud.
+
+    Attributes
+    ----------
+    global_whitening
+        Whitening diagnostics computed after assigning all live points to one
+        cluster.
+    cluster_local_whitening
+        Whitening diagnostics computed with the supplied cluster labels.
+    global_condition_number
+        Condition number of the regularized covariance of all live points.
+    cluster_condition_number
+        Condition numbers of the regularized per-cluster covariances.
+    global_whitened_cluster_covariance
+        Empirical covariance of each labelled cluster after applying the single
+        global whitening transform.
+    local_whitened_cluster_covariance
+        Empirical covariance of each labelled cluster after applying its own
+        cluster-local whitening transform.
+    global_identity_error
+        Frobenius norm distance between each globally whitened cluster
+        covariance and the identity matrix.
+    local_identity_error
+        Frobenius norm distance between each locally whitened cluster
+        covariance and the identity matrix.
+    global_whitened_cluster_mean_distance
+        Pairwise distances between labelled cluster means after global
+        whitening. Small values for separated modes indicate that the global
+        transform has used between-cluster separation as a covariance direction,
+        compressing the gap between modes.
+    """
+
+    global_whitening: ClusterLocalWhiteningDiagnostics
+    cluster_local_whitening: ClusterLocalWhiteningDiagnostics
+    global_condition_number: float
+    cluster_condition_number: np.ndarray
+    global_whitened_cluster_covariance: np.ndarray
+    local_whitened_cluster_covariance: np.ndarray
+    global_identity_error: np.ndarray
+    local_identity_error: np.ndarray
+    global_whitened_cluster_mean_distance: np.ndarray
+
+
 def _as_live_point_matrix(position) -> np.ndarray:
     """Flatten a live-point position PyTree into an ``(n_live, n_dim)`` array."""
     leaves = jax.tree.leaves(position)
@@ -270,6 +314,105 @@ def cluster_local_whitening_diagnostics(
         condition_number=condition_numbers,
         whitening_matrix=whitening_matrices,
         unwhitening_matrix=unwhitening_matrices,
+    )
+
+
+def compare_global_and_cluster_whitening(
+    live_points,
+    labels: np.ndarray,
+    *,
+    absolute_jitter: float = 1e-12,
+    relative_jitter: float = 1e-10,
+    minimum_eigenvalue: float = 1e-12,
+) -> WhiteningComparisonDiagnostics:
+    """Compare global and cluster-local whitening for labelled live points.
+
+    This diagnostics-only helper is intended for toy validation and post-run
+    inspection. It computes one whitening transform using the covariance of all
+    live points and compares it with separate per-cluster whitening transforms.
+    The returned identity errors measure how close each cluster's whitened
+    empirical covariance is to the identity matrix under the two approaches.
+
+    The helper does not alter nested-sampling kernels, replacement sampling,
+    evidence calculations, or any sampler state.
+    """
+    particles = getattr(live_points, "particles", live_points)
+    position = getattr(particles, "position", particles)
+    points = _as_live_point_matrix(position)
+    labels_array = np.asarray(labels)
+    if labels_array.shape[0] != points.shape[0]:
+        raise ValueError("labels must have one value per live point")
+
+    kwargs = dict(
+        absolute_jitter=absolute_jitter,
+        relative_jitter=relative_jitter,
+        minimum_eigenvalue=minimum_eigenvalue,
+    )
+    global_labels = np.zeros(points.shape[0], dtype=int)
+    global_whitening = cluster_local_whitening_diagnostics(
+        points, global_labels, **kwargs
+    )
+    cluster_local_whitening = cluster_local_whitening_diagnostics(
+        points, labels_array, **kwargs
+    )
+
+    cluster_labels = cluster_local_whitening.cluster_labels
+    num_clusters = int(cluster_labels.size)
+    num_dim = int(points.shape[1])
+    identity = np.eye(num_dim)
+    global_cluster_covariances = np.zeros((num_clusters, num_dim, num_dim))
+    local_cluster_covariances = np.zeros((num_clusters, num_dim, num_dim))
+    global_identity_error = np.zeros(num_clusters)
+    local_identity_error = np.zeros(num_clusters)
+    global_cluster_means = np.zeros((num_clusters, num_dim))
+
+    global_mean = global_whitening.mean[0]
+    global_matrix = global_whitening.whitening_matrix[0]
+    for output_id, cluster_label in enumerate(cluster_labels):
+        cluster_points = points[labels_array == cluster_label]
+        global_whitened = (global_matrix @ (cluster_points - global_mean).T).T
+        local_whitened = (
+            cluster_local_whitening.whitening_matrix[output_id]
+            @ (cluster_points - cluster_local_whitening.mean[output_id]).T
+        ).T
+
+        if cluster_points.shape[0] > 1:
+            global_covariance = np.atleast_2d(np.cov(global_whitened, rowvar=False))
+            local_covariance = np.atleast_2d(np.cov(local_whitened, rowvar=False))
+        else:
+            global_covariance = np.zeros((num_dim, num_dim))
+            local_covariance = np.zeros((num_dim, num_dim))
+        global_covariance = np.asarray(global_covariance).reshape(num_dim, num_dim)
+        local_covariance = np.asarray(local_covariance).reshape(num_dim, num_dim)
+        global_cluster_covariances[output_id] = global_covariance
+        local_cluster_covariances[output_id] = local_covariance
+        global_identity_error[output_id] = float(
+            np.linalg.norm(global_covariance - identity, ord="fro")
+        )
+        local_identity_error[output_id] = float(
+            np.linalg.norm(local_covariance - identity, ord="fro")
+        )
+        global_cluster_means[output_id] = np.mean(global_whitened, axis=0)
+
+    mean_distances = np.zeros((num_clusters, num_clusters))
+    for row in range(num_clusters):
+        for col in range(row + 1, num_clusters):
+            distance = float(
+                np.linalg.norm(global_cluster_means[row] - global_cluster_means[col])
+            )
+            mean_distances[row, col] = distance
+            mean_distances[col, row] = distance
+
+    return WhiteningComparisonDiagnostics(
+        global_whitening=global_whitening,
+        cluster_local_whitening=cluster_local_whitening,
+        global_condition_number=float(global_whitening.condition_number[0]),
+        cluster_condition_number=cluster_local_whitening.condition_number,
+        global_whitened_cluster_covariance=global_cluster_covariances,
+        local_whitened_cluster_covariance=local_cluster_covariances,
+        global_identity_error=global_identity_error,
+        local_identity_error=local_identity_error,
+        global_whitened_cluster_mean_distance=mean_distances,
     )
 
 
