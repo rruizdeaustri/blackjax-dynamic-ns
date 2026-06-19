@@ -1,6 +1,7 @@
 """Test the Nested Sampling algorithms"""
 
 import functools
+from typing import NamedTuple
 
 import chex
 import jax
@@ -59,9 +60,90 @@ def gaussian_mixture_loglikelihood(x):
     return jnp.logaddexp(mixture1, mixture2)
 
 
+def narrow_gaussian_mixture_loglikelihood(x):
+    """Two narrow separated Gaussian modes for toy replacement validation."""
+    scale = 0.18
+    left = stats.norm.logpdf((x - jnp.array([-2.0, 0.0])) / scale).sum() - 2.0 * jnp.log(
+        scale
+    )
+    right = stats.norm.logpdf(
+        (x - jnp.array([2.0, 0.0])) / scale
+    ).sum() - 2.0 * jnp.log(scale)
+    return jnp.logaddexp(left, right)
+
+
 def rosenbrock_loglikelihood_2d(x):
     """Negative Rosenbrock energy as a curved 2D loglikelihood."""
     return -((1.0 - x[0]) ** 2 + 100.0 * (x[1] - x[0] ** 2) ** 2)
+
+
+class ToyReplacementBenchmarkResult(NamedTuple):
+    """Small multimodal NSS validation summary for replacement strategies."""
+
+    log_evidence: jnp.ndarray
+    cluster_counts: jnp.ndarray
+    retained_left_mode: bool
+    retained_right_mode: bool
+    num_steps: int
+
+
+def make_toy_multimodal_live_points():
+    """Deterministic live points with two narrow separated modes."""
+    offsets = jnp.array(
+        [
+            [-0.08, -0.03],
+            [-0.04, 0.06],
+            [0.00, -0.07],
+            [0.05, 0.04],
+            [0.09, 0.00],
+            [-0.02, 0.02],
+        ]
+    )
+    left = offsets + jnp.array([-2.0, 0.0])
+    right = offsets + jnp.array([2.0, 0.0])
+    return jnp.concatenate([left, right], axis=0)
+
+
+def run_toy_replacement_benchmark(update_strategy):
+    """Run a quick global-vs-cluster-aware NSS toy benchmark.
+
+    The helper is intentionally tiny so it can run in targeted tests. It records
+    the live-point cluster count after initialization and each replacement step,
+    the finite running evidence estimate, and whether both x-axis modes still
+    have live points at the end.
+    """
+    key = jax.random.key(9001)
+    positions = make_toy_multimodal_live_points()
+    algorithm = nss.as_top_level_api(
+        logprior_fn=uniform_logprior_2d,
+        loglikelihood_fn=narrow_gaussian_mixture_loglikelihood,
+        num_inner_steps=4,
+        num_delete=1,
+        update_strategy=update_strategy,
+        max_steps=8,
+        max_shrinkage=40,
+    )
+    state = algorithm.init(positions, rng_key=key)
+
+    cluster_counts = []
+    num_steps = 6
+    for step_id in range(num_steps + 1):
+        cluster_summary = diagnostics.diagnose_live_point_clusters(
+            state, radius=0.35, include_covariance_condition=True
+        )
+        cluster_counts.append(cluster_summary.num_clusters)
+        if step_id == num_steps:
+            break
+        state, _ = algorithm.step(jax.random.fold_in(key, step_id), state)
+
+    final_x = state.particles.position[:, 0]
+    return ToyReplacementBenchmarkResult(
+        log_evidence=state.integrator.logZ,
+        cluster_counts=jnp.asarray(cluster_counts),
+        retained_left_mode=bool(jnp.any(final_x < 0.0)),
+        retained_right_mode=bool(jnp.any(final_x > 0.0)),
+        num_steps=num_steps,
+    )
 
 
 class NestedSamplingTest(chex.TestCase):
@@ -1448,6 +1530,28 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
 
         self.assertEqual(summary.num_clusters, 2)
         chex.assert_trees_all_equal(summary.cluster_sizes, jnp.array([4, 4]))
+
+    def test_toy_replacement_benchmark_compares_global_and_cluster_aware(self):
+        global_result = run_toy_replacement_benchmark(nss.update_with_mcmc_take_last)
+        cluster_aware_result = run_toy_replacement_benchmark(
+            functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=0.35,
+                min_cluster_size=3,
+            )
+        )
+
+        for result in (global_result, cluster_aware_result):
+            self.assertTrue(jnp.isfinite(result.log_evidence))
+            self.assertEqual(result.cluster_counts.shape, (result.num_steps + 1,))
+            self.assertEqual(int(result.cluster_counts[0]), 2)
+            self.assertTrue(result.retained_left_mode)
+            self.assertTrue(result.retained_right_mode)
+
+        # The prototype currently exposes fallback only internally; this toy
+        # benchmark validates mode retention and finite evidence without making
+        # the cluster-aware path the default replacement strategy.
+        self.assertGreaterEqual(int(jnp.max(cluster_aware_result.cluster_counts)), 2)
 
 
 if __name__ == "__main__":
