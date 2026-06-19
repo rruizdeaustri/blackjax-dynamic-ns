@@ -1367,5 +1367,88 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
         self.assertLess(result.global_whitened_cluster_mean_distance[0, 1], 2.1)
 
 
+class ClusterAwareReplacementPrototypeTest(chex.TestCase):
+    def test_default_nss_update_strategy_is_global(self):
+        init_state_fn = make_init_state_fn(
+            uniform_logprior_2d, gaussian_mixture_loglikelihood
+        )
+        default_kernel = nss.build_kernel(init_state_fn, num_inner_steps=4)
+        explicit_global_kernel = nss.build_kernel(
+            init_state_fn,
+            num_inner_steps=4,
+            update_strategy=nss.update_with_mcmc_take_last,
+        )
+
+        self.assertTrue(callable(default_kernel))
+        self.assertTrue(callable(explicit_global_kernel))
+
+    def test_cluster_aware_nss_runs_and_returns_finite_evidence(self):
+        key = jax.random.key(2026)
+        left = jax.random.normal(key, (20, 2)) * 0.08 + jnp.array([-2.0, 0.0])
+        right = jax.random.normal(jax.random.key(2027), (20, 2)) * 0.08 + jnp.array(
+            [2.0, 0.0]
+        )
+        positions = jnp.concatenate([left, right], axis=0)
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_mixture_loglikelihood,
+            num_inner_steps=4,
+            num_delete=1,
+            update_strategy=functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=0.35,
+                min_cluster_size=3,
+            ),
+        )
+        state = algorithm.init(positions, rng_key=key)
+
+        state, batch = utils.run_bounded_batch(
+            rng_key=jax.random.key(1),
+            state=state,
+            step_fn=algorithm.step,
+            num_steps=5,
+            loglikelihood_lower=-20.0,
+        )
+
+        self.assertTrue(jnp.isfinite(state.integrator.logZ))
+        self.assertTrue(jnp.all(jnp.isfinite(batch.dead_point_loglikelihoods)))
+
+    def test_cluster_aware_falls_back_for_tiny_clusters(self):
+        key = jax.random.key(3030)
+        positions = jax.random.normal(key, (12, 2))
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=2,
+            update_strategy=functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=1e-6,
+                min_cluster_size=3,
+            ),
+        )
+        state = algorithm.init(positions, rng_key=key)
+        new_state, _ = algorithm.step(jax.random.key(4), state)
+
+        self.assertEqual(new_state.particles.position.shape, positions.shape)
+        self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
+
+    def test_toy_multimodal_diagnostics_show_separated_clusters(self):
+        left = jnp.array(
+            [[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]]
+        )
+        right = jnp.array(
+            [[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]]
+        )
+        positions = jnp.concatenate([left, right], axis=0)
+        loglikelihood = jax.vmap(gaussian_mixture_loglikelihood)(positions)
+
+        summary = diagnostics.diagnose_live_point_clusters(
+            positions, loglikelihood, radius=0.08, include_covariance_condition=True
+        )
+
+        self.assertEqual(summary.num_clusters, 2)
+        chex.assert_trees_all_equal(summary.cluster_sizes, jnp.array([4, 4]))
+
+
 if __name__ == "__main__":
     absltest.main()
