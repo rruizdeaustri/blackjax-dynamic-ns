@@ -139,3 +139,34 @@ This is a prototype intended for toy multimodal diagnostics and controlled
 experiments. It is deliberately conservative, non-default, and may be slower
 than the global path because the clustering helpers run outside JIT-critical
 sampler kernels.
+
+## Toy replacement benchmark
+
+The test suite includes a small controlled toy benchmark for validating the
+experimental cluster-aware replacement prototype before trying it on
+application-scale multimodal problems such as LISA Galactic-binary windows. The
+benchmark uses deterministic live points split between two narrow Gaussian modes
+inside a broad uniform prior and compares:
+
+- the default global `update_with_mcmc_take_last` replacement strategy;
+- the opt-in `cluster_aware_update_with_mcmc_take_last` strategy.
+
+For each strategy, the utility records a finite running log-evidence estimate,
+the number of detected live-point clusters after initialization and each short
+replacement step, and whether final live points still occupy both modes. It is
+kept intentionally small so it can run as a targeted local or CI validation
+rather than as a performance benchmark.
+
+The benchmark is validation-only. It does not change default nested-sampling
+behaviour, does not modify evidence integration, and does not make the
+cluster-aware replacement strategy the default. The current prototype falls back
+internally to the global replacement path when cluster selection or local
+covariance checks are unsafe; explicit fallback-rate counters are not yet part
+of the public diagnostic result, so fallback-rate reporting is deferred to a
+later diagnostics PR.
+
+Run the toy replacement validation with:
+
+```bash
+python -m pytest tests/ns/test_nested_sampling.py -k "ClusterAwareReplacementPrototypeTest" -q
+```
