@@ -100,3 +100,42 @@ print(comparison.cluster_condition_number)
 print(comparison.global_identity_error)
 print(comparison.local_identity_error)
 ```
+
+## Experimental cluster-aware replacement prototype
+
+Nested slice sampling also exposes an opt-in replacement strategy,
+`blackjax.ns.nss.cluster_aware_update_with_mcmc_take_last`, for early
+experiments with mode-aware constrained proposals. It is disabled by default:
+existing nested-sampling constructors continue to use the global replacement
+path unless this strategy is passed explicitly.
+
+The prototype clusters the current live points at each replacement attempt,
+selects a sufficiently populated and well-conditioned cluster proportional to
+cluster size, initializes replacement chains from live points in that cluster,
+and supplies the cluster-local covariance to compatible proposal geometry such
+as nested slice hit-and-run directions. If clustering fails, no usable cluster is
+found, the selected cluster is too small, or the covariance is not finite or is
+ill-conditioned, the strategy falls back to the existing global replacement
+behaviour. Evidence integration and the default replacement kernels are not
+modified.
+
+```python
+from functools import partial
+from blackjax.ns import nss
+
+algorithm = nss.as_top_level_api(
+    logprior_fn=logprior_fn,
+    loglikelihood_fn=loglikelihood_fn,
+    num_inner_steps=20,
+    update_strategy=partial(
+        nss.cluster_aware_update_with_mcmc_take_last,
+        radius=0.25,
+        min_cluster_size=5,
+    ),
+)
+```
+
+This is a prototype intended for toy multimodal diagnostics and controlled
+experiments. It is deliberately conservative, non-default, and may be slower
+than the global path because the clustering helpers run outside JIT-critical
+sampler kernels.

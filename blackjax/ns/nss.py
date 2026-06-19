@@ -25,6 +25,7 @@ import jax.numpy as jnp
 from blackjax import SamplingAlgorithm
 from blackjax.mcmc.ss import build_kernel as build_slice_kernel
 from blackjax.mcmc.ss import sample_direction_from_covariance
+from blackjax.ns import diagnostics
 from blackjax.ns.adaptive import build_kernel as build_adaptive_kernel
 from blackjax.ns.adaptive import init
 from blackjax.ns.base import NSInfo, NSState
@@ -39,6 +40,7 @@ __all__ = [
     "build_kernel",
     "init",
     "update_inner_kernel_params",
+    "cluster_aware_update_with_mcmc_take_last",
 ]
 
 
@@ -92,6 +94,108 @@ def update_inner_kernel_params(
     return {
         "cov": jnp.atleast_2d(particles_covariance_matrix(state.particles.position))
     }
+
+
+def _cluster_positions(position: ArrayTree, indices) -> ArrayTree:
+    """Select a cluster subset from every position PyTree leaf."""
+    return jax.tree.map(lambda leaf: leaf[jnp.asarray(indices)], position)
+
+
+def cluster_aware_update_with_mcmc_take_last(
+    constrained_mcmc_step_fn,
+    num_mcmc_steps,
+    num_delete,
+    *,
+    radius: Optional[float] = None,
+    min_cluster_size: int = 3,
+    max_condition_number: float = 1e12,
+):
+    """Experimental cluster-aware nested-sampling replacement strategy.
+
+    This opt-in prototype mirrors :func:`update_with_mcmc_take_last`, but first
+    clusters the current live points, samples one sufficiently populated cluster
+    proportional to its size, starts replacements from that cluster, and passes
+    the cluster-local covariance to compatible constrained kernels (for NSS this
+    controls hit-and-run directions). Any unsafe condition falls back to the
+    existing global replacement strategy. This function is intentionally not the
+    default and is not intended for JIT compilation.
+    """
+    fallback_update = update_with_mcmc_take_last(
+        constrained_mcmc_step_fn, num_mcmc_steps, num_delete
+    )
+
+    def update_function(rng_key, state, loglikelihood_0, **step_parameters):
+        try:
+            particles = state.particles
+            summary = diagnostics.diagnose_live_point_clusters(
+                particles,
+                radius=radius,
+                include_covariance_condition=True,
+            )
+            valid = (
+                (summary.num_clusters > 1)
+                & (summary.cluster_sizes >= min_cluster_size)
+                & (summary.covariance_condition_number < max_condition_number)
+                & jnp.isfinite(jnp.asarray(summary.covariance_condition_number))
+            )
+            valid = jnp.asarray(valid)
+            if not bool(jnp.any(valid)):
+                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+
+            choice_key, sample_key = jax.random.split(rng_key)
+            labels = jnp.asarray(summary.labels)
+            cluster_ids = jnp.arange(summary.num_clusters)
+            cluster_weights = jnp.where(valid, jnp.asarray(summary.cluster_sizes), 0)
+            cluster_id = jax.random.choice(
+                choice_key, cluster_ids, p=cluster_weights / cluster_weights.sum()
+            )
+            cluster_mask = labels == cluster_id
+            survivor_mask = particles.loglikelihood > loglikelihood_0
+            weights = (cluster_mask & survivor_mask).astype(jnp.float32)
+            if not bool(weights.sum() > 0.0):
+                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+
+            start_key, mcmc_key = jax.random.split(sample_key)
+            start_idx = jax.random.choice(
+                start_key,
+                len(weights),
+                shape=(num_delete,),
+                p=weights / weights.sum(),
+                replace=True,
+            )
+            start_state = jax.tree.map(lambda x: x[start_idx], particles)
+
+            cluster_indices = jnp.nonzero(cluster_mask, size=int(cluster_mask.shape[0]))[0][
+                : int(jnp.sum(cluster_mask))
+            ]
+            cluster_position = _cluster_positions(particles.position, cluster_indices)
+            cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
+            if not bool(jnp.all(jnp.isfinite(cluster_cov))):
+                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+
+            local_params = dict(step_parameters)
+            local_params["cov"] = cluster_cov
+            shared_mcmc_step_fn = partial(
+                constrained_mcmc_step_fn,
+                loglikelihood_0=loglikelihood_0,
+                **local_params,
+            )
+
+            def mcmc_kernel(rng_key, state):
+                keys = jax.random.split(rng_key, num_mcmc_steps)
+
+                def body_fn(state, rng_key):
+                    new_state, info = shared_mcmc_step_fn(rng_key, state)
+                    return new_state, info
+
+                return jax.lax.scan(body_fn, state, keys)
+
+            sample_keys = jax.random.split(mcmc_key, num_delete)
+            return jax.vmap(mcmc_kernel)(sample_keys, start_state)
+        except Exception:
+            return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+
+    return update_function
 
 
 def build_kernel(
