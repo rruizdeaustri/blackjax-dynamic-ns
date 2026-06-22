@@ -109,6 +109,7 @@ def cluster_aware_update_with_mcmc_take_last(
     radius: Optional[float] = None,
     min_cluster_size: int = 3,
     max_condition_number: float = 1e12,
+    print_diagnostics: bool = True,
 ):
     """Experimental cluster-aware nested-sampling replacement strategy.
 
@@ -118,13 +119,57 @@ def cluster_aware_update_with_mcmc_take_last(
     the cluster-local covariance to compatible constrained kernels (for NSS this
     controls hit-and-run directions). Any unsafe condition falls back to the
     existing global replacement strategy. This function is intentionally not the
-    default and is not intended for JIT compilation.
+    default and is not intended for JIT compilation. When
+    ``print_diagnostics`` is enabled, each attempted replacement emits a concise
+    ``[cluster-aware]`` line with cumulative attempt, success, and fallback
+    counters plus the fallback reason or selected cluster metadata.
     """
     fallback_update = update_with_mcmc_take_last(
         constrained_mcmc_step_fn, num_mcmc_steps, num_delete
     )
+    diagnostic_counts = {"attempts": 0, "successes": 0, "fallbacks": 0}
+
+    def emit_diagnostic(
+        *,
+        reason,
+        summary=None,
+        cluster_id=None,
+        cluster_size=None,
+        exception=None,
+    ):
+        if not print_diagnostics:
+            return
+        sizes = None
+        condition_numbers = None
+        num_clusters = None
+        if summary is not None:
+            num_clusters = summary.num_clusters
+            sizes = jnp.asarray(summary.cluster_sizes).tolist()
+            condition_numbers = jnp.asarray(
+                summary.covariance_condition_number
+            ).tolist()
+        fields = [
+            f"attempt={diagnostic_counts['attempts']}",
+            f"success={diagnostic_counts['successes']}",
+            f"fallback={diagnostic_counts['fallbacks']}",
+            f"reason={reason}",
+            f"num_clusters={num_clusters}",
+            f"sizes={sizes}",
+            f"cov_cond={condition_numbers}",
+            f"selected_cluster={cluster_id}",
+            f"selected_size={cluster_size}",
+        ]
+        if exception is not None:
+            fields.append(f"exception={type(exception).__name__}")
+        print("[cluster-aware] " + ", ".join(fields))
+
+    def fallback(reason, rng_key, state, loglikelihood_0, summary=None, **step_parameters):
+        diagnostic_counts["fallbacks"] += 1
+        emit_diagnostic(reason=reason, summary=summary)
+        return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
     def update_function(rng_key, state, loglikelihood_0, **step_parameters):
+        diagnostic_counts["attempts"] += 1
         try:
             particles = state.particles
             summary = diagnostics.diagnose_live_point_clusters(
@@ -140,7 +185,14 @@ def cluster_aware_update_with_mcmc_take_last(
             )
             valid = jnp.asarray(valid)
             if not bool(jnp.any(valid)):
-                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+                return fallback(
+                    "no_valid_clusters",
+                    rng_key,
+                    state,
+                    loglikelihood_0,
+                    summary=summary,
+                    **step_parameters,
+                )
 
             choice_key, sample_key = jax.random.split(rng_key)
             labels = jnp.asarray(summary.labels)
@@ -152,7 +204,15 @@ def cluster_aware_update_with_mcmc_take_last(
             cluster_mask = labels == cluster_id
             survivor_mask = particles.loglikelihood > loglikelihood_0
             weights = (cluster_mask & survivor_mask).astype(jnp.float32)
+            selected_cluster_size = int(jnp.sum(cluster_mask))
             if not bool(weights.sum() > 0.0):
+                diagnostic_counts["fallbacks"] += 1
+                emit_diagnostic(
+                    reason="no_surviving_points_in_selected_cluster",
+                    summary=summary,
+                    cluster_id=int(cluster_id),
+                    cluster_size=selected_cluster_size,
+                )
                 return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
             start_key, mcmc_key = jax.random.split(sample_key)
@@ -166,11 +226,18 @@ def cluster_aware_update_with_mcmc_take_last(
             start_state = jax.tree.map(lambda x: x[start_idx], particles)
 
             cluster_indices = jnp.nonzero(cluster_mask, size=int(cluster_mask.shape[0]))[0][
-                : int(jnp.sum(cluster_mask))
+                :selected_cluster_size
             ]
             cluster_position = _cluster_positions(particles.position, cluster_indices)
             cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
             if not bool(jnp.all(jnp.isfinite(cluster_cov))):
+                diagnostic_counts["fallbacks"] += 1
+                emit_diagnostic(
+                    reason="non_finite_cluster_covariance",
+                    summary=summary,
+                    cluster_id=int(cluster_id),
+                    cluster_size=selected_cluster_size,
+                )
                 return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
             local_params = dict(step_parameters)
@@ -191,8 +258,17 @@ def cluster_aware_update_with_mcmc_take_last(
                 return jax.lax.scan(body_fn, state, keys)
 
             sample_keys = jax.random.split(mcmc_key, num_delete)
+            diagnostic_counts["successes"] += 1
+            emit_diagnostic(
+                reason="cluster_aware",
+                summary=summary,
+                cluster_id=int(cluster_id),
+                cluster_size=selected_cluster_size,
+            )
             return jax.vmap(mcmc_kernel)(sample_keys, start_state)
-        except Exception:
+        except Exception as exc:
+            diagnostic_counts["fallbacks"] += 1
+            emit_diagnostic(reason="exception", exception=exc)
             return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
     return update_function
