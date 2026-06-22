@@ -63,9 +63,9 @@ def gaussian_mixture_loglikelihood(x):
 def narrow_gaussian_mixture_loglikelihood(x):
     """Two narrow separated Gaussian modes for toy replacement validation."""
     scale = 0.18
-    left = stats.norm.logpdf((x - jnp.array([-2.0, 0.0])) / scale).sum() - 2.0 * jnp.log(
-        scale
-    )
+    left = stats.norm.logpdf(
+        (x - jnp.array([-2.0, 0.0])) / scale
+    ).sum() - 2.0 * jnp.log(scale)
     right = stats.norm.logpdf(
         (x - jnp.array([2.0, 0.0])) / scale
     ).sum() - 2.0 * jnp.log(scale)
@@ -306,6 +306,7 @@ class NestedSamplingTest(chex.TestCase):
         # Check logX is decreasing
         self.assertTrue(jnp.all(logX_seq[1:] <= logX_seq[:-1]))
 
+
 class GradientGuidedNestedSamplingTest(chex.TestCase):
     def setUp(self):
         super().setUp()
@@ -350,9 +351,7 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
         updated_birth = new_state.particles.loglikelihood_birth[updated_mask]
         self.assertGreater(updated_birth.shape[0], 0)
         self.assertTrue(
-            jnp.all(
-                new_state.particles.loglikelihood[updated_mask] > dead_threshold
-            )
+            jnp.all(new_state.particles.loglikelihood[updated_mask] > dead_threshold)
         )
 
     @parameterized.parameters(
@@ -433,7 +432,12 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
 
         self.assertTrue(jnp.any(info.update_info.crossed_boundary))
         replaced = jnp.isfinite(new_state.particles.loglikelihood_birth)
-        self.assertTrue(jnp.all(new_state.particles.loglikelihood[replaced] > new_state.particles.loglikelihood_birth[replaced]))
+        self.assertTrue(
+            jnp.all(
+                new_state.particles.loglikelihood[replaced]
+                > new_state.particles.loglikelihood_birth[replaced]
+            )
+        )
         self.assertTrue(jnp.all(info.update_info.reflection_failures >= 0))
 
     def test_ggns_no_boundary_crossing_reports_zero_reflections(self):
@@ -443,7 +447,6 @@ class GradientGuidedNestedSamplingTest(chex.TestCase):
         _, info = algorithm.step(jax.random.key(18), state)
         no_cross = ~info.update_info.crossed_boundary
         self.assertTrue(jnp.all(info.update_info.num_reflections[no_cross] == 0))
-
 
 
 class AdaptiveNestedSamplingTest(chex.TestCase):
@@ -548,7 +551,9 @@ class NestedSamplingBatchTest(chex.TestCase):
         self.assertEqual(batch.loglikelihood_lower, -6.0)
         self.assertTrue(jnp.isinf(batch.loglikelihood_upper))
         self.assertEqual(batch.dead_points.shape[-1], 2)
-        self.assertEqual(batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0])
+        self.assertEqual(
+            batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0]
+        )
 
     def test_run_bounded_batch_upper_bound(self):
         num_live = 35
@@ -583,7 +588,9 @@ class NestedSamplingBatchTest(chex.TestCase):
         self.assertTrue(jnp.all(batch.dead_point_loglikelihoods >= logL_lower))
         self.assertTrue(jnp.all(batch.dead_point_loglikelihoods < logL_upper))
         self.assertGreaterEqual(batch.metadata.num_steps, 1)
-        self.assertEqual(batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0])
+        self.assertEqual(
+            batch.metadata.num_dead, batch.dead_point_loglikelihoods.shape[0]
+        )
         if batch.metadata.reached_loglikelihood_upper:
             self.assertEqual(batch.metadata.terminated_reason, 1)
             self.assertTrue(jnp.min(final_state.particles.loglikelihood) >= logL_upper)
@@ -764,7 +771,9 @@ class NestedSamplingBatchTest(chex.TestCase):
             step_size=0.05,
         )
 
-        static_nss, static_nss_batches = run_static(static_nss_algo, jax.random.key(501))
+        static_nss, static_nss_batches = run_static(
+            static_nss_algo, jax.random.key(501)
+        )
         static_ggns, static_ggns_batches = run_static(
             static_ggns_algo, jax.random.key(502)
         )
@@ -782,12 +791,16 @@ class NestedSamplingBatchTest(chex.TestCase):
             (dynamic_ggns, dynamic_ggns_batches),
         ):
             self.assertTrue(jnp.isfinite(merged.logZ))
-            self.assertAlmostEqual(float(jnp.sum(merged.posterior_weights)), 1.0, places=5)
+            self.assertAlmostEqual(
+                float(jnp.sum(merged.posterior_weights)), 1.0, places=5
+            )
             self.assertGreater(float(merged.ess), 0.0)
             self.assertGreaterEqual(merged.metadata.num_batches, 1)
             self.assertGreater(merged.metadata.num_dead, 0)
             for batch in batches:
-                self.assertLessEqual(batch.loglikelihood_lower, batch.loglikelihood_upper)
+                self.assertLessEqual(
+                    batch.loglikelihood_lower, batch.loglikelihood_upper
+                )
                 self.assertGreaterEqual(batch.metadata.num_steps, 1)
                 self.assertGreaterEqual(batch.metadata.num_dead, 0)
 
@@ -1218,9 +1231,7 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
 
     def test_one_gaussian_like_cluster(self):
         angles = jnp.linspace(0.0, 2.0 * jnp.pi, 24, endpoint=False)
-        positions = jnp.column_stack(
-            (0.05 * jnp.cos(angles), 0.05 * jnp.sin(angles))
-        )
+        positions = jnp.column_stack((0.05 * jnp.cos(angles), 0.05 * jnp.sin(angles)))
         loglikelihood = -jnp.sum(positions**2, axis=1)
 
         result = diagnostics.diagnose_live_point_clusters(
@@ -1232,24 +1243,16 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
 
         self.assertEqual(result.num_clusters, 1)
         chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([24]))
-        chex.assert_trees_all_close(
-            result.loglikelihood_min[0], jnp.min(loglikelihood)
-        )
+        chex.assert_trees_all_close(result.loglikelihood_min[0], jnp.min(loglikelihood))
         chex.assert_trees_all_close(
             result.loglikelihood_mean[0], jnp.mean(loglikelihood)
         )
-        chex.assert_trees_all_close(
-            result.loglikelihood_max[0], jnp.max(loglikelihood)
-        )
+        chex.assert_trees_all_close(result.loglikelihood_max[0], jnp.max(loglikelihood))
         self.assertTrue(jnp.isfinite(result.covariance_condition_number[0]))
 
     def test_two_separated_clusters(self):
-        left = jnp.array(
-            [[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]]
-        )
-        right = jnp.array(
-            [[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]]
-        )
+        left = jnp.array([[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]])
+        right = jnp.array([[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]])
         positions = jnp.concatenate([left, right], axis=0)
         loglikelihood = jnp.array([-4.0, -3.0, -2.0, -1.0, 1.0, 2.0, 3.0, 4.0])
 
@@ -1282,9 +1285,7 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
         chex.assert_trees_all_equal(result.cluster_sizes, jnp.array([3, 3]))
 
     def test_whitening_one_well_conditioned_cluster(self):
-        positions = jnp.array(
-            [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
-        )
+        positions = jnp.array([[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]])
         labels = jnp.zeros(4, dtype=int)
 
         result = diagnostics.cluster_local_whitening_diagnostics(positions, labels)
@@ -1312,9 +1313,7 @@ class LivePointClusteringDiagnosticsTest(chex.TestCase):
         self.assert_whitens_covariance(result, 0)
 
     def test_whitening_two_clusters_with_different_covariance_scales(self):
-        small = jnp.array(
-            [[-1.0, 0.0], [-0.9, 0.0], [-1.0, 0.1], [-0.9, 0.1]]
-        )
+        small = jnp.array([[-1.0, 0.0], [-0.9, 0.0], [-1.0, 0.1], [-0.9, 0.1]])
         large = jnp.array([[8.0, 0.0], [12.0, 0.0], [10.0, 2.0], [10.0, -2.0]])
         positions = jnp.concatenate([small, large], axis=0)
         labels = jnp.array([0, 0, 0, 0, 1, 1, 1, 1])
@@ -1495,6 +1494,26 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
         self.assertTrue(jnp.isfinite(state.integrator.logZ))
         self.assertTrue(jnp.all(jnp.isfinite(batch.dead_point_loglikelihoods)))
 
+    def test_cluster_aware_jitted_step_falls_back_without_tracer_conversion(self):
+        key = jax.random.key(4040)
+        positions = jax.random.normal(key, (12, 2))
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=2,
+            update_strategy=functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=0.5,
+                min_cluster_size=3,
+            ),
+        )
+        state = algorithm.init(positions, rng_key=key)
+
+        new_state, _ = jax.jit(algorithm.step)(jax.random.key(5), state)
+
+        self.assertEqual(new_state.particles.position.shape, positions.shape)
+        self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
+
     def test_cluster_aware_falls_back_for_tiny_clusters(self):
         key = jax.random.key(3030)
         positions = jax.random.normal(key, (12, 2))
@@ -1515,12 +1534,8 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
         self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
 
     def test_toy_multimodal_diagnostics_show_separated_clusters(self):
-        left = jnp.array(
-            [[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]]
-        )
-        right = jnp.array(
-            [[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]]
-        )
+        left = jnp.array([[-2.0, 0.0], [-2.05, 0.0], [-2.0, 0.05], [-1.95, 0.0]])
+        right = jnp.array([[2.0, 0.0], [2.05, 0.0], [2.0, -0.05], [1.95, 0.0]])
         positions = jnp.concatenate([left, right], axis=0)
         loglikelihood = jax.vmap(gaussian_mixture_loglikelihood)(positions)
 

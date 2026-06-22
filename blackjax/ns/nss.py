@@ -21,6 +21,7 @@ from typing import Callable, Dict, Optional
 
 import jax
 import jax.numpy as jnp
+import numpy as np
 
 from blackjax import SamplingAlgorithm
 from blackjax.mcmc.ss import build_kernel as build_slice_kernel
@@ -101,6 +102,18 @@ def _cluster_positions(position: ArrayTree, indices) -> ArrayTree:
     return jax.tree.map(lambda leaf: leaf[jnp.asarray(indices)], position)
 
 
+def _contains_jax_tracer(value) -> bool:
+    """Return True when ``value`` contains a JAX tracer leaf.
+
+    The experimental cluster-aware replacement uses NumPy clustering diagnostics,
+    so it must only inspect concrete live points. When callers wrap NSS steps in
+    ``jax.jit``/``lax.scan``, live particles are tracers at trace time; detecting
+    that up front lets us take the standard global replacement path without
+    triggering ``TracerArrayConversionError`` from NumPy/Python conversions.
+    """
+    return any(isinstance(leaf, jax.core.Tracer) for leaf in jax.tree.leaves(value))
+
+
 def cluster_aware_update_with_mcmc_take_last(
     constrained_mcmc_step_fn,
     num_mcmc_steps,
@@ -161,9 +174,12 @@ def cluster_aware_update_with_mcmc_take_last(
         ]
         if exception is not None:
             fields.append(f"exception={type(exception).__name__}")
+            fields.append(f"message={exception}")
         print("[cluster-aware] " + ", ".join(fields))
 
-    def fallback(reason, rng_key, state, loglikelihood_0, summary=None, **step_parameters):
+    def fallback(
+        reason, rng_key, state, loglikelihood_0, summary=None, **step_parameters
+    ):
         diagnostic_counts["fallbacks"] += 1
         emit_diagnostic(reason=reason, summary=summary)
         return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
@@ -172,6 +188,17 @@ def cluster_aware_update_with_mcmc_take_last(
         diagnostic_counts["attempts"] += 1
         try:
             particles = state.particles
+            if _contains_jax_tracer(
+                (rng_key, particles, loglikelihood_0, step_parameters)
+            ):
+                return fallback(
+                    "cluster_aware_requires_concrete_state",
+                    rng_key,
+                    state,
+                    loglikelihood_0,
+                    **step_parameters,
+                )
+
             summary = diagnostics.diagnose_live_point_clusters(
                 particles,
                 radius=radius,
@@ -181,10 +208,10 @@ def cluster_aware_update_with_mcmc_take_last(
                 (summary.num_clusters > 1)
                 & (summary.cluster_sizes >= min_cluster_size)
                 & (summary.covariance_condition_number < max_condition_number)
-                & jnp.isfinite(jnp.asarray(summary.covariance_condition_number))
+                & np.isfinite(summary.covariance_condition_number)
             )
-            valid = jnp.asarray(valid)
-            if not bool(jnp.any(valid)):
+            valid = np.asarray(valid, dtype=bool)
+            if not np.any(valid):
                 return fallback(
                     "no_valid_clusters",
                     rng_key,
@@ -201,19 +228,24 @@ def cluster_aware_update_with_mcmc_take_last(
             cluster_id = jax.random.choice(
                 choice_key, cluster_ids, p=cluster_weights / cluster_weights.sum()
             )
-            cluster_mask = labels == cluster_id
-            survivor_mask = particles.loglikelihood > loglikelihood_0
-            weights = (cluster_mask & survivor_mask).astype(jnp.float32)
-            selected_cluster_size = int(jnp.sum(cluster_mask))
-            if not bool(weights.sum() > 0.0):
+            cluster_id_int = int(np.asarray(jax.device_get(cluster_id)))
+            cluster_mask = labels == cluster_id_int
+            survivor_mask = np.asarray(
+                jax.device_get(particles.loglikelihood > loglikelihood_0), dtype=bool
+            )
+            weights = jnp.asarray(cluster_mask & survivor_mask, dtype=jnp.float32)
+            selected_cluster_size = int(np.sum(cluster_mask))
+            if float(np.asarray(jax.device_get(weights.sum()))) <= 0.0:
                 diagnostic_counts["fallbacks"] += 1
                 emit_diagnostic(
                     reason="no_surviving_points_in_selected_cluster",
                     summary=summary,
-                    cluster_id=int(cluster_id),
+                    cluster_id=cluster_id_int,
                     cluster_size=selected_cluster_size,
                 )
-                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+                return fallback_update(
+                    rng_key, state, loglikelihood_0, **step_parameters
+                )
 
             start_key, mcmc_key = jax.random.split(sample_key)
             start_idx = jax.random.choice(
@@ -225,20 +257,22 @@ def cluster_aware_update_with_mcmc_take_last(
             )
             start_state = jax.tree.map(lambda x: x[start_idx], particles)
 
-            cluster_indices = jnp.nonzero(cluster_mask, size=int(cluster_mask.shape[0]))[0][
-                :selected_cluster_size
-            ]
+            cluster_indices = jnp.nonzero(
+                cluster_mask, size=int(cluster_mask.shape[0])
+            )[0][:selected_cluster_size]
             cluster_position = _cluster_positions(particles.position, cluster_indices)
             cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
-            if not bool(jnp.all(jnp.isfinite(cluster_cov))):
+            if not np.all(np.asarray(jax.device_get(jnp.isfinite(cluster_cov)))):
                 diagnostic_counts["fallbacks"] += 1
                 emit_diagnostic(
                     reason="non_finite_cluster_covariance",
                     summary=summary,
-                    cluster_id=int(cluster_id),
+                    cluster_id=cluster_id_int,
                     cluster_size=selected_cluster_size,
                 )
-                return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
+                return fallback_update(
+                    rng_key, state, loglikelihood_0, **step_parameters
+                )
 
             local_params = dict(step_parameters)
             local_params["cov"] = cluster_cov
@@ -262,7 +296,7 @@ def cluster_aware_update_with_mcmc_take_last(
             emit_diagnostic(
                 reason="cluster_aware",
                 summary=summary,
-                cluster_id=int(cluster_id),
+                cluster_id=cluster_id_int,
                 cluster_size=selected_cluster_size,
             )
             return jax.vmap(mcmc_kernel)(sample_keys, start_state)
