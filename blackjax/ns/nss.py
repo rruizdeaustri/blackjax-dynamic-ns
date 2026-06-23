@@ -123,6 +123,7 @@ def cluster_aware_update_with_mcmc_take_last(
     min_cluster_size: int = 3,
     max_condition_number: float = 1e12,
     print_diagnostics: bool = True,
+    eager: bool = False,
 ):
     """Experimental cluster-aware nested-sampling replacement strategy.
 
@@ -132,7 +133,10 @@ def cluster_aware_update_with_mcmc_take_last(
     the cluster-local covariance to compatible constrained kernels (for NSS this
     controls hit-and-run directions). Any unsafe condition falls back to the
     existing global replacement strategy. This function is intentionally not the
-    default and is not intended for JIT compilation. When
+    default. By default it preserves the traced/JIT-compatible fallback behavior
+    used by the standard replacement path. Set ``eager=True`` for validation runs
+    that operate on concrete live points: the cluster selection and per-particle
+    MCMC loop are executed from Python instead of ``vmap``/``lax.scan``. When
     ``print_diagnostics`` is enabled, each attempted replacement emits a concise
     ``[cluster-aware]`` line with cumulative attempt, success, and fallback
     counters plus the fallback reason or selected cluster metadata.
@@ -289,7 +293,14 @@ def cluster_aware_update_with_mcmc_take_last(
                     new_state, info = shared_mcmc_step_fn(rng_key, state)
                     return new_state, info
 
-                return jax.lax.scan(body_fn, state, keys)
+                if not eager:
+                    return jax.lax.scan(body_fn, state, keys)
+
+                infos = []
+                for key in keys:
+                    state, info = body_fn(state, key)
+                    infos.append(info)
+                return state, jax.tree.map(lambda *xs: jnp.stack(xs), *infos)
 
             sample_keys = jax.random.split(mcmc_key, num_delete)
             diagnostic_counts["successes"] += 1
@@ -299,7 +310,18 @@ def cluster_aware_update_with_mcmc_take_last(
                 cluster_id=cluster_id_int,
                 cluster_size=selected_cluster_size,
             )
-            return jax.vmap(mcmc_kernel)(sample_keys, start_state)
+            if not eager:
+                return jax.vmap(mcmc_kernel)(sample_keys, start_state)
+
+            outputs = [
+                mcmc_kernel(key, jax.tree.map(lambda x, i=i: x[i], start_state))
+                for i, key in enumerate(sample_keys)
+            ]
+            final_states, infos = zip(*outputs)
+            return (
+                jax.tree.map(lambda *xs: jnp.stack(xs), *final_states),
+                jax.tree.map(lambda *xs: jnp.stack(xs), *infos),
+            )
         except Exception as exc:
             diagnostic_counts["fallbacks"] += 1
             emit_diagnostic(reason="exception", exception=exc)

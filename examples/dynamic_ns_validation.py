@@ -175,6 +175,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-batches", type=int, default=3)
     parser.add_argument("--ggns-step-size", type=float, default=0.05)
     parser.add_argument("--ggns-num-inner-steps", type=int, default=4)
+    parser.add_argument(
+        "--no-plot",
+        action="store_true",
+        help=(
+            "Compatibility flag for validation workflows that normally create a "
+            "final corner plot; this script does not plot, so the flag is accepted "
+            "and reported as disabled plotting."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -184,6 +193,8 @@ def main() -> None:
 
     print(f"JAX backend: {jax.default_backend()}")
     print(f"sampler: {args.sampler}")
+    if args.no_plot:
+        print("plotting: disabled (--no-plot)")
     print(
         "config: "
         f"num_live={args.num_live}, num_seeds={args.num_seeds}, "

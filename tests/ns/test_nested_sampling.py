@@ -1,6 +1,8 @@
 """Test the Nested Sampling algorithms"""
 
 import functools
+import io
+from contextlib import redirect_stdout
 from typing import NamedTuple
 
 import chex
@@ -1530,6 +1532,64 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
         state = algorithm.init(positions, rng_key=key)
         new_state, _ = algorithm.step(jax.random.key(4), state)
 
+        self.assertEqual(new_state.particles.position.shape, positions.shape)
+        self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
+
+    def test_cluster_aware_eager_diagnostics_use_cluster_reason(self):
+        key = jax.random.key(6060)
+        left = jax.random.normal(key, (20, 2)) * 0.08 + jnp.array([-2.0, 0.0])
+        right = jax.random.normal(jax.random.key(6061), (20, 2)) * 0.08 + jnp.array(
+            [2.0, 0.0]
+        )
+        positions = jnp.concatenate([left, right], axis=0)
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_mixture_loglikelihood,
+            num_inner_steps=2,
+            update_strategy=functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=0.35,
+                min_cluster_size=3,
+                eager=True,
+            ),
+        )
+        state = algorithm.init(positions, rng_key=key)
+
+        stdout = io.StringIO()
+        with redirect_stdout(stdout):
+            new_state, _ = algorithm.step(jax.random.key(6), state)
+
+        self.assertIn("reason=cluster_aware", stdout.getvalue())
+        self.assertNotIn(
+            "reason=cluster_aware_requires_concrete_state", stdout.getvalue()
+        )
+        self.assertEqual(new_state.particles.position.shape, positions.shape)
+        self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
+
+    def test_cluster_aware_eager_diagnostics_use_no_valid_clusters_reason(self):
+        key = jax.random.key(7070)
+        positions = jax.random.normal(key, (12, 2))
+        algorithm = nss.as_top_level_api(
+            logprior_fn=uniform_logprior_2d,
+            loglikelihood_fn=gaussian_loglikelihood_2d,
+            num_inner_steps=2,
+            update_strategy=functools.partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                radius=1e-6,
+                min_cluster_size=3,
+                eager=True,
+            ),
+        )
+        state = algorithm.init(positions, rng_key=key)
+
+        stdout = io.StringIO()
+        with redirect_stdout(stdout):
+            new_state, _ = algorithm.step(jax.random.key(7), state)
+
+        self.assertIn("reason=no_valid_clusters", stdout.getvalue())
+        self.assertNotIn(
+            "reason=cluster_aware_requires_concrete_state", stdout.getvalue()
+        )
         self.assertEqual(new_state.particles.position.shape, positions.shape)
         self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
 
