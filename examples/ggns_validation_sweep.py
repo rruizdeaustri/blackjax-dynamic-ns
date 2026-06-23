@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import argparse
 import time
+from contextlib import nullcontext
 from dataclasses import dataclass
+from functools import partial
 
 import jax
 import jax.numpy as jnp
@@ -67,16 +69,27 @@ def run_one(
     ggns_step_size: float,
     ggns_num_integration_steps: int | None,
     ggns_num_inner_steps: int,
+    replacement_strategy: str,
+    cluster_aware_eager: bool,
+    nss_eager: bool,
 ) -> RunMetrics:
     positions = make_positions(seed, num_live)
 
     if sampler_name == "nss":
-        algo = nss.as_top_level_api(
+        nss_kwargs = dict(
             logprior_fn=uniform_logprior_2d,
             loglikelihood_fn=gaussian_mixture_loglikelihood,
             num_inner_steps=4,
             num_delete=2,
         )
+        if replacement_strategy == "cluster_aware":
+            nss_kwargs["update_strategy"] = partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                eager=cluster_aware_eager,
+            )
+        elif replacement_strategy != "global":
+            raise ValueError(f"Unknown replacement strategy '{replacement_strategy}'")
+        algo = nss.as_top_level_api(**nss_kwargs)
     elif sampler_name == "ggns":
         ggns_kwargs = dict(
             logprior_fn=uniform_logprior_2d,
@@ -145,30 +158,36 @@ def run_one(
         return new_state, info
 
     t0 = time.perf_counter()
-    if mode == "dynamic":
-        _, result = utils.run_dynamic_posterior_scheduler(
-            rng_key=jax.random.key(seed + 20_000),
-            state=state,
-            step_fn=instrumented_step,
-            initial_num_steps=initial_num_steps,
-            refinement_num_steps=refinement_num_steps,
-            max_batches=max_batches,
-        )
-        merged = result.merged
-        total_steps = sum(batch.metadata.num_steps for batch in result.batches)
-    elif mode == "static":
-        _, batch = utils.run_bounded_batch(
-            rng_key=jax.random.key(seed + 20_000),
-            state=state,
-            step_fn=instrumented_step,
-            num_steps=static_num_steps,
-            loglikelihood_lower=-jnp.inf,
-            loglikelihood_upper=None,
-        )
-        merged = utils.merge_bounded_batches([batch])
-        total_steps = batch.metadata.num_steps
-    else:
-        raise ValueError(f"Unknown mode '{mode}'")
+    eager_context = (
+        jax.disable_jit()
+        if (sampler_name == "nss" and nss_eager)
+        else nullcontext()
+    )
+    with eager_context:
+        if mode == "dynamic":
+            _, result = utils.run_dynamic_posterior_scheduler(
+                rng_key=jax.random.key(seed + 20_000),
+                state=state,
+                step_fn=instrumented_step,
+                initial_num_steps=initial_num_steps,
+                refinement_num_steps=refinement_num_steps,
+                max_batches=max_batches,
+            )
+            merged = result.merged
+            total_steps = sum(batch.metadata.num_steps for batch in result.batches)
+        elif mode == "static":
+            _, batch = utils.run_bounded_batch(
+                rng_key=jax.random.key(seed + 20_000),
+                state=state,
+                step_fn=instrumented_step,
+                num_steps=static_num_steps,
+                loglikelihood_lower=-jnp.inf,
+                loglikelihood_upper=None,
+            )
+            merged = utils.merge_bounded_batches([batch])
+            total_steps = batch.metadata.num_steps
+        else:
+            raise ValueError(f"Unknown mode '{mode}'")
 
     jax.block_until_ready(merged.logZ)
     run_seconds = time.perf_counter() - t0
@@ -325,6 +344,24 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ggns-step-size", type=float, default=0.001)
     parser.add_argument("--ggns-num-integration-steps", type=int, default=None)
     parser.add_argument("--ggns-num-inner-steps", type=int, default=1)
+    parser.add_argument(
+        "--replacement-strategy",
+        choices=["global", "cluster_aware"],
+        default="global",
+        help="NSS replacement strategy. The default global path is unchanged.",
+    )
+    parser.add_argument(
+        "--cluster-aware-eager",
+        action="store_true",
+        help="Run cluster-aware replacement's Python validation path for concrete live points.",
+    )
+    parser.add_argument(
+        "--nss-eager",
+        "--disable-nss-jit",
+        dest="nss_eager",
+        action="store_true",
+        help="Disable JAX JIT while running NSS validation loops.",
+    )
     return parser.parse_args()
 
 
@@ -370,6 +407,9 @@ def main() -> None:
                         ggns_step_size=args.ggns_step_size,
                         ggns_num_integration_steps=args.ggns_num_integration_steps,
                         ggns_num_inner_steps=args.ggns_num_inner_steps,
+                        replacement_strategy=args.replacement_strategy,
+                        cluster_aware_eager=args.cluster_aware_eager,
+                        nss_eager=args.nss_eager,
                     )
                     results.append(metrics)
                     print(

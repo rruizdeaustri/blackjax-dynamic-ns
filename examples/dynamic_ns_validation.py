@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import time
+from contextlib import nullcontext
+from functools import partial
 from typing import Callable
 
 import jax
@@ -36,6 +38,13 @@ def build_algo(args: argparse.Namespace):
         num_delete=2,
     )
     if args.sampler == "nss":
+        if args.replacement_strategy == "cluster_aware":
+            common_kwargs["update_strategy"] = partial(
+                nss.cluster_aware_update_with_mcmc_take_last,
+                eager=args.cluster_aware_eager,
+            )
+        elif args.replacement_strategy != "global":
+            raise ValueError(f"Unknown replacement strategy: {args.replacement_strategy}")
         return nss.as_top_level_api(**common_kwargs)
     if args.sampler == "ggns":
         return ggns.as_top_level_api(step_size=args.ggns_step_size, **common_kwargs)
@@ -176,6 +185,24 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ggns-step-size", type=float, default=0.05)
     parser.add_argument("--ggns-num-inner-steps", type=int, default=4)
     parser.add_argument(
+        "--replacement-strategy",
+        choices=["global", "cluster_aware"],
+        default="global",
+        help="NSS replacement strategy. The default global path is unchanged.",
+    )
+    parser.add_argument(
+        "--cluster-aware-eager",
+        action="store_true",
+        help="Run cluster-aware replacement's Python validation path for concrete live points.",
+    )
+    parser.add_argument(
+        "--nss-eager",
+        "--disable-nss-jit",
+        dest="nss_eager",
+        action="store_true",
+        help="Disable JAX JIT while running NSS validation loops.",
+    )
+    parser.add_argument(
         "--no-plot",
         action="store_true",
         help=(
@@ -202,26 +229,32 @@ def main() -> None:
         f"refinement_steps={args.refinement_num_steps}, max_batches={args.max_batches}"
     )
 
-    for seed in range(args.num_seeds):
-        positions = init_positions(seed=seed, num_live=args.num_live)
-        static_merged, static_batch, static_dt = time_static_run(
-            seed=seed,
-            algo=algo,
-            positions=positions,
-            static_num_steps=args.static_num_steps,
-        )
-        print_static_summary(seed, static_merged, static_batch, static_dt)
+    eager_context = (
+        jax.disable_jit()
+        if (args.sampler == "nss" and args.nss_eager)
+        else nullcontext()
+    )
+    with eager_context:
+        for seed in range(args.num_seeds):
+            positions = init_positions(seed=seed, num_live=args.num_live)
+            static_merged, static_batch, static_dt = time_static_run(
+                seed=seed,
+                algo=algo,
+                positions=positions,
+                static_num_steps=args.static_num_steps,
+            )
+            print_static_summary(seed, static_merged, static_batch, static_dt)
 
-        dynamic_result, dynamic_dt = time_dynamic_run(
-            seed=seed,
-            algo=algo,
-            positions=positions,
-            initial_num_steps=args.initial_num_steps,
-            refinement_num_steps=args.refinement_num_steps,
-            max_batches=args.max_batches,
-            target=args.target,
-        )
-        print_dynamic_summary(seed, dynamic_result, dynamic_dt)
+            dynamic_result, dynamic_dt = time_dynamic_run(
+                seed=seed,
+                algo=algo,
+                positions=positions,
+                initial_num_steps=args.initial_num_steps,
+                refinement_num_steps=args.refinement_num_steps,
+                max_batches=args.max_batches,
+                target=args.target,
+            )
+            print_dynamic_summary(seed, dynamic_result, dynamic_dt)
 
 
 if __name__ == "__main__":
