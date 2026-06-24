@@ -17,11 +17,13 @@ Hit-and-Run Slice Sampling (HRSS) as the inner MCMC kernel.
 """
 
 from functools import partial
+from types import SimpleNamespace
 from typing import Callable, Dict, Optional
 
 import jax
 import jax.numpy as jnp
 import numpy as np
+from jax.flatten_util import ravel_pytree
 
 from blackjax import SamplingAlgorithm
 from blackjax.mcmc.ss import build_kernel as build_slice_kernel
@@ -102,6 +104,47 @@ def _cluster_positions(position: ArrayTree, indices) -> ArrayTree:
     return jax.tree.map(lambda leaf: leaf[jnp.asarray(indices)], position)
 
 
+def _standardize_positions(
+    position: ArrayTree, *, scale_floor: float
+) -> tuple[ArrayTree, jnp.ndarray, jnp.ndarray]:
+    """Robustly standardize batched positions without changing their PyTree shape.
+
+    The experimental cluster-aware path does NumPy clustering outside JIT.  It
+    should make scale-sensitive choices (Euclidean neighbourhoods and covariance
+    condition checks) in dimensionless coordinates while keeping the actual
+    replacement state in the caller's original parameterization.
+    """
+    if scale_floor <= 0.0:
+        raise ValueError("scale_floor must be positive")
+
+    rows = jax.vmap(lambda x: ravel_pytree(x)[0])(position)
+    _, unravel_fn = ravel_pytree(jax.tree.map(lambda leaf: leaf[0], position))
+    center = jnp.median(rows, axis=0)
+    absolute_deviation = jnp.abs(rows - center)
+    mad = 1.4826 * jnp.median(absolute_deviation, axis=0)
+    std = jnp.std(rows, axis=0)
+    scale_floor_array = jnp.asarray(scale_floor, dtype=rows.dtype)
+    scale = jnp.where(mad > scale_floor_array, mad, std)
+    scale = jnp.maximum(scale, scale_floor_array)
+    standardized_rows = (rows - center) / scale
+    return jax.vmap(unravel_fn)(standardized_rows), center, scale
+
+
+def _covariance_condition_numbers_for_labels(
+    position: ArrayTree, labels: np.ndarray, num_clusters: int
+) -> np.ndarray:
+    """Compute per-label covariance condition numbers in the original coordinates."""
+    rows = np.asarray(jax.device_get(jax.vmap(lambda x: ravel_pytree(x)[0])(position)))
+    condition_numbers = np.full(num_clusters, np.inf, dtype=float)
+    labels = np.asarray(labels)
+    for cluster_id in range(num_clusters):
+        cluster_rows = rows[labels == cluster_id]
+        if cluster_rows.shape[0] > 1:
+            covariance = np.atleast_2d(np.cov(cluster_rows, rowvar=False))
+            condition_numbers[cluster_id] = float(np.linalg.cond(covariance))
+    return condition_numbers
+
+
 def _contains_jax_tracer(value) -> bool:
     """Return True when ``value`` contains a JAX tracer leaf.
 
@@ -122,6 +165,8 @@ def cluster_aware_update_with_mcmc_take_last(
     radius: Optional[float] = None,
     min_cluster_size: int = 3,
     max_condition_number: float = 1e12,
+    standardize: bool = True,
+    scale_floor: float = 1e-12,
     print_diagnostics: bool = True,
     eager: bool = False,
 ):
@@ -139,7 +184,11 @@ def cluster_aware_update_with_mcmc_take_last(
     MCMC loop are executed from Python instead of ``vmap``/``lax.scan``. When
     ``print_diagnostics`` is enabled, each attempted replacement emits a concise
     ``[cluster-aware]`` line with cumulative attempt, success, and fallback
-    counters plus the fallback reason or selected cluster metadata.
+    counters plus the fallback reason or selected cluster metadata. When
+    ``standardize=True``, clustering, covariance condition diagnostics, and the
+    cluster-local proposal covariance are computed after robust median/MAD
+    standardization with ``scale_floor``; replacement states remain in the
+    original parameterization.
     """
     fallback_update = update_with_mcmc_take_last(
         constrained_mcmc_step_fn, num_mcmc_steps, num_delete
@@ -150,6 +199,9 @@ def cluster_aware_update_with_mcmc_take_last(
         *,
         reason,
         summary=None,
+        raw_condition_numbers=None,
+        standardized_condition_numbers=None,
+        standardization_applied=False,
         cluster_id=None,
         cluster_size=None,
         exception=None,
@@ -165,14 +217,23 @@ def cluster_aware_update_with_mcmc_take_last(
             condition_numbers = jnp.asarray(
                 summary.covariance_condition_number
             ).tolist()
+        if raw_condition_numbers is not None:
+            raw_condition_numbers = jnp.asarray(raw_condition_numbers).tolist()
+        if standardized_condition_numbers is not None:
+            standardized_condition_numbers = jnp.asarray(
+                standardized_condition_numbers
+            ).tolist()
         fields = [
             f"attempt={diagnostic_counts['attempts']}",
             f"success={diagnostic_counts['successes']}",
             f"fallback={diagnostic_counts['fallbacks']}",
             f"reason={reason}",
+            f"standardized={standardization_applied}",
             f"num_clusters={num_clusters}",
             f"sizes={sizes}",
             f"cov_cond={condition_numbers}",
+            f"cov_cond_raw={raw_condition_numbers}",
+            f"cov_cond_standardized={standardized_condition_numbers}",
             f"selected_cluster={cluster_id}",
             f"selected_size={cluster_size}",
         ]
@@ -182,10 +243,24 @@ def cluster_aware_update_with_mcmc_take_last(
         print("[cluster-aware] " + ", ".join(fields))
 
     def fallback(
-        reason, rng_key, state, loglikelihood_0, summary=None, **step_parameters
+        reason,
+        rng_key,
+        state,
+        loglikelihood_0,
+        summary=None,
+        raw_condition_numbers=None,
+        standardized_condition_numbers=None,
+        standardization_applied=False,
+        **step_parameters,
     ):
         diagnostic_counts["fallbacks"] += 1
-        emit_diagnostic(reason=reason, summary=summary)
+        emit_diagnostic(
+            reason=reason,
+            summary=summary,
+            raw_condition_numbers=raw_condition_numbers,
+            standardized_condition_numbers=standardized_condition_numbers,
+            standardization_applied=standardization_applied,
+        )
         return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
     def update_function(rng_key, state, loglikelihood_0, **step_parameters):
@@ -203,16 +278,30 @@ def cluster_aware_update_with_mcmc_take_last(
                     **step_parameters,
                 )
 
+            standardization_applied = bool(standardize)
+            standardized_position = particles.position
+            if standardization_applied:
+                standardized_position, _, _ = _standardize_positions(
+                    particles.position, scale_floor=scale_floor
+                )
+
+            standardized_particles = SimpleNamespace(
+                position=standardized_position, loglikelihood=particles.loglikelihood
+            )
             summary = diagnostics.diagnose_live_point_clusters(
-                particles,
+                standardized_particles,
                 radius=radius,
                 include_covariance_condition=True,
+            )
+            standardized_condition_numbers = summary.covariance_condition_number
+            raw_condition_numbers = _covariance_condition_numbers_for_labels(
+                particles.position, summary.labels, summary.num_clusters
             )
             valid = (
                 (summary.num_clusters > 1)
                 & (summary.cluster_sizes >= min_cluster_size)
-                & (summary.covariance_condition_number < max_condition_number)
-                & np.isfinite(summary.covariance_condition_number)
+                & (standardized_condition_numbers < max_condition_number)
+                & np.isfinite(standardized_condition_numbers)
             )
             valid = np.asarray(valid, dtype=bool)
             if not np.any(valid):
@@ -222,6 +311,9 @@ def cluster_aware_update_with_mcmc_take_last(
                     state,
                     loglikelihood_0,
                     summary=summary,
+                    raw_condition_numbers=raw_condition_numbers,
+                    standardized_condition_numbers=standardized_condition_numbers,
+                    standardization_applied=standardization_applied,
                     **step_parameters,
                 )
 
@@ -244,6 +336,9 @@ def cluster_aware_update_with_mcmc_take_last(
                 emit_diagnostic(
                     reason="no_surviving_points_in_selected_cluster",
                     summary=summary,
+                    raw_condition_numbers=raw_condition_numbers,
+                    standardized_condition_numbers=standardized_condition_numbers,
+                    standardization_applied=standardization_applied,
                     cluster_id=cluster_id_int,
                     cluster_size=selected_cluster_size,
                 )
@@ -264,13 +359,18 @@ def cluster_aware_update_with_mcmc_take_last(
             cluster_indices = jnp.nonzero(
                 cluster_mask, size=int(cluster_mask.shape[0])
             )[0][:selected_cluster_size]
-            cluster_position = _cluster_positions(particles.position, cluster_indices)
+            cluster_position = _cluster_positions(
+                standardized_position, cluster_indices
+            )
             cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
             if not np.all(np.asarray(jax.device_get(jnp.isfinite(cluster_cov)))):
                 diagnostic_counts["fallbacks"] += 1
                 emit_diagnostic(
                     reason="non_finite_cluster_covariance",
                     summary=summary,
+                    raw_condition_numbers=raw_condition_numbers,
+                    standardized_condition_numbers=standardized_condition_numbers,
+                    standardization_applied=standardization_applied,
                     cluster_id=cluster_id_int,
                     cluster_size=selected_cluster_size,
                 )
@@ -307,6 +407,9 @@ def cluster_aware_update_with_mcmc_take_last(
             emit_diagnostic(
                 reason="cluster_aware",
                 summary=summary,
+                raw_condition_numbers=raw_condition_numbers,
+                standardized_condition_numbers=standardized_condition_numbers,
+                standardization_applied=standardization_applied,
                 cluster_id=cluster_id_int,
                 cluster_size=selected_cluster_size,
             )
