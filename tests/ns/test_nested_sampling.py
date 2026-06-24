@@ -1560,11 +1560,39 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
             new_state, _ = algorithm.step(jax.random.key(6), state)
 
         self.assertIn("reason=cluster_aware", stdout.getvalue())
+        self.assertIn("standardized=True", stdout.getvalue())
+        self.assertIn("cov_cond_raw=", stdout.getvalue())
+        self.assertIn("cov_cond_standardized=", stdout.getvalue())
         self.assertNotIn(
             "reason=cluster_aware_requires_concrete_state", stdout.getvalue()
         )
         self.assertEqual(new_state.particles.position.shape, positions.shape)
         self.assertTrue(jnp.all(jnp.isfinite(new_state.particles.loglikelihood)))
+
+    def test_cluster_aware_standardization_reduces_condition_diagnostics(self):
+        left = jnp.array(
+            [
+                [-1.0e9, -2.0],
+                [-1.0e9 + 1.0e6, -1.0],
+                [-1.0e9 - 1.0e6, 0.0],
+                [-1.0e9 + 2.0e6, 1.0],
+                [-1.0e9 - 2.0e6, 2.0],
+            ]
+        )
+        right = left.at[:, 0].add(2.0e9)
+        positions = jnp.concatenate([left, right], axis=0)
+        labels = jnp.repeat(jnp.arange(2), 5)
+
+        standardized, _, _ = nss._standardize_positions(positions, scale_floor=1e-12)
+        raw_condition = nss._covariance_condition_numbers_for_labels(
+            positions, labels, 2
+        )
+        standardized_condition = nss._covariance_condition_numbers_for_labels(
+            standardized, labels, 2
+        )
+
+        self.assertTrue(jnp.all(raw_condition > standardized_condition))
+        self.assertTrue(jnp.all(jnp.isfinite(standardized_condition)))
 
     def test_cluster_aware_eager_diagnostics_use_no_valid_clusters_reason(self):
         key = jax.random.key(7070)
@@ -1587,6 +1615,9 @@ class ClusterAwareReplacementPrototypeTest(chex.TestCase):
             new_state, _ = algorithm.step(jax.random.key(7), state)
 
         self.assertIn("reason=no_valid_clusters", stdout.getvalue())
+        self.assertIn("standardized=True", stdout.getvalue())
+        self.assertIn("cov_cond_raw=", stdout.getvalue())
+        self.assertIn("cov_cond_standardized=", stdout.getvalue())
         self.assertNotIn(
             "reason=cluster_aware_requires_concrete_state", stdout.getvalue()
         )
