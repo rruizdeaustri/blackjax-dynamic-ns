@@ -42,9 +42,17 @@ def build_algo(args: argparse.Namespace):
             common_kwargs["update_strategy"] = partial(
                 nss.cluster_aware_update_with_mcmc_take_last,
                 eager=args.cluster_aware_eager,
+                standardize=args.cluster_aware_standardize,
+                scale_floor=args.cluster_aware_scale_floor,
+                radius=args.cluster_aware_radius,
+                min_cluster_size=args.cluster_aware_min_cluster_size,
+                max_condition_number=args.cluster_aware_max_condition_number,
+                covariance_regularization=args.cluster_aware_covariance_regularization,
             )
         elif args.replacement_strategy != "global":
-            raise ValueError(f"Unknown replacement strategy: {args.replacement_strategy}")
+            raise ValueError(
+                f"Unknown replacement strategy: {args.replacement_strategy}"
+            )
         return nss.as_top_level_api(**common_kwargs)
     if args.sampler == "ggns":
         return ggns.as_top_level_api(step_size=args.ggns_step_size, **common_kwargs)
@@ -194,6 +202,20 @@ def parse_args() -> argparse.Namespace:
         "--cluster-aware-eager",
         action="store_true",
         help="Run cluster-aware replacement's Python validation path for concrete live points.",
+    )
+    parser.add_argument(
+        "--cluster-aware-standardize",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+    )
+    parser.add_argument("--cluster-aware-scale-floor", type=float, default=1e-12)
+    parser.add_argument("--cluster-aware-radius", type=float, default=None)
+    parser.add_argument("--cluster-aware-min-cluster-size", type=int, default=3)
+    parser.add_argument(
+        "--cluster-aware-max-condition-number", type=float, default=1e12
+    )
+    parser.add_argument(
+        "--cluster-aware-covariance-regularization", type=float, default=1e-6
     )
     parser.add_argument(
         "--nss-eager",

@@ -169,6 +169,7 @@ def cluster_aware_update_with_mcmc_take_last(
     scale_floor: float = 1e-12,
     print_diagnostics: bool = True,
     eager: bool = False,
+    covariance_regularization: float = 1e-6,
 ):
     """Experimental cluster-aware nested-sampling replacement strategy.
 
@@ -188,7 +189,10 @@ def cluster_aware_update_with_mcmc_take_last(
     ``standardize=True``, clustering, covariance condition diagnostics, and the
     cluster-local proposal covariance are computed after robust median/MAD
     standardization with ``scale_floor``; replacement states remain in the
-    original parameterization.
+    original parameterization. By default (``eager=False``), cluster selection,
+    validity checks, and covariance construction are JAX-native and compatible
+    with ``jax.jit``/``lax.scan``. Set ``eager=True`` to retain the original
+    Python/NumPy diagnostics path.
     """
     fallback_update = update_with_mcmc_take_last(
         constrained_mcmc_step_fn, num_mcmc_steps, num_delete
@@ -263,7 +267,144 @@ def cluster_aware_update_with_mcmc_take_last(
         )
         return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
+    def _regularized_weighted_covariance(rows, weights):
+        weights = weights.astype(rows.dtype)
+        total = jnp.maximum(jnp.sum(weights), jnp.asarray(1.0, dtype=rows.dtype))
+        normalized = weights / total
+        mean = jnp.sum(rows * normalized[:, None], axis=0)
+        centered = rows - mean
+        covariance = (centered * normalized[:, None]).T @ centered
+        dimension = rows.shape[-1]
+        diag = jnp.diag(covariance)
+        diag_floor = jnp.maximum(
+            jnp.mean(diag), jnp.asarray(scale_floor, dtype=rows.dtype)
+        )
+        regularization = jnp.asarray(covariance_regularization, dtype=rows.dtype)
+        covariance = covariance + regularization * diag_floor * jnp.eye(
+            dimension, dtype=rows.dtype
+        )
+        covariance = jnp.where(
+            jnp.all(jnp.isfinite(covariance)),
+            covariance,
+            diag_floor * jnp.eye(dimension, dtype=rows.dtype),
+        )
+        return covariance
+
+    def _condition_number(covariance):
+        eigenvalues = jnp.linalg.eigvalsh(covariance)
+        max_eigenvalue = jnp.max(eigenvalues)
+        min_eigenvalue = jnp.maximum(
+            jnp.min(eigenvalues), jnp.asarray(scale_floor, dtype=eigenvalues.dtype)
+        )
+        return max_eigenvalue / min_eigenvalue
+
+    def _jax_cluster_update(rng_key, state, loglikelihood_0, **step_parameters):
+        choice_key, start_key, sample_key = jax.random.split(rng_key, 3)
+        particles = state.particles
+        rows = jax.vmap(lambda x: ravel_pytree(x)[0])(particles.position)
+        if standardize:
+            center = jnp.median(rows, axis=0)
+            absolute_deviation = jnp.abs(rows - center)
+            mad = 1.4826 * jnp.median(absolute_deviation, axis=0)
+            std = jnp.std(rows, axis=0)
+            floor = jnp.asarray(scale_floor, dtype=rows.dtype)
+            scale = jnp.maximum(jnp.where(mad > floor, mad, std), floor)
+            cluster_rows = (rows - center) / scale
+        else:
+            cluster_rows = rows
+
+        distances = jnp.linalg.norm(
+            cluster_rows[:, None, :] - cluster_rows[None, :, :], axis=-1
+        )
+        if radius is None:
+            positive_distances = jnp.where(
+                distances > 0, distances, jnp.asarray(jnp.inf, dtype=distances.dtype)
+            )
+            radius_value = jnp.median(jnp.min(positive_distances, axis=1)) * 2.0
+            radius_value = jnp.maximum(
+                radius_value, jnp.asarray(scale_floor, dtype=rows.dtype)
+            )
+        else:
+            radius_value = jnp.asarray(radius, dtype=rows.dtype)
+
+        neighbor_mask = distances <= radius_value
+        cluster_sizes = jnp.sum(neighbor_mask, axis=1)
+        survivor_mask = particles.loglikelihood > loglikelihood_0
+
+        def candidate_cov(mask):
+            return _regularized_weighted_covariance(
+                cluster_rows, mask.astype(rows.dtype)
+            )
+
+        covariances = jax.vmap(candidate_cov)(neighbor_mask)
+        condition_numbers = jax.vmap(_condition_number)(covariances)
+        valid = (
+            (cluster_sizes >= min_cluster_size)
+            & jnp.isfinite(condition_numbers)
+            & (condition_numbers < max_condition_number)
+            & (jnp.sum(neighbor_mask & survivor_mask[None, :], axis=1) > 0)
+        )
+        weights = jnp.where(valid, cluster_sizes.astype(jnp.float32), 0.0)
+        has_valid_cluster = jnp.sum(weights) > 0.0
+
+        def cluster_branch(_):
+            seed_idx = jax.random.choice(
+                choice_key,
+                rows.shape[0],
+                p=weights / jnp.sum(weights),
+            )
+            selected_mask = neighbor_mask[seed_idx]
+            start_weights = jnp.where(selected_mask & survivor_mask, 1.0, 0.0)
+            start_idx = jax.random.choice(
+                start_key,
+                rows.shape[0],
+                shape=(num_delete,),
+                p=start_weights / jnp.sum(start_weights),
+                replace=True,
+            )
+            start_state = jax.tree.map(lambda x: x[start_idx], particles)
+            cluster_cov = covariances[seed_idx]
+            diagonal_cov = jnp.diag(jnp.maximum(jnp.diag(cluster_cov), scale_floor))
+            cluster_cov = jnp.where(
+                (_condition_number(cluster_cov) < max_condition_number)
+                & jnp.all(jnp.isfinite(cluster_cov)),
+                cluster_cov,
+                diagonal_cov,
+            )
+            local_params = dict(step_parameters)
+            local_params["cov"] = cluster_cov
+            shared_mcmc_step_fn = partial(
+                constrained_mcmc_step_fn,
+                loglikelihood_0=loglikelihood_0,
+                **local_params,
+            )
+
+            def mcmc_kernel(rng_key, state):
+                keys = jax.random.split(rng_key, num_mcmc_steps)
+
+                def body_fn(state, rng_key):
+                    new_state, info = shared_mcmc_step_fn(rng_key, state)
+                    return new_state, info
+
+                return jax.lax.scan(body_fn, state, keys)
+
+            sample_keys = jax.random.split(sample_key, num_delete)
+            return jax.vmap(mcmc_kernel)(sample_keys, start_state)
+
+        return jax.lax.cond(
+            has_valid_cluster,
+            cluster_branch,
+            lambda _: fallback_update(
+                rng_key, state, loglikelihood_0, **step_parameters
+            ),
+            operand=None,
+        )
+
     def update_function(rng_key, state, loglikelihood_0, **step_parameters):
+        if not eager:
+            return _jax_cluster_update(
+                rng_key, state, loglikelihood_0, **step_parameters
+            )
         diagnostic_counts["attempts"] += 1
         try:
             particles = state.particles
