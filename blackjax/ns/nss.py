@@ -18,11 +18,12 @@ Hit-and-Run Slice Sampling (HRSS) as the inner MCMC kernel.
 
 from functools import partial
 from types import SimpleNamespace
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, NamedTuple
 
 import jax
 import jax.numpy as jnp
 import numpy as np
+import time
 from jax.flatten_util import ravel_pytree
 
 from blackjax import SamplingAlgorithm
@@ -38,12 +39,112 @@ from blackjax.ns.from_mcmc import update_with_mcmc_take_last
 from blackjax.smc.tuning.from_particles import particles_covariance_matrix
 from blackjax.types import ArrayTree
 
+
+class ReplacementDiagnostics(NamedTuple):
+    """Per-NS-step diagnostics for constrained-MCMC replacement."""
+
+    mcmc_infos: NamedTuple
+    strategy: str
+    used_strategy: str
+    success_rate: jnp.ndarray
+    accepted_proposals: jnp.ndarray
+    proposals_per_accepted_replacement: jnp.ndarray
+    final_loglikelihood_improvement: jnp.ndarray
+    selected_cluster_size: jnp.ndarray
+    covariance_mode: str
+    condition_number_before_regularization: jnp.ndarray
+    condition_number_after_regularization: jnp.ndarray
+    runtime_seconds: jnp.ndarray
+    fallback_to_global: jnp.ndarray
+    diagonal_covariance_fallback: jnp.ndarray
+
+
+def _replacement_acceptance_diagnostics(
+    final_particles, mcmc_infos, loglikelihood_0, num_mcmc_steps
+):
+    accepted = getattr(mcmc_infos, "is_accepted", None)
+    if accepted is None:
+        accepted = jnp.ones(
+            (final_particles.loglikelihood.shape[0], num_mcmc_steps), dtype=bool
+        )
+    accepted = jnp.asarray(accepted).astype(bool)
+    per_replacement_accepted = jnp.sum(accepted, axis=-1)
+    success = final_particles.loglikelihood > loglikelihood_0
+    denom = jnp.maximum(per_replacement_accepted, 1)
+    proposals_per_accepted = jnp.where(success, num_mcmc_steps / denom, jnp.inf)
+    improvement = final_particles.loglikelihood - loglikelihood_0
+    return success, per_replacement_accepted, proposals_per_accepted, improvement
+
+
+def diagnostic_update_with_mcmc_take_last(
+    constrained_mcmc_step_fn,
+    num_mcmc_steps,
+    num_delete,
+    *,
+    strategy_name: str = "global",
+    print_diagnostics: bool = True,
+):
+    """Global replacement strategy with per-step replacement diagnostics."""
+    base_update = update_with_mcmc_take_last(
+        constrained_mcmc_step_fn, num_mcmc_steps, num_delete
+    )
+    counts = {"attempts": 0, "successes": 0, "runtime": 0.0}
+
+    def update_function(rng_key, state, loglikelihood_0, **step_parameters):
+        counts["attempts"] += 1
+        t0 = time.perf_counter()
+        new_particles, mcmc_infos = base_update(
+            rng_key, state, loglikelihood_0, **step_parameters
+        )
+        jax.block_until_ready(new_particles.loglikelihood)
+        runtime = time.perf_counter() - t0
+        success, accepted, proposals_per_accepted, improvement = (
+            _replacement_acceptance_diagnostics(
+                new_particles, mcmc_infos, loglikelihood_0, num_mcmc_steps
+            )
+        )
+        counts["successes"] += int(np.asarray(jnp.sum(success)))
+        counts["runtime"] += runtime
+        diag = ReplacementDiagnostics(
+            mcmc_infos=mcmc_infos,
+            strategy=strategy_name,
+            used_strategy="global",
+            success_rate=jnp.mean(success.astype(jnp.float32)),
+            accepted_proposals=accepted,
+            proposals_per_accepted_replacement=proposals_per_accepted,
+            final_loglikelihood_improvement=improvement,
+            selected_cluster_size=jnp.full((num_delete,), -1),
+            covariance_mode="global",
+            condition_number_before_regularization=jnp.nan,
+            condition_number_after_regularization=jnp.nan,
+            runtime_seconds=jnp.asarray(runtime),
+            fallback_to_global=jnp.asarray(False),
+            diagonal_covariance_fallback=jnp.asarray(False),
+        )
+        if print_diagnostics:
+            print(
+                "[replacement] "
+                f"strategy={strategy_name}, used=global, attempt={counts['attempts']}, "
+                f"success_rate={float(diag.success_rate):.4f}, "
+                f"accepted_proposals={np.asarray(accepted).tolist()}, "
+                f"proposals_per_accepted={np.asarray(proposals_per_accepted).tolist()}, "
+                f"final_logL_minus_threshold={np.asarray(improvement).tolist()}, "
+                f"runtime_s={runtime:.6f}"
+            )
+        return new_particles, diag
+
+    update_function.diagnostic_counts = counts
+    return update_function
+
+
 __all__ = [
     "as_top_level_api",
     "build_kernel",
     "init",
     "update_inner_kernel_params",
     "cluster_aware_update_with_mcmc_take_last",
+    "diagnostic_update_with_mcmc_take_last",
+    "ReplacementDiagnostics",
 ]
 
 
@@ -170,6 +271,10 @@ def cluster_aware_update_with_mcmc_take_last(
     print_diagnostics: bool = True,
     eager: bool = False,
     covariance_regularization: float = 1e-6,
+    auto_fallback: bool = False,
+    warmup_attempts: int = 25,
+    min_success_rate: float = 0.5,
+    max_runtime_ratio: float = 2.0,
 ):
     """Experimental cluster-aware nested-sampling replacement strategy.
 
@@ -197,7 +302,16 @@ def cluster_aware_update_with_mcmc_take_last(
     fallback_update = update_with_mcmc_take_last(
         constrained_mcmc_step_fn, num_mcmc_steps, num_delete
     )
-    diagnostic_counts = {"attempts": 0, "successes": 0, "fallbacks": 0}
+    diagnostic_counts = {
+        "attempts": 0,
+        "successes": 0,
+        "fallbacks": 0,
+        "cluster_runtime": 0.0,
+        "cluster_attempts": 0,
+        "global_runtime": 0.0,
+        "global_attempts": 0,
+        "auto_fallback_active": False,
+    }
 
     def emit_diagnostic(
         *,
@@ -265,6 +379,17 @@ def cluster_aware_update_with_mcmc_take_last(
             standardized_condition_numbers=standardized_condition_numbers,
             standardization_applied=standardization_applied,
         )
+        if auto_fallback and diagnostic_counts["attempts"] >= warmup_attempts:
+            fallback_fraction = diagnostic_counts["fallbacks"] / max(
+                diagnostic_counts["attempts"], 1
+            )
+            if fallback_fraction > (1.0 - min_success_rate):
+                diagnostic_counts["auto_fallback_active"] = True
+                if print_diagnostics:
+                    print(
+                        "[cluster-aware] auto_fallback_enabled "
+                        f"reason=fallback_fraction, fallback_fraction={fallback_fraction:.4f}"
+                    )
         return fallback_update(rng_key, state, loglikelihood_0, **step_parameters)
 
     def _regularized_weighted_covariance(rows, weights):
@@ -406,6 +531,42 @@ def cluster_aware_update_with_mcmc_take_last(
                 rng_key, state, loglikelihood_0, **step_parameters
             )
         diagnostic_counts["attempts"] += 1
+        if auto_fallback and diagnostic_counts["auto_fallback_active"]:
+            t0 = time.perf_counter()
+            new_particles, mcmc_infos = fallback_update(
+                rng_key, state, loglikelihood_0, **step_parameters
+            )
+            jax.block_until_ready(new_particles.loglikelihood)
+            runtime = time.perf_counter() - t0
+            diagnostic_counts["global_runtime"] += runtime
+            diagnostic_counts["global_attempts"] += 1
+            success, accepted, proposals_per_accepted, improvement = (
+                _replacement_acceptance_diagnostics(
+                    new_particles, mcmc_infos, loglikelihood_0, num_mcmc_steps
+                )
+            )
+            diag = ReplacementDiagnostics(
+                mcmc_infos,
+                "cluster_aware",
+                "global",
+                jnp.mean(success.astype(jnp.float32)),
+                accepted,
+                proposals_per_accepted,
+                improvement,
+                jnp.full((num_delete,), -1),
+                "global_auto_fallback",
+                jnp.nan,
+                jnp.nan,
+                jnp.asarray(runtime),
+                jnp.asarray(True),
+                jnp.asarray(False),
+            )
+            if print_diagnostics:
+                print(
+                    "[replacement] strategy=cluster_aware, used=global_auto_fallback, "
+                    f"attempt={diagnostic_counts['attempts']}, success_rate={float(diag.success_rate):.4f}, runtime_s={runtime:.6f}"
+                )
+            return new_particles, diag
         try:
             particles = state.particles
             if _contains_jax_tracer(
@@ -504,6 +665,31 @@ def cluster_aware_update_with_mcmc_take_last(
                 standardized_position, cluster_indices
             )
             cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
+            covariance_mode = "full_covariance"
+            diagonal_covariance_fallback = False
+            condition_before_regularization = jnp.linalg.cond(cluster_cov)
+            if covariance_regularization > 0.0:
+                diag_mean = jnp.maximum(
+                    jnp.mean(jnp.diag(cluster_cov)),
+                    jnp.asarray(scale_floor, dtype=cluster_cov.dtype),
+                )
+                cluster_cov = (
+                    cluster_cov
+                    + covariance_regularization
+                    * diag_mean
+                    * jnp.eye(cluster_cov.shape[0], dtype=cluster_cov.dtype)
+                )
+                covariance_mode = "regularized_covariance"
+            condition_after_regularization = jnp.linalg.cond(cluster_cov)
+            if (
+                not np.isfinite(float(np.asarray(condition_after_regularization)))
+            ) or float(
+                np.asarray(condition_after_regularization)
+            ) >= max_condition_number:
+                diagonal_covariance_fallback = True
+                covariance_mode = "diagonal_fallback"
+                cluster_cov = jnp.diag(jnp.maximum(jnp.diag(cluster_cov), scale_floor))
+                condition_after_regularization = jnp.linalg.cond(cluster_cov)
             if not np.all(np.asarray(jax.device_get(jnp.isfinite(cluster_cov)))):
                 diagnostic_counts["fallbacks"] += 1
                 emit_diagnostic(
@@ -554,18 +740,75 @@ def cluster_aware_update_with_mcmc_take_last(
                 cluster_id=cluster_id_int,
                 cluster_size=selected_cluster_size,
             )
-            if not eager:
-                return jax.vmap(mcmc_kernel)(sample_keys, start_state)
-
+            t0 = time.perf_counter()
             outputs = [
                 mcmc_kernel(key, jax.tree.map(lambda x, i=i: x[i], start_state))
                 for i, key in enumerate(sample_keys)
             ]
             final_states, infos = zip(*outputs)
-            return (
-                jax.tree.map(lambda *xs: jnp.stack(xs), *final_states),
-                jax.tree.map(lambda *xs: jnp.stack(xs), *infos),
+            new_particles = jax.tree.map(lambda *xs: jnp.stack(xs), *final_states)
+            mcmc_infos = jax.tree.map(lambda *xs: jnp.stack(xs), *infos)
+            jax.block_until_ready(new_particles.loglikelihood)
+            runtime = time.perf_counter() - t0
+            diagnostic_counts["cluster_runtime"] += runtime
+            diagnostic_counts["cluster_attempts"] += 1
+            success, accepted, proposals_per_accepted, improvement = (
+                _replacement_acceptance_diagnostics(
+                    new_particles, mcmc_infos, loglikelihood_0, num_mcmc_steps
+                )
             )
+            success_rate = float(jnp.mean(success.astype(jnp.float32)))
+            before_cond = float(np.asarray(condition_before_regularization))
+            after_cond = float(np.asarray(condition_after_regularization))
+            diag = ReplacementDiagnostics(
+                mcmc_infos=mcmc_infos,
+                strategy="cluster_aware",
+                used_strategy="cluster_aware",
+                success_rate=jnp.asarray(success_rate),
+                accepted_proposals=accepted,
+                proposals_per_accepted_replacement=proposals_per_accepted,
+                final_loglikelihood_improvement=improvement,
+                selected_cluster_size=jnp.full((num_delete,), selected_cluster_size),
+                covariance_mode=covariance_mode,
+                condition_number_before_regularization=jnp.asarray(before_cond),
+                condition_number_after_regularization=jnp.asarray(after_cond),
+                runtime_seconds=jnp.asarray(runtime),
+                fallback_to_global=jnp.asarray(False),
+                diagonal_covariance_fallback=jnp.asarray(diagonal_covariance_fallback),
+            )
+            if print_diagnostics:
+                print(
+                    "[replacement] strategy=cluster_aware, used=cluster_aware, "
+                    f"attempt={diagnostic_counts['attempts']}, success_rate={success_rate:.4f}, "
+                    f"accepted_proposals={np.asarray(accepted).tolist()}, proposals_per_accepted={np.asarray(proposals_per_accepted).tolist()}, "
+                    f"final_logL_minus_threshold={np.asarray(improvement).tolist()}, selected_cluster_size={selected_cluster_size}, "
+                    f"covariance_mode={covariance_mode}, diagonal_fallback={diagonal_covariance_fallback}, "
+                    f"cond_before={before_cond:.6g}, cond_after={after_cond:.6g}, runtime_s={runtime:.6f}"
+                )
+            if auto_fallback and diagnostic_counts["attempts"] >= warmup_attempts:
+                cluster_attempts = max(diagnostic_counts["cluster_attempts"], 1)
+                mean_cluster_runtime = (
+                    diagnostic_counts["cluster_runtime"] / cluster_attempts
+                )
+                mean_global_runtime = (
+                    diagnostic_counts["global_runtime"]
+                    / max(diagnostic_counts["global_attempts"], 1)
+                    if diagnostic_counts["global_attempts"]
+                    else np.nan
+                )
+                runtime_bad = (
+                    np.isfinite(mean_global_runtime)
+                    and mean_cluster_runtime > max_runtime_ratio * mean_global_runtime
+                )
+                success_bad = success_rate < min_success_rate
+                if runtime_bad or success_bad:
+                    diagnostic_counts["auto_fallback_active"] = True
+                    if print_diagnostics:
+                        print(
+                            "[cluster-aware] auto_fallback_enabled reason="
+                            + ("runtime" if runtime_bad else "success_rate")
+                        )
+            return new_particles, diag
         except Exception as exc:
             diagnostic_counts["fallbacks"] += 1
             emit_diagnostic(reason="exception", exception=exc)

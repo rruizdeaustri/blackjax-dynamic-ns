@@ -78,6 +78,11 @@ def run_one(
     cluster_aware_min_cluster_size: int,
     cluster_aware_max_condition_number: float,
     cluster_aware_covariance_regularization: float,
+    cluster_aware_auto_fallback: bool,
+    cluster_aware_warmup_attempts: int,
+    cluster_aware_min_success_rate: float,
+    cluster_aware_max_runtime_ratio: float,
+    replacement_diagnostics: bool,
     nss_eager: bool,
 ) -> RunMetrics:
     positions = make_positions(seed, num_live)
@@ -99,6 +104,14 @@ def run_one(
                 min_cluster_size=cluster_aware_min_cluster_size,
                 max_condition_number=cluster_aware_max_condition_number,
                 covariance_regularization=cluster_aware_covariance_regularization,
+                auto_fallback=cluster_aware_auto_fallback,
+                warmup_attempts=cluster_aware_warmup_attempts,
+                min_success_rate=cluster_aware_min_success_rate,
+                max_runtime_ratio=cluster_aware_max_runtime_ratio,
+            )
+        elif replacement_strategy == "global" and replacement_diagnostics:
+            nss_kwargs["update_strategy"] = partial(
+                nss.diagnostic_update_with_mcmc_take_last
             )
         elif replacement_strategy != "global":
             raise ValueError(f"Unknown replacement strategy '{replacement_strategy}'")
@@ -378,6 +391,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ggns-num-integration-steps", type=int, default=None)
     parser.add_argument("--ggns-num-inner-steps", type=int, default=1)
     parser.add_argument(
+        "--replacement-diagnostics",
+        action="store_true",
+        help="Print per-replacement diagnostics for the global NSS path.",
+    )
+    parser.add_argument(
         "--replacement-strategy",
         choices=["global", "cluster_aware"],
         default="global",
@@ -402,6 +420,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cluster-aware-covariance-regularization", type=float, default=1e-6
     )
+    parser.add_argument("--cluster-aware-auto-fallback", action="store_true")
+    parser.add_argument("--cluster-aware-warmup-attempts", type=int, default=25)
+    parser.add_argument("--cluster-aware-min-success-rate", type=float, default=0.5)
+    parser.add_argument("--cluster-aware-max-runtime-ratio", type=float, default=2.0)
     parser.add_argument(
         "--nss-eager",
         "--disable-nss-jit",
@@ -462,6 +484,11 @@ def main() -> None:
                         cluster_aware_min_cluster_size=args.cluster_aware_min_cluster_size,
                         cluster_aware_max_condition_number=args.cluster_aware_max_condition_number,
                         cluster_aware_covariance_regularization=args.cluster_aware_covariance_regularization,
+                        cluster_aware_auto_fallback=args.cluster_aware_auto_fallback,
+                        cluster_aware_warmup_attempts=args.cluster_aware_warmup_attempts,
+                        cluster_aware_min_success_rate=args.cluster_aware_min_success_rate,
+                        cluster_aware_max_runtime_ratio=args.cluster_aware_max_runtime_ratio,
+                        replacement_diagnostics=args.replacement_diagnostics,
                         nss_eager=args.nss_eager,
                     )
                     results.append(metrics)
