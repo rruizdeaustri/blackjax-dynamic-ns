@@ -48,6 +48,14 @@ def build_algo(args: argparse.Namespace):
                 min_cluster_size=args.cluster_aware_min_cluster_size,
                 max_condition_number=args.cluster_aware_max_condition_number,
                 covariance_regularization=args.cluster_aware_covariance_regularization,
+                auto_fallback=args.cluster_aware_auto_fallback,
+                warmup_attempts=args.cluster_aware_warmup_attempts,
+                min_success_rate=args.cluster_aware_min_success_rate,
+                max_runtime_ratio=args.cluster_aware_max_runtime_ratio,
+            )
+        elif args.replacement_strategy == "global" and args.replacement_diagnostics:
+            common_kwargs["update_strategy"] = partial(
+                nss.diagnostic_update_with_mcmc_take_last
             )
         elif args.replacement_strategy != "global":
             raise ValueError(
@@ -193,6 +201,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ggns-step-size", type=float, default=0.05)
     parser.add_argument("--ggns-num-inner-steps", type=int, default=4)
     parser.add_argument(
+        "--replacement-diagnostics",
+        action="store_true",
+        help="Print per-replacement diagnostics for the global NSS path.",
+    )
+    parser.add_argument(
         "--replacement-strategy",
         choices=["global", "cluster_aware"],
         default="global",
@@ -217,6 +230,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cluster-aware-covariance-regularization", type=float, default=1e-6
     )
+    parser.add_argument("--cluster-aware-auto-fallback", action="store_true")
+    parser.add_argument("--cluster-aware-warmup-attempts", type=int, default=25)
+    parser.add_argument("--cluster-aware-min-success-rate", type=float, default=0.5)
+    parser.add_argument("--cluster-aware-max-runtime-ratio", type=float, default=2.0)
     parser.add_argument(
         "--nss-eager",
         "--disable-nss-jit",
