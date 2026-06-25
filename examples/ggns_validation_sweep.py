@@ -1,4 +1,5 @@
 """Smoke validation sweep for NSS vs GGNS in static/dynamic NS modes."""
+
 from __future__ import annotations
 
 import argparse
@@ -71,6 +72,12 @@ def run_one(
     ggns_num_inner_steps: int,
     replacement_strategy: str,
     cluster_aware_eager: bool,
+    cluster_aware_standardize: bool,
+    cluster_aware_scale_floor: float,
+    cluster_aware_radius: float | None,
+    cluster_aware_min_cluster_size: int,
+    cluster_aware_max_condition_number: float,
+    cluster_aware_covariance_regularization: float,
     nss_eager: bool,
 ) -> RunMetrics:
     positions = make_positions(seed, num_live)
@@ -86,6 +93,12 @@ def run_one(
             nss_kwargs["update_strategy"] = partial(
                 nss.cluster_aware_update_with_mcmc_take_last,
                 eager=cluster_aware_eager,
+                standardize=cluster_aware_standardize,
+                scale_floor=cluster_aware_scale_floor,
+                radius=cluster_aware_radius,
+                min_cluster_size=cluster_aware_min_cluster_size,
+                max_condition_number=cluster_aware_max_condition_number,
+                covariance_regularization=cluster_aware_covariance_regularization,
             )
         elif replacement_strategy != "global":
             raise ValueError(f"Unknown replacement strategy '{replacement_strategy}'")
@@ -159,9 +172,7 @@ def run_one(
 
     t0 = time.perf_counter()
     eager_context = (
-        jax.disable_jit()
-        if (sampler_name == "nss" and nss_eager)
-        else nullcontext()
+        jax.disable_jit() if (sampler_name == "nss" and nss_eager) else nullcontext()
     )
     with eager_context:
         if mode == "dynamic":
@@ -212,7 +223,9 @@ def run_one(
                 jnp.mean((~accepted.astype(bool)).astype(jnp.float32))
             )
         if crossed is not None:
-            metrics.boundary_crossing_rate = float(jnp.mean(crossed.astype(jnp.float32)))
+            metrics.boundary_crossing_rate = float(
+                jnp.mean(crossed.astype(jnp.float32))
+            )
         if gaps is not None:
             metrics.mean_constraint_gap = float(jnp.mean(gaps))
             metrics.median_constraint_gap = float(jnp.median(gaps))
@@ -225,7 +238,9 @@ def run_one(
             accepted_gaps = jnp.concatenate(ggns_accepted_gap)
             if accepted_gaps.size > 0:
                 metrics.mean_accepted_constraint_gap = float(jnp.mean(accepted_gaps))
-                metrics.median_accepted_constraint_gap = float(jnp.median(accepted_gaps))
+                metrics.median_accepted_constraint_gap = float(
+                    jnp.median(accepted_gaps)
+                )
         if ggns_delta_logl:
             delta_logl = jnp.concatenate(ggns_delta_logl)
             metrics.mean_delta_logl = float(jnp.mean(delta_logl))
@@ -262,7 +277,9 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
     failures = sum(result.failed for result in results)
     ok = [result for result in results if not result.failed]
     if not ok:
-        print(f"\n{label} {sampler.upper()}: all runs failed ({failures}/{len(results)}).")
+        print(
+            f"\n{label} {sampler.upper()}: all runs failed ({failures}/{len(results)})."
+        )
         return
 
     logzs = jnp.array([r.logz for r in ok])
@@ -270,7 +287,9 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
     run_seconds = jnp.array([r.run_seconds for r in ok])
     ms_per_step = jnp.array([r.ms_per_step for r in ok])
 
-    print(f"\n{label} {sampler.upper()} summary ({len(ok)} successful / {len(results)} total):")
+    print(
+        f"\n{label} {sampler.upper()} summary ({len(ok)} successful / {len(results)} total):"
+    )
     print(f"  mean logZ: {float(jnp.mean(logzs)):.6f}")
     print(f"  std logZ: {float(jnp.std(logzs)):.6f}")
     print(f"  mean ESS: {float(jnp.mean(esses)):.3f}")
@@ -297,6 +316,7 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
         frac_reflected = jnp.array([r.fraction_proposals_with_reflection for r in ok])
 
         refl_fail_rate = jnp.array([r.reflection_failure_rate for r in ok])
+
         def fmt_nanmean(arr: jax.Array, precision: int = 6) -> str:
             value = float(jnp.nanmean(arr))
             return "n/a" if jnp.isnan(value) else f"{value:.{precision}f}"
@@ -306,6 +326,7 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
                 return "n/a"
             value = float(jnp.nanmax(arr))
             return "n/a" if jnp.isnan(value) else f"{value:.{precision}f}"
+
         print(f"  mean acceptance rate: {float(jnp.nanmean(ar)):.4f}")
         print(f"  mean boundary-crossing rate: {float(jnp.nanmean(bcr)):.4f}")
         print(f"  mean fallback/rejection rate: {float(jnp.nanmean(fr)):.4f}")
@@ -313,14 +334,26 @@ def summarize(label: str, sampler: str, results: list[RunMetrics]) -> None:
         print(f"  median(start_logL - constraint): {fmt_nanmean(start_median_gap)}")
         print(f"  mean(final_logL - constraint): {float(jnp.nanmean(mean_gap)):.6f}")
         print(f"  median(final_logL - constraint): {float(jnp.nanmean(med_gap)):.6f}")
-        print(f"  mean(final_logL - constraint, accepted): {fmt_nanmean(accepted_mean_gap)}")
-        print(f"  median(final_logL - constraint, accepted): {fmt_nanmean(accepted_median_gap)}")
-        print(f"  mean(delta_logL = final_logL - start_logL): {fmt_nanmean(mean_delta)}")
+        print(
+            f"  mean(final_logL - constraint, accepted): {fmt_nanmean(accepted_mean_gap)}"
+        )
+        print(
+            f"  median(final_logL - constraint, accepted): {fmt_nanmean(accepted_median_gap)}"
+        )
+        print(
+            f"  mean(delta_logL = final_logL - start_logL): {fmt_nanmean(mean_delta)}"
+        )
         print(f"  median(delta_logL): {fmt_nanmean(median_delta)}")
         print(f"  fallback/rejection gap: {fmt_nanmean(fallback_gap)}")
-        print(f"  mean reflections per proposal: {fmt_nanmean(mean_reflections, precision=4)}")
-        print(f"  max reflections per proposal: {fmt_nanmax(max_reflections, precision=4)}")
-        print(f"  fraction proposals with reflection: {fmt_nanmean(frac_reflected, precision=4)}")
+        print(
+            f"  mean reflections per proposal: {fmt_nanmean(mean_reflections, precision=4)}"
+        )
+        print(
+            f"  max reflections per proposal: {fmt_nanmax(max_reflections, precision=4)}"
+        )
+        print(
+            f"  fraction proposals with reflection: {fmt_nanmean(frac_reflected, precision=4)}"
+        )
         print(f"  reflection failure rate: {fmt_nanmean(refl_fail_rate, precision=4)}")
         print(f"  max(final_logL - constraint): {float(jnp.nanmean(max_gap)):.6f}")
 
@@ -354,6 +387,20 @@ def parse_args() -> argparse.Namespace:
         "--cluster-aware-eager",
         action="store_true",
         help="Run cluster-aware replacement's Python validation path for concrete live points.",
+    )
+    parser.add_argument(
+        "--cluster-aware-standardize",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+    )
+    parser.add_argument("--cluster-aware-scale-floor", type=float, default=1e-12)
+    parser.add_argument("--cluster-aware-radius", type=float, default=None)
+    parser.add_argument("--cluster-aware-min-cluster-size", type=int, default=3)
+    parser.add_argument(
+        "--cluster-aware-max-condition-number", type=float, default=1e12
+    )
+    parser.add_argument(
+        "--cluster-aware-covariance-regularization", type=float, default=1e-6
     )
     parser.add_argument(
         "--nss-eager",
@@ -409,6 +456,12 @@ def main() -> None:
                         ggns_num_inner_steps=args.ggns_num_inner_steps,
                         replacement_strategy=args.replacement_strategy,
                         cluster_aware_eager=args.cluster_aware_eager,
+                        cluster_aware_standardize=args.cluster_aware_standardize,
+                        cluster_aware_scale_floor=args.cluster_aware_scale_floor,
+                        cluster_aware_radius=args.cluster_aware_radius,
+                        cluster_aware_min_cluster_size=args.cluster_aware_min_cluster_size,
+                        cluster_aware_max_condition_number=args.cluster_aware_max_condition_number,
+                        cluster_aware_covariance_regularization=args.cluster_aware_covariance_regularization,
                         nss_eager=args.nss_eager,
                     )
                     results.append(metrics)
@@ -418,7 +471,9 @@ def main() -> None:
                         f"ms/step={metrics.ms_per_step:.3f}, failures=0"
                     )
                 except Exception as exc:
-                    print(f"  {mode} {sampler} seed={seed}: FAILED ({type(exc).__name__}: {exc})")
+                    print(
+                        f"  {mode} {sampler} seed={seed}: FAILED ({type(exc).__name__}: {exc})"
+                    )
                     results.append(
                         RunMetrics(
                             logz=float("nan"),
