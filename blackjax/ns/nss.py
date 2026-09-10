@@ -331,13 +331,38 @@ def cluster_aware_update_with_mcmc_take_last(
         cluster_sizes = jnp.sum(neighbor_mask, axis=1)
         survivor_mask = particles.loglikelihood > loglikelihood_0
 
-        def candidate_cov(mask):
-            return _regularized_weighted_covariance(
-                cluster_rows, mask.astype(rows.dtype)
-            )
+        #def candidate_cov(mask):
+        #    return _regularized_weighted_covariance(
+        #        cluster_rows, mask.astype(rows.dtype)
+        #    )
 
-        covariances = jax.vmap(candidate_cov)(neighbor_mask)
-        condition_numbers = jax.vmap(_condition_number)(covariances)
+        #covariances = jax.vmap(candidate_cov)(neighbor_mask)
+        #condition_numbers = jax.vmap(_condition_number)(covariances)
+
+        def candidate_standardized_cov(mask):
+                return _regularized_weighted_covariance(
+                    cluster_rows,
+                    mask.astype(rows.dtype),
+                )
+
+        def candidate_raw_cov(mask):
+                return _regularized_weighted_covariance(
+                    rows,
+                    mask.astype(rows.dtype),
+                )
+
+        standardized_covariances = jax.vmap(
+                candidate_standardized_cov
+        )(neighbor_mask)
+
+        raw_covariances = jax.vmap(
+                candidate_raw_cov
+        )(neighbor_mask)
+
+        condition_numbers = jax.vmap(
+                _condition_number
+        )(standardized_covariances)
+
         valid = (
             (cluster_sizes >= min_cluster_size)
             & jnp.isfinite(condition_numbers)
@@ -363,7 +388,8 @@ def cluster_aware_update_with_mcmc_take_last(
                 replace=True,
             )
             start_state = jax.tree.map(lambda x: x[start_idx], particles)
-            cluster_cov = covariances[seed_idx]
+            #cluster_cov = covariances[seed_idx]
+            cluster_cov = raw_covariances[seed_idx]
             diagonal_cov = jnp.diag(jnp.maximum(jnp.diag(cluster_cov), scale_floor))
             cluster_cov = jnp.where(
                 (_condition_number(cluster_cov) < max_condition_number)
@@ -500,8 +526,13 @@ def cluster_aware_update_with_mcmc_take_last(
             cluster_indices = jnp.nonzero(
                 cluster_mask, size=int(cluster_mask.shape[0])
             )[0][:selected_cluster_size]
+            #cluster_position = _cluster_positions(
+            #    standardized_position, cluster_indices
+            #)
+
             cluster_position = _cluster_positions(
-                standardized_position, cluster_indices
+                particles.position,
+                cluster_indices,
             )
             cluster_cov = jnp.atleast_2d(particles_covariance_matrix(cluster_position))
             if not np.all(np.asarray(jax.device_get(jnp.isfinite(cluster_cov)))):
