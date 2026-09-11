@@ -156,3 +156,11 @@ def edge_statistics(level_info, num_levels):
         result[f"{prefix}_eligible"][edge] += int(is_eligible)
         result[f"{prefix}_accepted"][edge] += int(is_accepted)
     return result
+
+
+def maximum_loglikelihood(loglikelihood):
+    """Return the largest finite retained log likelihood, or -inf if empty."""
+    values = np.asarray(loglikelihood).reshape(-1)
+    if values.size == 0:
+        return -np.inf
+    return float(np.nanmax(values))
