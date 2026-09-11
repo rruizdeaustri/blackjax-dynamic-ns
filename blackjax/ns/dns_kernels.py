@@ -23,7 +23,7 @@ and treats the likelihood threshold as an additional horizontal-slice
 eligibility condition.
 """
 
-from typing import Callable
+from typing import Callable, Optional
 
 import jax
 import jax.numpy as jnp
@@ -58,7 +58,7 @@ def build_constrained_slice_kernel(
     loglikelihood_fn: Callable,
     cov=None,
     *,
-    generate_slice_direction_fn: Callable | None = None,
+    generate_slice_direction_fn: Optional[Callable] = None,
     stepper_fn: Callable = default_stepper,
     max_steps: int = 10,
     max_shrinkage: int = 100,
