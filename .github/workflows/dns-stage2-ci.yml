@@ -1,3 +1,4 @@
+# retry: 3
 # retry: 2
 name: DNS Stage 2 temporary validation
 
