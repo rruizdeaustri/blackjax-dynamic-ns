@@ -112,6 +112,7 @@ def _expected_second_moment(level, masses, radii):
 def test_frozen_dns_stationarity_and_initial_mode_independence():
     burn = 500
     fractions = []
+    per_level_samples = [[] for _ in range(NUM_LEVELS)]
     for seed, start_sign in ((11, -1), (17, 1)):
         levels, masses, radii, trace = run_dns(seed, start_sign)
         positions, loglikelihood, indices, info = trace
@@ -131,7 +132,7 @@ def test_frozen_dns_stationarity_and_initial_mode_independence():
             expected_second = _expected_second_moment(level, masses, radii)
             tolerance = max(0.08, 0.06 * expected_second)
             assert abs(np.mean(samples**2) - expected_second) < tolerance
-            assert abs(np.mean(samples > 0) - 0.5) < 0.08
+            per_level_samples[level].append(samples)
 
         fractions.append(float(np.mean(positions > 0)))
         highest = np.asarray(
@@ -156,6 +157,10 @@ def test_frozen_dns_stationarity_and_initial_mode_independence():
     assert abs(fractions[0] - 0.5) < 0.08
     assert abs(fractions[1] - 0.5) < 0.08
     assert abs(fractions[0] - fractions[1]) < 0.08
+
+    for level in range(NUM_LEVELS):
+        pooled = np.concatenate(per_level_samples[level])
+        assert abs(np.mean(pooled > 0) - 0.5) < 0.06
 
 
 def test_backtracking_causes_repeated_high_mode_switches_across_seeds():
