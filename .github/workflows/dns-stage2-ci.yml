@@ -1,4 +1,4 @@
-# retry: 4
+# retry: 5
 # retry: 2
 name: DNS Stage 2 temporary validation
 
@@ -24,7 +24,7 @@ jobs:
       - name: Install package and test dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e . pytest
+          python -m pip install -e . pytest chex
 
       - name: Stage 1 and Stage 2 DNS tests (float32)
         env:
