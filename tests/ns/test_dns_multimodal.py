@@ -9,7 +9,7 @@ BOUND = 6.0
 MODE = 1.0
 SIGMA = 0.3
 NUM_LEVELS = 5
-LOCAL_DIRECTION_SCALE = 0.2
+LOCAL_DIRECTION_SCALE = 0.5
 
 
 def double_well_problem():
