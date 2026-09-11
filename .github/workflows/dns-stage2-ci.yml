@@ -1,4 +1,4 @@
-# retry: 3
+# retry: 4
 # retry: 2
 name: DNS Stage 2 temporary validation
 
@@ -46,19 +46,8 @@ jobs:
         run: |
           python examples/dns_multimodal_validation.py | tee /tmp/dns_stage2_validation.json
 
-      - name: Legacy nested-sampling regressions in fresh Python processes
+      - name: Legacy nested-sampling regressions
         env:
           JAX_PLATFORMS: cpu
-        shell: bash
         run: |
-          set -euo pipefail
-          python -m pytest tests/ns/test_nested_sampling.py --collect-only -q             | grep '^tests/ns/test_nested_sampling.py::'             > /tmp/ns_test_nodes.txt
-
-          passed=0
-          while IFS= read -r test; do
-            echo "=== $test ==="
-            python -m pytest "$test" -q --tb=short
-            passed=$((passed + 1))
-          done < /tmp/ns_test_nodes.txt
-
-          echo "LEGACY_NS_TESTS_PASSED=$passed"
+          python -m pytest tests/ns/test_nested_sampling.py -q --tb=short
