@@ -1,3 +1,4 @@
+# rerun after float64 stationarity sample update
 # retry: 5
 # retry: 2
 name: DNS Stage 2 temporary validation
