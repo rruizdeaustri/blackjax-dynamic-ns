@@ -1,3 +1,4 @@
+# retry: 6
 # rerun after float64 stationarity sample update
 # retry: 5
 # retry: 2
@@ -47,8 +48,21 @@ jobs:
         run: |
           python examples/dns_multimodal_validation.py | tee /tmp/dns_stage2_validation.json
 
-      - name: Legacy nested-sampling regressions
+      - name: Legacy nested-sampling regressions in fresh processes
         env:
           JAX_PLATFORMS: cpu
+        shell: bash
         run: |
-          python -m pytest tests/ns/test_nested_sampling.py -q --tb=short
+          set -euo pipefail
+          python -m pytest tests/ns/test_nested_sampling.py --collect-only -q             > /tmp/ns_collect.txt
+          grep '^tests/ns/test_nested_sampling.py::' /tmp/ns_collect.txt             > /tmp/ns_test_nodes.txt
+          test -s /tmp/ns_test_nodes.txt
+
+          passed=0
+          while IFS= read -r test; do
+            echo "=== $test ==="
+            python -m pytest "$test" -q --tb=short
+            passed=$((passed + 1))
+          done < /tmp/ns_test_nodes.txt
+
+          echo "LEGACY_NS_TESTS_PASSED=$passed"
