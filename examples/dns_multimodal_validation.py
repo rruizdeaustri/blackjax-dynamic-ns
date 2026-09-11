@@ -83,17 +83,27 @@ def summarize(seed, burn=400):
     result = {
         "seed": seed,
         "mode_fraction_B": float(np.mean(positions > 0)),
-        "max_loglikelihood": float(np.max(loglikelihood)),
+        "max_loglikelihood": dns_diagnostics.maximum_loglikelihood(loglikelihood),
         "level_occupancy": dns_diagnostics.level_occupancy(indices, NUM_LEVELS).tolist(),
         "a_to_b": 0,
         "b_to_a": 0,
         "switches": 0,
         "round_trips": 0,
         "first_passage": None,
+        "first_passage_eval_proxy": None,
         "backtracking_minima": [],
         "parameter_failure_count": int(np.size(info.parameter_is_valid) - np.count_nonzero(info.parameter_is_valid)),
     }
     passages = []
+    passage_costs = []
+    step_cost = np.asarray(info.parameter_info.num_steps) + np.asarray(
+        info.parameter_info.num_shrink
+    )
+    step_cost = np.asarray(step_cost[burn:])
+    if step_cost.ndim == 3:
+        step_cost = step_cost[..., 0]
+    cumulative_cost = np.cumsum(step_cost, axis=0)
+
     for walker in range(positions.shape[1]):
         switch = dns_diagnostics.mode_switch_summary(
             np.where(positions[:, walker] >= 0, 1, -1),
@@ -107,11 +117,17 @@ def summarize(seed, burn=400):
         result["backtracking_minima"].extend(switch["backtracking_minima"].tolist())
         if switch["first_passage_index"] is not None:
             passages.append(switch["first_passage_index"])
+            passage_costs.append(
+                int(cumulative_cost[switch["first_passage_index"], walker])
+            )
         trips = dns_diagnostics.round_trip_counts(
             indices[:, walker], low_level=0, high_level=NUM_LEVELS - 1
         )
         result["round_trips"] += trips["low_high_low"] + trips["high_low_high"]
     result["first_passage"] = min(passages) if passages else None
+    result["first_passage_eval_proxy"] = (
+        min(passage_costs) if passage_costs else None
+    )
     result["max_switch_backtracking_level"] = (
         max(result["backtracking_minima"]) if result["backtracking_minima"] else None
     )
@@ -154,6 +170,8 @@ def fixed_high_control(seed=32, num_walkers=8, num_sweeps=6500, high_level=3):
 if __name__ == "__main__":
     report = {
         "dns": [summarize(seed) for seed in (21, 22, 23)],
-        "fixed_high_control": fixed_high_control(),
+        "fixed_high_control": [
+            fixed_high_control(seed) for seed in (31, 32, 33)
+        ],
     }
     print(json.dumps(report, indent=2))
