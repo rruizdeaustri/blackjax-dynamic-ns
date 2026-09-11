@@ -140,6 +140,20 @@ def test_frozen_dns_stationarity_and_initial_mode_independence():
         )
         assert highest.shape == positions.shape
 
+        level_info = jax.tree.map(
+            lambda x: np.asarray(x[burn:]), info.level_info
+        )
+        edge = dns_diagnostics.edge_statistics(level_info, NUM_LEVELS)
+        expected = np.exp(-1.0)
+        for j in range(NUM_LEVELS - 1):
+            assert edge["up_attempts"][j] > 200
+            assert edge["down_attempts"][j] > 200
+            up_eligibility = edge["up_eligible"][j] / edge["up_attempts"][j]
+            down_acceptance = edge["down_accepted"][j] / edge["down_attempts"][j]
+            assert abs(up_eligibility - expected) < 0.06
+            assert abs(down_acceptance - expected) < 0.06
+            assert edge["up_accepted"][j] == edge["up_eligible"][j]
+
     assert abs(fractions[0] - 0.5) < 0.08
     assert abs(fractions[1] - 0.5) < 0.08
     assert abs(fractions[0] - fractions[1]) < 0.08
