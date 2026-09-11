@@ -1,0 +1,54 @@
+# rerun after float64 stationarity sample update
+# retry: 5
+# retry: 2
+name: DNS Stage 2 temporary validation
+
+on:
+  pull_request:
+    branches:
+      - dns-development
+
+permissions:
+  contents: read
+
+jobs:
+  stage2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest chex
+
+      - name: Stage 1 and Stage 2 DNS tests (float32)
+        env:
+          JAX_PLATFORMS: cpu
+        run: |
+          python -m pytest             tests/ns/test_dns.py             tests/ns/test_dns_kernels.py             tests/ns/test_dns_multimodal.py             -q --tb=short
+
+      - name: Stage 1 and Stage 2 DNS tests (float64)
+        env:
+          JAX_PLATFORMS: cpu
+          JAX_ENABLE_X64: "1"
+        run: |
+          python -m pytest             tests/ns/test_dns.py             tests/ns/test_dns_kernels.py             tests/ns/test_dns_multimodal.py             -q --tb=short
+
+      - name: Multimodal mechanism report
+        env:
+          JAX_PLATFORMS: cpu
+          JAX_ENABLE_X64: "1"
+        run: |
+          python examples/dns_multimodal_validation.py | tee /tmp/dns_stage2_validation.json
+
+      - name: Legacy nested-sampling regressions
+        env:
+          JAX_PLATFORMS: cpu
+        run: |
+          python -m pytest tests/ns/test_nested_sampling.py -q --tb=short
