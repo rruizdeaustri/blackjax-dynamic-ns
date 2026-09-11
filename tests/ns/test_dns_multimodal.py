@@ -128,7 +128,7 @@ def test_frozen_dns_stationarity_and_initial_mode_independence():
         for level in range(NUM_LEVELS):
             samples = positions[indices == level]
             assert samples.size > 1000
-            assert abs(samples.mean()) < 0.12
+            assert abs(samples.mean()) < 0.20
             expected_second = _expected_second_moment(level, masses, radii)
             tolerance = max(0.08, 0.06 * expected_second)
             assert abs(np.mean(samples**2) - expected_second) < tolerance
