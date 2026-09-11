@@ -83,6 +83,7 @@ def summarize(seed, burn=400):
     result = {
         "seed": seed,
         "mode_fraction_B": float(np.mean(positions > 0)),
+        "max_loglikelihood": float(np.max(loglikelihood)),
         "level_occupancy": dns_diagnostics.level_occupancy(indices, NUM_LEVELS).tolist(),
         "a_to_b": 0,
         "b_to_a": 0,
