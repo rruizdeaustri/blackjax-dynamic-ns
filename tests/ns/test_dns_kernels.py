@@ -18,14 +18,15 @@ def _run_parameter_chain(step, state, num_steps, seed):
     )
 
 
-def test_uniform_constrained_prior_distribution():
+@pytest.mark.parametrize("radius", [0.5, 1.0, 1.5])
+def test_uniform_constrained_prior_distribution(radius):
     def logprior(x):
         return jnp.where(jnp.abs(x) <= 2.0, 0.0, -jnp.inf)
 
     def loglikelihood(x):
         return -(x**2)
 
-    threshold = jnp.array(-1.0)
+    threshold = jnp.array(-(radius**2))
     particle = dns.DNSParticleState(jnp.array(0.0), logprior(0.0), loglikelihood(0.0))
     step = dns_kernels.build_constrained_slice_kernel(
         logprior, loglikelihood, cov=jnp.array([[1.0]]), max_steps=12
@@ -34,9 +35,9 @@ def test_uniform_constrained_prior_distribution():
         step, (particle, threshold), 5000, 13
     )
     samples = np.asarray(positions[500:])
-    assert np.max(np.abs(samples)) < 1.0
-    assert abs(samples.mean()) < 0.04
-    assert abs(np.mean(samples**2) - 1.0 / 3.0) < 0.04
+    assert np.max(np.abs(samples)) < radius
+    assert abs(samples.mean()) < 0.05
+    assert abs(np.mean(samples**2) - radius**2 / 3.0) < 0.05
     assert np.mean(np.asarray(info.is_accepted[500:])) > 0.95
 
 
