@@ -53,3 +53,13 @@ def test_autocorrelation_distinguishes_persistence_and_constants():
     for i in range(1,1024): correlated[i]=.95*correlated[i-1]+noise[i]
     assert autocorrelation_information(correlated)['ess'] < autocorrelation_information(noise)['ess']/5
     assert autocorrelation_information(np.ones(256))['ess']==0
+
+
+def test_historical_rms_normalization_preserves_all_relative_scales():
+    historical=np.geomspace(.00049,2.2,54)
+    frozen=frozen_scales('historical_rms_normalized',historical=historical)
+    np.testing.assert_allclose(np.sqrt(np.mean(frozen**2)),COMMON_SCALE,rtol=2e-15)
+    np.testing.assert_allclose(frozen[:,None]/frozen[None,:],
+                               historical[:,None]/historical[None,:],rtol=2e-15)
+    np.testing.assert_array_equal(historical,np.geomspace(.00049,2.2,54))
+    assert not frozen.flags.writeable

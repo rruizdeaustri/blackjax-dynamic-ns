@@ -18,7 +18,7 @@ COMMON_SCALE = float(np.pi / np.sqrt(3))
 
 
 def frozen_scales(kind, historical=None, tuning=None):
-    if kind == 'historical':
+    if kind in ('historical', 'historical_rms_normalized'):
         scales = np.array(historical, dtype=float, copy=True)
     elif kind == 'isotropic':
         scales = np.full(54, COMMON_SCALE)
@@ -29,6 +29,8 @@ def frozen_scales(kind, historical=None, tuning=None):
         raise ValueError('Unknown scale strategy')
     if scales.shape != (54,) or not np.all(np.isfinite(scales)) or np.any(scales <= 0):
         raise ValueError('Invalid scales')
+    if kind == 'historical_rms_normalized':
+        scales *= COMMON_SCALE / np.sqrt(np.mean(scales**2))
     scales.setflags(write=False)
     return scales
 
@@ -121,7 +123,14 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--reference',type=Path,default=Path('/tmp/lisa_dns_stage4_rejection'))
     parser.add_argument('--output',type=Path,default=Path('/tmp/lisa_dns_stage4_kernel_benchmark'))
+    parser.add_argument('--strategy',choices=['original_three','historical_rms_normalized'],default='original_three')
+    parser.add_argument('--previous-benchmark',type=Path,default=Path('/tmp/lisa_dns_stage4_kernel_benchmark'))
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=True)
+    previous = None
+    if args.strategy == 'historical_rms_normalized':
+        if args.output.resolve() == args.previous_benchmark.resolve():
+            parser.error('Use a separate output directory to preserve the completed benchmark')
+        previous=json.loads((args.previous_benchmark/'report.json').read_text())
     accepted=json.loads((args.reference/'report.json').read_text())
     ell1=accepted['ell1']
     report=dict(notice=audit.NOTICE,status='initializing',threshold=ell1,
@@ -152,20 +161,37 @@ def main():
         assert np.all(reference_ll>ell1) and np.all(tuning_file['loglikelihood'][start_indices]>ell1)
         historical_path=audit.HIST/'seed44/posterior.npz'
         historical=diagonal_scales(np.load(historical_path)['samples_u'])
-        # Freeze all three geometries before any benchmark chain starts.
-        all_scales={name:frozen_scales(name,historical,tuning) for name in ['historical','isotropic','iid_relative']}
+        names = (['historical_rms_normalized'] if previous is not None
+                 else ['historical','isotropic','iid_relative'])
+        # Freeze requested geometries before any benchmark chain starts.
+        all_scales={name:frozen_scales(name,historical,tuning) for name in names}
+        if previous is not None:
+            assert previous['status'] == 'completed_fixed_contour_benchmark'
+            assert previous['threshold'] == ell1 and previous['settings'] == report['settings']
+            saved=np.load(args.previous_benchmark/'frozen_inputs.npz')
+            np.testing.assert_array_equal(starts,saved['starts'])
+            np.testing.assert_array_equal(historical,saved['historical'])
+            for field in ['tuning_sha256','evaluation_sha256','starts_sha256']:
+                assert report['banks'][field] == previous['banks'][field]
+            for p in [source,config_path,historical_path,Path(proposals.__file__)]:
+                assert hashlib.sha256(p.read_bytes()).hexdigest() == previous['file_sha256'][str(p)]
+            report['comparison_provenance']=dict(previous_report=str(args.previous_benchmark/'report.json'),
+                sha256=hashlib.sha256((args.previous_benchmark/'report.json').read_bytes()).hexdigest(),
+                old_strategies_rerun=False,identical_inputs_and_settings_verified=True)
         files=[source,config_path,historical_path,Path(__file__),Path(proposals.__file__),
                args.reference/'selection_bank.npz',args.reference/'calibration_bank.npz']
         report.update(config=cfg,devices=str(jax.devices()),jax_version=jax.__version__,
             file_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
             scale_definitions=dict(historical='69 seed44 samples_u coordinate std(ddof=1), unchanged',
+                historical_rms_normalized='original historical std * (pi/sqrt(3)) / RMS(original historical std)',
                 isotropic='all 54 scales pi/sqrt(3)',iid_relative='512 tuning samples coordinate std(ddof=1), divided by RMS std and multiplied by pi/sqrt(3)'),
             scales={k:v.tolist() for k,v in all_scales.items()})
         np.savez(args.output/'frozen_inputs.npz',starts=starts,**all_scales)
         from jax_samplers.problems.lisa_gb_transdim_problem import u_to_f0_unordered
         physical=lambda x:np.asarray(u_to_f0_unordered(jnp.asarray(x),problem.f_min_cfg,problem.f_max_cfg))
         save()
-        for strategy_index,(name,scales) in enumerate(all_scales.items()):
+        for name,scales in all_scales.items():
+            strategy_index={'historical':0,'isotropic':1,'iid_relative':2,'historical_rms_normalized':3}[name]
             original_scales=scales.copy()
             step=jax.jit(proposals.build_parameter_step(prior,like,scales))
             positions=np.empty((8,384,54));logL=np.empty((8,384));lp=np.empty((8,384))
@@ -215,6 +241,11 @@ def main():
                 **{k:np.asarray(v) for k,v in decoded.items()})
             print(name,'SUMMARY',json.dumps(row),flush=True);save()
         report['status']='completed_fixed_contour_benchmark'
+        if previous is not None:
+            report['comparison']={name:previous['strategies'][name] for name in ['historical','isotropic','iid_relative']}
+            report['comparison']['historical_rms_normalized']=report['strategies']['historical_rms_normalized']
+            report['comparison_RMS']={name:float(np.sqrt(np.mean(np.asarray(s)**2)))
+                for name,s in {**previous['scales'],**report['scales']}.items()}
     except Exception as exc:
         report.update(status='error',error=f'{type(exc).__name__}: {exc}')
         raise

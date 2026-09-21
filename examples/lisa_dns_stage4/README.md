@@ -254,3 +254,37 @@ remains high (median lag-one about 0.97), with only about 5.6 estimated effectiv
 observations per 256 retained steps. Broad exploration is improved but global
 mixing is not established. No further sampling followed the benchmark. All 83
 previous tests plus five new cheap geometry/autocorrelation tests passed (88 total).
+
+## Controlled historical RMS normalization
+
+```bash
+JAX_PLATFORMS=cuda PYTHONPATH=. MPLCONFIGDIR=/tmp/lisa_dns_mpl \
+/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python \
+-m examples.lisa_dns_stage4.run_kernel_benchmark \
+--strategy historical_rms_normalized \
+--previous-benchmark /tmp/lisa_dns_stage4_kernel_benchmark \
+--output /tmp/lisa_dns_stage4_historical_rms
+```
+
+This mode runs only one additional strategy, with seeds 4800--4807. It verifies
+exact agreement with the previous benchmark's saved starts, original historical
+scales, evaluation/tuning bank hashes, threshold, budget, configuration, and
+proposal source. The old results are read for comparison and never rerun.
+A separate output directory is required to preserve the earlier artifacts.
+The new frozen scales are `historical * (pi/sqrt(3)) / RMS(historical)`; all
+relative coordinate ratios are preserved. Walkers, burn-in, retained steps,
+slice mechanics, mixture probabilities, cache checks, diagnostics, and sparse
+checkpoint cadence are unchanged. There is no additional multiplier tuning.
+
+The additional strategy completed all 3072 steps with zero contour/cache,
+nonfinite, or slice failures. RMS scales were 0.7753555389972507 (original),
+1.8137993642342176 (normalized historical), and 1.8137993642342176 (isotropic).
+Normalization improved median f0 variance coverage only 1.86-fold, from 1.406e-6
+to 2.614e-6; isotropic coverage (0.2990) remained 114396-fold higher at matched
+RMS. Physical f0 span/reference width improved 1.47-fold (0.001379 to 0.002029),
+while isotropic reached 0.6996. Normalized historical logL KS ranged
+0.166--0.609, between-walker logL-mean SD was 210.83, median f0/logL ESS was
+5.29/21.57, and slice cost proxy was 19366. The relative anisotropy is therefore
+the dominant observed limitation; absolute direction length has a modest
+secondary effect. Independent short random streams do not constitute a precise
+causal decomposition, and finite ESS does not establish global mixing.
