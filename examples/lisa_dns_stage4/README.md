@@ -171,3 +171,86 @@ The two bank NPZ files retain all proposed points, prior/likelihood values,
 acceptance masks, and retained indices. `report.json` stores counts, intervals,
 seeds, model/config/source hashes, bank hashes, and the MCMC/IID comparison.
 The earlier runs and their artifacts remain unchanged.
+
+## Fixed-contour frozen-scale benchmark
+
+```bash
+JAX_PLATFORMS=cuda PYTHONPATH=. MPLCONFIGDIR=/tmp/lisa_dns_mpl \
+/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python \
+-m examples.lisa_dns_stage4.run_kernel_benchmark \
+--reference /tmp/lisa_dns_stage4_rejection \
+--output /tmp/lisa_dns_stage4_kernel_benchmark
+```
+
+This separate runner has no level-construction or level-transition calls. It
+uses only the constrained parameter callback at the previously accepted ell1.
+Every strategy has eight walkers, 128 burn-in steps and 256 retained steps per
+walker, `max_steps=10`, `max_shrinkage=100`, and the unchanged 20/40/40 labelled
+mixture. Streams are 4500--4507, 4600--4607, and 4700--4707. There are no budget
+extensions or multiplier sweeps.
+
+The geometries, all frozen before the first chain, are:
+
+* A: original 69-row seed44 coordinate standard deviations (`ddof=1`).
+* B: all 54 scales equal to `c=pi/sqrt(3)`.
+* C: coordinate standard deviations (`ddof=1`) from the selection bank's first
+  512 accepted level-one points, normalized by their RMS and multiplied by c.
+
+The direction generator uses `scales * masked_normal / norm(masked_normal)`.
+Thus B has norm c for global, single-label, and pair directions. Since the slice
+stepper expands its scalar bracket in unit increments, c sets the latent
+length per bracket increment. It is not multiplied by sqrt(54). For C the global
+expected squared direction norm is c squared; individual label blocks can
+have modestly different norms. A is left at its original absolute scale for a
+faithful baseline, so the A/B comparison changes both relative geometry and
+overall norm. The B/C comparison controls the global RMS norm.
+
+All strategies use the same eight distinct excess accepted points from the
+selection bank, excluded from both its 512 tuning points and the independent
+calibration bank's 512 evaluation points. No historical seed44 point initializes
+any benchmark walker. Tuning/evaluation/start hashes and row-disjointness are
+recorded. No scale is updated from benchmark samples.
+
+`report.json` contains compact metrics and inputs; each strategy also writes
+its complete step trace, detailed diagnostics, and sparse physical catalogue
+checkpoints at initialization and steps 128, 256, and 384. Simple existing
+f0 transforms provide distribution summaries without waveform reconstruction.
+Every parameter state is directly checked for finite values, contour membership,
+and scalar cache consistency. The same likelihood cost proxy and direct-check
+counts are reported for each strategy.
+
+The primary f0 variance metric is the median of 72 within-walker/label variance
+ratios to the independent IID reference. Pooled variances are also saved but can
+hide immobilized walkers with dispersed starting points. LogL KS distances are
+descriptive, without IID p-values. Between-walker mean spread, physical f0 spans,
+all 54 coordinate means/variances, and displacement metrics are saved.
+Autocorrelation uses a biased FFT estimate with an initial-positive monotone
+sequence of paired lags, capped at ESS=n. Constant traces get ESS=0. These short
+within-walker estimates are comparative diagnostics, not evidence of stationarity
+or global catalogue coverage. Different labelled frequency regions are not
+identified as distinct physical modes.
+
+The completed benchmark at ell1 had zero contour, cache, nonfinite, or slice
+failures for all strategies (3072 parameter steps each):
+
+| Strategy | Median within-walker f0 variance / IID | Walker logL KS range | SD of walker mean logL | Median ESS f0 / logL | Slice cost proxy |
+|---|---:|---:|---:|---:|---:|
+| Historical | 1.406e-6 | 0.162--0.910 | 368.54 | 4.60 / 13.09 | 25019 |
+| Isotropic | 0.2990 | 0.059--0.156 | 46.92 | 5.55 / 48.42 | 17554 |
+| IID relative | 0.3466 | 0.041--0.123 | 79.15 | 5.69 / 35.63 | 17485 |
+
+Median physical f0 span divided by the reference's central-90% width increased
+from 0.00138 to 0.6996 (isotropic) and 0.7951 (IID relative). Median between-walker
+f0 mean SD, measured in IID-reference SD units, decreased from 0.818 to 0.641 and
+0.709. The seed44 local scaling is the dominant observed problem: isotropic
+scaling improves frequency variance coverage by over 200000 times and substantially
+improves logL agreement at lower likelihood proxy cost. B/C has no consistent
+winner across diagnostics, so this attempt does not establish a further benefit
+from contour-specific anisotropy. C's frozen scales range only 1.650--2.010.
+
+The A/B comparison also changes RMS scale from 0.775 to 1.814; it does not isolate
+relative anisotropy from overall direction length. Frequency autocorrelation
+remains high (median lag-one about 0.97), with only about 5.6 estimated effective
+observations per 256 retained steps. Broad exploration is improved but global
+mixing is not established. No further sampling followed the benchmark. All 83
+previous tests plus five new cheap geometry/autocorrelation tests passed (88 total).
