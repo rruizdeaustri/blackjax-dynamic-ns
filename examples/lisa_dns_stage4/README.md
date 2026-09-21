@@ -117,3 +117,57 @@ scale anisotropy is a plausible contributor to slow catalogue exploration.
 One short attempt cannot isolate burn-in, scales, and contour geometry.
 No parameter changes, production, multi-start, or full-run replay followed the
 failure. The report includes read-only diagnosis derived from the saved trace.
+
+## IID level-1 rejection reference
+
+Run the isolated diagnostic (no MCMC or DNS production path):
+
+```bash
+JAX_PLATFORMS=cuda PYTHONPATH=. MPLCONFIGDIR=/tmp/lisa_dns_mpl \
+/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python \
+-m examples.lisa_dns_stage4.run_rejection \
+--previous /tmp/lisa_dns_stage4_prior_smoke \
+--output /tmp/lisa_dns_stage4_rejection
+```
+
+This holds the accepted level-one threshold fixed. Two new streams, seeds 4424
+and 4425, each call the audited `problem.sample_prior` for a fixed budget of 2048
+points. Likelihoods are evaluated sequentially in chunks of 32. All successes
+count toward the binomial prior-acceptance estimate; only the first 512 successes
+from each bank enter threshold selection/calibration. Insufficient successes
+stop the run; there is no automatic retry. Conditioning on having enough
+successes does not bias the accepted values. Banks must have no shared rows.
+
+The completed attempt accepted 756/2048 selection proposals and 747/2048
+calibration proposals, retaining 512 points from each. These rates (0.369141,
+0.364746) agree with the previous X1 estimate within 0.58 and 0.39 combined
+standard errors. The IID threshold is `-113448.99632193986`; independent
+calibration is `195/512=0.380859375`, SE `0.02146061`, with Wilson 95% interval
+`[0.33983211, 0.42366111]`. This supports ordinary exp(-1) compression.
+Using the previously accepted Xhat1 unchanged gives `Xhat2=0.13538360595703125`
+and `log Xhat2=-1.9996430044384734`. The report's scaled interval explicitly
+holds Xhat1 fixed; it is not a joint interval propagating both calibrations.
+No MCMC ESS is computed for rejection samples.
+
+The old MCMC threshold (`-113462.60568488069`) has IID-reference exceedance
+`406/1024=0.396484375`, Wilson interval `[0.36696385, 0.42677865]`.
+The saved short MCMC calibration estimate was 0.456055 with ESS 13.7368 and
+large between-walker disagreement. Comparisons exclude the original 128-step
+burn-in and retain the original time/walker grouping. They use descriptive KS
+distances, never IID p-values for correlated MCMC observations.
+
+`walker_comparison.json` records every walker's logL quantiles, all 54 latent
+means/variances and reference-normalized differences, f0 latent displacement,
+and labelled physical f0 means/variances/quantiles decoded with the existing
+`u_to_f0_unordered` transform. The median within-walker f0 latent variance is
+1.44e-6 times the IID reference variance. LogL KS distances range 0.130--0.895.
+These are different, narrowly explored labelled regions of the same contour;
+they do not establish distinct physical modes. The current blocker is short
+constrained-kernel mixing, not an inability to calibrate these shallow levels.
+No proposal tuning, burn-in increase, lower ESS gate, optional deeper rejection,
+or production followed this diagnostic.
+
+The two bank NPZ files retain all proposed points, prior/likelihood values,
+acceptance masks, and retained indices. `report.json` stores counts, intervals,
+seeds, model/config/source hashes, bank hashes, and the MCMC/IID comparison.
+The earlier runs and their artifacts remain unchanged.
