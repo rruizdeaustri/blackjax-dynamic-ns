@@ -4,6 +4,8 @@
 
 Exactly one additional level is frozen: `ell_11 = -108868.60077896297`, `log X_11 = -9.643899891984567`. The mass increment is the log of the independent calibration compression, not the selection compression.
 
+Calibration between-walker SE remained controlled under the unchanged gate and fell from Stage-4V 0.06913128436451788 to 0.0496193565736982 (28.2% lower). Residual heterogeneity remains: calibration exceedance fractions span 0.0703125–0.43359375. This is operationally acceptable independent construction, not proof of whole-catalogue physical convergence.
+
 ## Frozen setup and independent starts
 
 The exact Stage-4V checkpoint was loaded, including its complete level-0–10 prefix, and levels 0–9 were verified against Stage 4G. The lower checkpoint was copied byte for byte; no lower threshold or log mass was rebuilt or recalibrated. Source checkpoint SHA256: `5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a`.
