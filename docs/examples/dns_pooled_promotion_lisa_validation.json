@@ -1,0 +1,837 @@
+{
+  "decision": "FAIL",
+  "mixing_language": "D: validation integrity failure; mixing not measured",
+  "cause": "Initial cross-platform cache recomputation mismatch; no transition executed",
+  "harness_deviation": "GPU instead of historical CPU, and bitwise recomputation checks instead of frozen runner tolerances",
+  "selection_sweeps": 0,
+  "calibration_sweeps": 0,
+  "calibration_not_started": true,
+  "runtime_replay": "not applicable: no saved transitions; synthetic replay tests only",
+  "promotion": {
+    "selection": {
+      "total_retained": 2048,
+      "eligible": 753,
+      "eligible_fraction": 0.36767578125,
+      "donors": 7,
+      "per_donor_counts": [
+        134,
+        138,
+        131,
+        1,
+        122,
+        109,
+        0,
+        118
+      ],
+      "pool_order": "time-major, flat=retained_index*8+donor",
+      "selected_flat_indices": [
+        1663,
+        780,
+        1153,
+        1821,
+        1789,
+        1229,
+        1837,
+        983
+      ],
+      "retained_indices": [
+        207,
+        97,
+        144,
+        227,
+        223,
+        153,
+        229,
+        122
+      ],
+      "absolute_trace_indices": [
+        335,
+        225,
+        272,
+        355,
+        351,
+        281,
+        357,
+        250
+      ],
+      "donor_ids": [
+        7,
+        4,
+        1,
+        5,
+        5,
+        5,
+        5,
+        7
+      ],
+      "source_state_sha256": [
+        "0220f286a2fe697f38831fd4d5c4ad0069ac7bec305d732e08c4883f4acd694e",
+        "823ecf31b457a97042f46416ca5a4b5e06c172842bd8cca03541fe9de4fb1032",
+        "4ca4c64cf69a881ca981c006ab88c240bf125754285b58ad95f597c544c7514f",
+        "1064abc498c70b2bfed2fe1c3ea598b195f472396f7288ab5a9c41758de214a8",
+        "5d15d70fcc254d299a02dd239b8b9f78a743ab58f51dc416593222926f253665",
+        "7ab6fb93359f2f9fcb6b5b7b9d74e7244f6a6dc790e8a932b6f36e295dbdf49e",
+        "2662b5f885594dec1da968c77af99f5369dced8109cde6b22807d708e7294d03",
+        "b61ff5e0e792c7eae7d9aa9ace84b01e8fdea8dc0c7a924dd1d692f5da959bc2"
+      ],
+      "donor_multiplicities": [
+        0,
+        1,
+        0,
+        0,
+        1,
+        4,
+        0,
+        2
+      ],
+      "unique_promoted_states": 8,
+      "duplicates": 0,
+      "initial_logL": [
+        -106959.93639847376,
+        -107089.42346159703,
+        -104536.41922529046,
+        -107030.3785782433,
+        -106940.79261477459,
+        -104755.56689080255,
+        -105389.94605097032,
+        -106929.37673758554
+      ]
+    },
+    "calibration": {
+      "total_retained": 2048,
+      "eligible": 266,
+      "eligible_fraction": 0.1298828125,
+      "donors": 8,
+      "per_donor_counts": [
+        37,
+        46,
+        34,
+        29,
+        31,
+        19,
+        24,
+        46
+      ],
+      "pool_order": "time-major, flat=retained_index*8+donor",
+      "selected_flat_indices": [
+        519,
+        1859,
+        991,
+        1714,
+        1563,
+        1816,
+        889,
+        1335
+      ],
+      "retained_indices": [
+        64,
+        232,
+        123,
+        214,
+        195,
+        227,
+        111,
+        166
+      ],
+      "absolute_trace_indices": [
+        192,
+        360,
+        251,
+        342,
+        323,
+        355,
+        239,
+        294
+      ],
+      "donor_ids": [
+        7,
+        3,
+        7,
+        2,
+        3,
+        0,
+        1,
+        7
+      ],
+      "source_state_sha256": [
+        "103606749f1a0d8e0da1ab93142248580057101419f366bcae039f149817c1c0",
+        "44ab86239eea4ca01eb5e14e0fb3a7e8cfa81f7d8c3253c57ed52293c60a0353",
+        "856839e3a4f840a240ca5ce282c24adcf48cf7c26c08ae0e3f8a32ef3534fe5b",
+        "806ca5435f65818f43a21e162bfbf877fce222b3f2df96d064642536154e190f",
+        "f313c4149799fee159deab3094314ad1160dd5a95e11e30b6e71337e68a1ee9f",
+        "28672664b779aafaf61ee0540c5bc3d0b3ac8d7736b72911870193263f81f844",
+        "e839f3d586312aeb818d406632a3709d93fe5fde9fc40b616b3c6021e738d09a",
+        "6fba0b98effafc49fd3ed4efd20de2388412d33bee0be2199da57f7f2299ee6d"
+      ],
+      "donor_multiplicities": [
+        1,
+        1,
+        1,
+        2,
+        0,
+        0,
+        0,
+        3
+      ],
+      "unique_promoted_states": 8,
+      "duplicates": 0,
+      "initial_logL": [
+        -106807.23935693501,
+        -106335.50282945644,
+        -106834.66284096263,
+        -105344.17869913754,
+        -106935.47522564357,
+        -105244.12530518323,
+        -106490.01829988169,
+        -105650.09248267638
+      ]
+    }
+  },
+  "initial_geometry": {
+    "selection": {
+      "pairs": [
+        {
+          "a": 0,
+          "b": 1,
+          "labelled": 226.96771424849808,
+          "sorted_f0": 98.4801411528677,
+          "assignment": 98.4801411528677,
+          "assignment_over_labelled": 0.4338949329376673,
+          "sorted_mean_distance": 98.4801411528677,
+          "full_assignment_rms": 0.2840385328983614
+        },
+        {
+          "a": 0,
+          "b": 2,
+          "labelled": 207.2693523611963,
+          "sorted_f0": 140.9807704856324,
+          "assignment": 140.9807704856324,
+          "assignment_over_labelled": 0.680181458954691,
+          "sorted_mean_distance": 140.98077048563243,
+          "full_assignment_rms": 0.2568590431789428
+        },
+        {
+          "a": 0,
+          "b": 3,
+          "labelled": 163.97695325805347,
+          "sorted_f0": 32.49025544955462,
+          "assignment": 32.49025544955462,
+          "assignment_over_labelled": 0.19813915799755177,
+          "sorted_mean_distance": 32.49025544955457,
+          "full_assignment_rms": 0.2417935801851659
+        },
+        {
+          "a": 0,
+          "b": 4,
+          "labelled": 170.20702435179106,
+          "sorted_f0": 40.91712017345904,
+          "assignment": 40.91712017345904,
+          "assignment_over_labelled": 0.24039619004730267,
+          "sorted_mean_distance": 40.91712017345907,
+          "full_assignment_rms": 0.25662549033404697
+        },
+        {
+          "a": 0,
+          "b": 5,
+          "labelled": 225.62460057686206,
+          "sorted_f0": 48.515888016058334,
+          "assignment": 48.515888016058334,
+          "assignment_over_labelled": 0.21502924721868147,
+          "sorted_mean_distance": 48.51588801605841,
+          "full_assignment_rms": 0.25418937544306885
+        },
+        {
+          "a": 0,
+          "b": 6,
+          "labelled": 164.07895545567274,
+          "sorted_f0": 32.488731030407884,
+          "assignment": 32.488731030407884,
+          "assignment_over_labelled": 0.19800669098716306,
+          "sorted_mean_distance": 32.48873103040802,
+          "full_assignment_rms": 0.25324995690545604
+        },
+        {
+          "a": 0,
+          "b": 7,
+          "labelled": 208.86153268936928,
+          "sorted_f0": 56.871838757418516,
+          "assignment": 56.871838757418516,
+          "assignment_over_labelled": 0.27229446238911564,
+          "sorted_mean_distance": 56.8718387574185,
+          "full_assignment_rms": 0.20244857654887344
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "labelled": 280.7841188799953,
+          "sorted_f0": 101.50805032008327,
+          "assignment": 101.50805032008327,
+          "assignment_over_labelled": 0.36151635186841513,
+          "sorted_mean_distance": 101.50805032008323,
+          "full_assignment_rms": 0.29915430350093236
+        },
+        {
+          "a": 1,
+          "b": 3,
+          "labelled": 248.1617109331667,
+          "sorted_f0": 117.02122343354642,
+          "assignment": 117.02122343354642,
+          "assignment_over_labelled": 0.471552291421225,
+          "sorted_mean_distance": 117.02122343354641,
+          "full_assignment_rms": 0.26799195307497686
+        },
+        {
+          "a": 1,
+          "b": 4,
+          "labelled": 249.32258068903383,
+          "sorted_f0": 120.98377535010023,
+          "assignment": 120.98377535010023,
+          "assignment_over_labelled": 0.485249972207678,
+          "sorted_mean_distance": 120.98377535010023,
+          "full_assignment_rms": 0.2639268396352759
+        },
+        {
+          "a": 1,
+          "b": 5,
+          "labelled": 254.13297147172594,
+          "sorted_f0": 68.48561494998415,
+          "assignment": 68.48561494998415,
+          "assignment_over_labelled": 0.2694873260772605,
+          "sorted_mean_distance": 68.48561494998405,
+          "full_assignment_rms": 0.23091749180313187
+        },
+        {
+          "a": 1,
+          "b": 6,
+          "labelled": 248.1927959024806,
+          "sorted_f0": 117.07093947471257,
+          "assignment": 117.07093947471257,
+          "assignment_over_labelled": 0.47169354392023466,
+          "sorted_mean_distance": 117.07093947471257,
+          "full_assignment_rms": 0.26129654960941645
+        },
+        {
+          "a": 1,
+          "b": 7,
+          "labelled": 288.36542307079407,
+          "sorted_f0": 122.49043555138888,
+          "assignment": 122.49043555138888,
+          "assignment_over_labelled": 0.4247750449654893,
+          "sorted_mean_distance": 122.49043555138886,
+          "full_assignment_rms": 0.2702454076162843
+        },
+        {
+          "a": 2,
+          "b": 3,
+          "labelled": 173.0099820353231,
+          "sorted_f0": 156.0584420249185,
+          "assignment": 156.0584420249185,
+          "assignment_over_labelled": 0.9020198730097339,
+          "sorted_mean_distance": 156.05844202491852,
+          "full_assignment_rms": 0.2833554244048938
+        },
+        {
+          "a": 2,
+          "b": 4,
+          "labelled": 177.16896742211534,
+          "sorted_f0": 162.6762800457067,
+          "assignment": 162.6762800457067,
+          "assignment_over_labelled": 0.9181984995042671,
+          "sorted_mean_distance": 162.6762800457067,
+          "full_assignment_rms": 0.2924666745655477
+        },
+        {
+          "a": 2,
+          "b": 5,
+          "labelled": 232.53573457368984,
+          "sorted_f0": 114.17981226494231,
+          "assignment": 114.17981226494231,
+          "assignment_over_labelled": 0.49102049830865496,
+          "sorted_mean_distance": 114.17981226494231,
+          "full_assignment_rms": 0.2672264388058132
+        },
+        {
+          "a": 2,
+          "b": 6,
+          "labelled": 172.95321938505322,
+          "sorted_f0": 156.01360907951846,
+          "assignment": 156.01360907951846,
+          "assignment_over_labelled": 0.9020566927533082,
+          "sorted_mean_distance": 156.01360907951843,
+          "full_assignment_rms": 0.29757400617047347
+        },
+        {
+          "a": 2,
+          "b": 7,
+          "labelled": 250.20322206750532,
+          "sorted_f0": 179.75125128635204,
+          "assignment": 179.75125128635204,
+          "assignment_over_labelled": 0.7184210091341462,
+          "sorted_mean_distance": 179.75125128635204,
+          "full_assignment_rms": 0.26912688310037547
+        },
+        {
+          "a": 3,
+          "b": 4,
+          "labelled": 15.872764838529282,
+          "sorted_f0": 15.75969350526143,
+          "assignment": 15.75969350526143,
+          "assignment_over_labelled": 0.9928763933430561,
+          "sorted_mean_distance": 15.759693505261433,
+          "full_assignment_rms": 0.10878377683792709
+        },
+        {
+          "a": 3,
+          "b": 5,
+          "labelled": 156.55359645640436,
+          "sorted_f0": 77.18061859444353,
+          "assignment": 77.18061859444353,
+          "assignment_over_labelled": 0.49299805524388635,
+          "sorted_mean_distance": 77.18061859444356,
+          "full_assignment_rms": 0.2111781524301622
+        },
+        {
+          "a": 3,
+          "b": 6,
+          "labelled": 0.17905887258675415,
+          "sorted_f0": 0.17905887258675415,
+          "assignment": 0.17905887258675415,
+          "assignment_over_labelled": 1.0,
+          "sorted_mean_distance": 0.17905887256912179,
+          "full_assignment_rms": 0.0972354454811675
+        },
+        {
+          "a": 3,
+          "b": 7,
+          "labelled": 200.76508623541034,
+          "sorted_f0": 39.57953099615946,
+          "assignment": 39.57953099615946,
+          "assignment_over_labelled": 0.1971434961044464,
+          "sorted_mean_distance": 39.5795309961596,
+          "full_assignment_rms": 0.22075660077863818
+        },
+        {
+          "a": 4,
+          "b": 5,
+          "labelled": 155.21426482493047,
+          "sorted_f0": 85.42095981799106,
+          "assignment": 85.42095981799106,
+          "assignment_over_labelled": 0.5503421989875686,
+          "sorted_mean_distance": 85.42095981799108,
+          "full_assignment_rms": 0.23787250866149726
+        },
+        {
+          "a": 4,
+          "b": 6,
+          "labelled": 15.865616350461648,
+          "sorted_f0": 15.760272724239451,
+          "assignment": 15.760272724239451,
+          "assignment_over_labelled": 0.9933602562992057,
+          "sorted_mean_distance": 15.760272724239417,
+          "full_assignment_rms": 0.05951121762842796
+        },
+        {
+          "a": 4,
+          "b": 7,
+          "labelled": 201.17271767395243,
+          "sorted_f0": 35.21200778812642,
+          "assignment": 35.21200778812642,
+          "assignment_over_labelled": 0.17503371329503903,
+          "sorted_mean_distance": 35.212007788126456,
+          "full_assignment_rms": 0.24601595811630592
+        },
+        {
+          "a": 5,
+          "b": 6,
+          "labelled": 156.5534780611545,
+          "sorted_f0": 77.18180514922102,
+          "assignment": 77.18180514922102,
+          "assignment_over_labelled": 0.4930060073087069,
+          "sorted_mean_distance": 77.181805149221,
+          "full_assignment_rms": 0.23064412607926496
+        },
+        {
+          "a": 5,
+          "b": 7,
+          "labelled": 247.79655943624863,
+          "sorted_f0": 92.92838890230465,
+          "assignment": 92.92838890230465,
+          "assignment_over_labelled": 0.37501888288409674,
+          "sorted_mean_distance": 92.92838890230465,
+          "full_assignment_rms": 0.23740566551069528
+        },
+        {
+          "a": 6,
+          "b": 7,
+          "labelled": 200.76086768847048,
+          "sorted_f0": 39.68605883837358,
+          "assignment": 39.68605883837358,
+          "assignment_over_labelled": 0.1976782591912095,
+          "sorted_mean_distance": 39.68605883837357,
+          "full_assignment_rms": 0.24305865325445722
+        }
+      ],
+      "unique_states": 8,
+      "distances": {
+        "assignment": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 0.17905887258675415,
+          "q25": 39.65942687782005,
+          "median": 81.30138248360603,
+          "q75": 118.04914844355949,
+          "max": 179.75125128635204
+        },
+        "sorted_mean_distance": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 0.17905887256912179,
+          "q25": 39.659426877820074,
+          "median": 81.30138248360603,
+          "q75": 118.04914844355949,
+          "max": 179.75125128635204
+        },
+        "full_assignment_rms": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 0.05951121762842796,
+          "q25": 0.23084915037216514,
+          "median": 0.25371966617426245,
+          "q75": 0.26827568558132653,
+          "max": 0.29915430350093236
+        }
+      }
+    },
+    "calibration": {
+      "pairs": [
+        {
+          "a": 0,
+          "b": 1,
+          "labelled": 192.4231077927021,
+          "sorted_f0": 100.12528855969879,
+          "assignment": 100.12528855969879,
+          "assignment_over_labelled": 0.5203392134564421,
+          "sorted_mean_distance": 100.12528855969876,
+          "full_assignment_rms": 0.25105998301977994
+        },
+        {
+          "a": 0,
+          "b": 2,
+          "labelled": 174.53010107251404,
+          "sorted_f0": 82.98079214686221,
+          "assignment": 82.98079214686221,
+          "assignment_over_labelled": 0.4754526103917468,
+          "sorted_mean_distance": 82.98079214686227,
+          "full_assignment_rms": 0.20159286220569322
+        },
+        {
+          "a": 0,
+          "b": 3,
+          "labelled": 279.9610087617488,
+          "sorted_f0": 112.6848682334928,
+          "assignment": 112.6848682334928,
+          "assignment_over_labelled": 0.4025020081613914,
+          "sorted_mean_distance": 112.6848682334928,
+          "full_assignment_rms": 0.2557490900261107
+        },
+        {
+          "a": 0,
+          "b": 4,
+          "labelled": 195.10843065591493,
+          "sorted_f0": 52.217416914952615,
+          "assignment": 52.217416914952615,
+          "assignment_over_labelled": 0.26763280673935136,
+          "sorted_mean_distance": 52.217416914952594,
+          "full_assignment_rms": 0.27078225123896726
+        },
+        {
+          "a": 0,
+          "b": 5,
+          "labelled": 288.21166429272995,
+          "sorted_f0": 93.96022631600805,
+          "assignment": 93.96022631600805,
+          "assignment_over_labelled": 0.32601118537858625,
+          "sorted_mean_distance": 93.96022631600802,
+          "full_assignment_rms": 0.25136767729580706
+        },
+        {
+          "a": 0,
+          "b": 6,
+          "labelled": 304.9864552672456,
+          "sorted_f0": 75.10920525802855,
+          "assignment": 75.10920525802855,
+          "assignment_over_labelled": 0.24627062599292748,
+          "sorted_mean_distance": 75.10920525802857,
+          "full_assignment_rms": 0.29468046388860647
+        },
+        {
+          "a": 0,
+          "b": 7,
+          "labelled": 186.4900201603278,
+          "sorted_f0": 38.797079957265716,
+          "assignment": 38.797079957265716,
+          "assignment_over_labelled": 0.20803837076059825,
+          "sorted_mean_distance": 38.797079957265645,
+          "full_assignment_rms": 0.2272262451926144
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "labelled": 185.38999526493865,
+          "sorted_f0": 57.12910152609634,
+          "assignment": 57.12910152609634,
+          "assignment_over_labelled": 0.30815633521352553,
+          "sorted_mean_distance": 57.12910152609635,
+          "full_assignment_rms": 0.24541979297799185
+        },
+        {
+          "a": 1,
+          "b": 3,
+          "labelled": 301.49369134797877,
+          "sorted_f0": 162.67528711427758,
+          "assignment": 162.67528711427758,
+          "assignment_over_labelled": 0.5395644810574846,
+          "sorted_mean_distance": 162.67528711427755,
+          "full_assignment_rms": 0.242160088944421
+        },
+        {
+          "a": 1,
+          "b": 4,
+          "labelled": 147.41816675359047,
+          "sorted_f0": 56.45451451971597,
+          "assignment": 56.45451451971597,
+          "assignment_over_labelled": 0.3829549353579991,
+          "sorted_mean_distance": 56.45451451971588,
+          "full_assignment_rms": 0.15191390267803795
+        },
+        {
+          "a": 1,
+          "b": 5,
+          "labelled": 240.72832681464135,
+          "sorted_f0": 131.18906987535132,
+          "assignment": 131.18906987535132,
+          "assignment_over_labelled": 0.5449673148618098,
+          "sorted_mean_distance": 131.18906987535132,
+          "full_assignment_rms": 0.24541129874565562
+        },
+        {
+          "a": 1,
+          "b": 6,
+          "labelled": 188.272060795454,
+          "sorted_f0": 105.05077231279306,
+          "assignment": 105.05077231279306,
+          "assignment_over_labelled": 0.5579732429174622,
+          "sorted_mean_distance": 105.0507723127931,
+          "full_assignment_rms": 0.24917682451643228
+        },
+        {
+          "a": 1,
+          "b": 7,
+          "labelled": 194.7204271632324,
+          "sorted_f0": 77.20077514610743,
+          "assignment": 77.20077514610743,
+          "assignment_over_labelled": 0.39646983252245394,
+          "sorted_mean_distance": 77.20077514610743,
+          "full_assignment_rms": 0.2539383828522701
+        },
+        {
+          "a": 2,
+          "b": 3,
+          "labelled": 265.46523720329304,
+          "sorted_f0": 170.3807123956147,
+          "assignment": 170.3807123956147,
+          "assignment_over_labelled": 0.641819298792547,
+          "sorted_mean_distance": 170.38071239561472,
+          "full_assignment_rms": 0.272445064396286
+        },
+        {
+          "a": 2,
+          "b": 4,
+          "labelled": 165.78630470753205,
+          "sorted_f0": 51.301499231809075,
+          "assignment": 51.301499231809075,
+          "assignment_over_labelled": 0.30944352926082397,
+          "sorted_mean_distance": 51.301499231809,
+          "full_assignment_rms": 0.2555329320965636
+        },
+        {
+          "a": 2,
+          "b": 5,
+          "labelled": 310.02125388307593,
+          "sorted_f0": 148.70240171955163,
+          "assignment": 148.70240171955163,
+          "assignment_over_labelled": 0.4796522814388543,
+          "sorted_mean_distance": 148.7024017195516,
+          "full_assignment_rms": 0.27359784111045626
+        },
+        {
+          "a": 2,
+          "b": 6,
+          "labelled": 285.945391131726,
+          "sorted_f0": 114.8895996217781,
+          "assignment": 114.8895996217781,
+          "assignment_over_labelled": 0.4017886043452685,
+          "sorted_mean_distance": 114.88959962177807,
+          "full_assignment_rms": 0.2775892371578593
+        },
+        {
+          "a": 2,
+          "b": 7,
+          "labelled": 95.06981693023944,
+          "sorted_f0": 80.7702910807933,
+          "assignment": 80.7702910807933,
+          "assignment_over_labelled": 0.8495892144197681,
+          "sorted_mean_distance": 80.77029108079327,
+          "full_assignment_rms": 0.207876799384703
+        },
+        {
+          "a": 3,
+          "b": 4,
+          "labelled": 238.04797337719984,
+          "sorted_f0": 128.79714025396808,
+          "assignment": 128.79714025396808,
+          "assignment_over_labelled": 0.5410553949555457,
+          "sorted_mean_distance": 128.79714025396802,
+          "full_assignment_rms": 0.23481943262814137
+        },
+        {
+          "a": 3,
+          "b": 5,
+          "labelled": 271.53564152279347,
+          "sorted_f0": 88.37747157495001,
+          "assignment": 88.37747157495001,
+          "assignment_over_labelled": 0.32547282220235296,
+          "sorted_mean_distance": 88.37747157495005,
+          "full_assignment_rms": 0.2328359578603385
+        },
+        {
+          "a": 3,
+          "b": 6,
+          "labelled": 305.7721274628019,
+          "sorted_f0": 89.33657790925781,
+          "assignment": 89.33657790925781,
+          "assignment_over_labelled": 0.292167172497192,
+          "sorted_mean_distance": 89.33657790925781,
+          "full_assignment_rms": 0.2920574460712086
+        },
+        {
+          "a": 3,
+          "b": 7,
+          "labelled": 235.14683673253384,
+          "sorted_f0": 107.63859197778922,
+          "assignment": 107.63859197778922,
+          "assignment_over_labelled": 0.4577505420590539,
+          "sorted_mean_distance": 107.63859197778919,
+          "full_assignment_rms": 0.2567489035315237
+        },
+        {
+          "a": 4,
+          "b": 5,
+          "labelled": 295.25940902608954,
+          "sorted_f0": 103.96603886611362,
+          "assignment": 103.96603886611362,
+          "assignment_over_labelled": 0.35211761484263837,
+          "sorted_mean_distance": 103.96603886611364,
+          "full_assignment_rms": 0.26014715670434985
+        },
+        {
+          "a": 4,
+          "b": 6,
+          "labelled": 242.38976878522976,
+          "sorted_f0": 74.31894072476237,
+          "assignment": 74.31894072476237,
+          "assignment_over_labelled": 0.3066092314754956,
+          "sorted_mean_distance": 74.31894072476241,
+          "full_assignment_rms": 0.2433820996711362
+        },
+        {
+          "a": 4,
+          "b": 7,
+          "labelled": 170.24504124509994,
+          "sorted_f0": 41.08041065589029,
+          "assignment": 41.08041065589029,
+          "assignment_over_labelled": 0.24130165763093955,
+          "sorted_mean_distance": 41.080410655890354,
+          "full_assignment_rms": 0.2572000658624474
+        },
+        {
+          "a": 5,
+          "b": 6,
+          "labelled": 256.9596565932159,
+          "sorted_f0": 88.97941119115586,
+          "assignment": 88.97941119115586,
+          "assignment_over_labelled": 0.34627774791906785,
+          "sorted_mean_distance": 88.97941119115579,
+          "full_assignment_rms": 0.24754792547342236
+        },
+        {
+          "a": 5,
+          "b": 7,
+          "labelled": 262.81344073692543,
+          "sorted_f0": 77.51207088215511,
+          "assignment": 77.51207088215511,
+          "assignment_over_labelled": 0.29493191316552264,
+          "sorted_mean_distance": 77.5120708821551,
+          "full_assignment_rms": 0.237335829365813
+        },
+        {
+          "a": 6,
+          "b": 7,
+          "labelled": 257.74644740734124,
+          "sorted_f0": 64.48050434367127,
+          "assignment": 64.48050434367127,
+          "assignment_over_labelled": 0.2501702932951258,
+          "sorted_mean_distance": 64.4805043436713,
+          "full_assignment_rms": 0.2516319878367126
+        }
+      ],
+      "unique_states": 8,
+      "distances": {
+        "assignment": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 38.797079957265716,
+          "q25": 71.85933162948959,
+          "median": 88.67844138305293,
+          "q75": 108.90016104171511,
+          "max": 170.3807123956147
+        },
+        "sorted_mean_distance": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 38.797079957265645,
+          "q25": 71.85933162948963,
+          "median": 88.67844138305293,
+          "q75": 108.9001610417151,
+          "max": 170.38071239561472
+        },
+        "full_assignment_rms": {
+          "n": 28,
+          "nonfinite": 0,
+          "min": 0.15191390267803795,
+          "q25": 0.240954024049769,
+          "median": 0.2512138301577935,
+          "q75": 0.25793683857292304,
+          "max": 0.29468046388860647
+        }
+      }
+    }
+  },
+  "max_cache_prior_error": 5.684341886080802e-14,
+  "max_cache_logL_error": 3.6816345527768135e-08,
+  "protected_files": 36,
+  "protected_hashes_unchanged": true,
+  "frozen_through": 12,
+  "ell12": -108187.99712765554,
+  "logX12": -10.418392711998465,
+  "ell_test": -107123.66036615883,
+  "level13_absent": true,
+  "no_mass_update": true,
+  "no_retry": true,
+  "manual_methodology_ended": true,
+  "tests": {
+    "passed": 322,
+    "new": 10,
+    "real_lisa_calls_in_pytest": 0
+  }
+}
