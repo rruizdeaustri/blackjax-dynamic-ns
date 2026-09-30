@@ -1,0 +1,1938 @@
+{
+  "stage": "7A",
+  "historical": [
+    {
+      "level": 10,
+      "candidate": {
+        "block_size": 32,
+        "blocks": 64,
+        "ess": 32.208944589410514,
+        "exceeds": 753,
+        "interval": [
+          0.16677745788551554,
+          0.5685741046144844
+        ],
+        "naive_iid_se": 0.010654607212361613,
+        "naive_iid_wilson": [
+          0.34705895891651917,
+          0.3887880785482968
+        ],
+        "order_index": 1294,
+        "ratio": 0.36767578125,
+        "sample_count": 2048,
+        "standard_error": 0.08495993527477426,
+        "status": "ok",
+        "threshold": -109780.28875081123,
+        "walker_fractions": [
+          0.609375,
+          0.37890625,
+          0.66796875,
+          0.51171875,
+          0.48046875,
+          0.12109375,
+          0.05078125,
+          0.12109375
+        ]
+      },
+      "candidate_hash": "39278e858a071de965f89f7d22d4f6cd4ec8b315be2c78b358153155bc815495",
+      "calibration": {
+        "ratio": 0.4873046875,
+        "sample_count": 2048,
+        "exceeds": 998,
+        "naive_iid_se": 0.01104498147315988,
+        "naive_iid_wilson": [
+          0.46570095068796247,
+          0.5089559606555253
+        ],
+        "standard_error": 0.06913128436451788,
+        "interval": [
+          0.323835175947904,
+          0.650774199052096
+        ],
+        "ess": 52.27700333532884,
+        "blocks": 64,
+        "block_size": 32,
+        "walker_fractions": [
+          0.59765625,
+          0.53125,
+          0.6171875,
+          0.52734375,
+          0.53125,
+          0.60546875,
+          0.01953125,
+          0.46875
+        ],
+        "block_means_se": 0.02871102185901655,
+        "between_walker_se": 0.06913128436451788
+      },
+      "exact_threshold_prefix": true,
+      "exact_log_masses": true,
+      "checkpoint_sha256": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+      "note": "Historical starts used the former recovery rule; current promotion is the frozen pooled rule."
+    },
+    {
+      "level": 11,
+      "candidate": {
+        "block_size": 32,
+        "blocks": 64,
+        "ess": 54.1024594386805,
+        "exceeds": 753,
+        "interval": [
+          0.2126670879124386,
+          0.5226844745875614
+        ],
+        "naive_iid_se": 0.010654607212361613,
+        "naive_iid_wilson": [
+          0.34705895891651917,
+          0.3887880785482968
+        ],
+        "order_index": 1294,
+        "ratio": 0.36767578125,
+        "sample_count": 2048,
+        "standard_error": 0.06555320289604122,
+        "status": "ok",
+        "threshold": -108868.60077896297,
+        "walker_fractions": [
+          0.546875,
+          0.46875,
+          0.5625,
+          0.4765625,
+          0.41015625,
+          0.26171875,
+          0.109375,
+          0.10546875
+        ]
+      },
+      "candidate_hash": "bd046887104a9a135b4a11b17582855a6f394f0d3b8384d652c51885ea61d61e",
+      "calibration": {
+        "ratio": 0.28662109375,
+        "sample_count": 2048,
+        "exceeds": 587,
+        "naive_iid_se": 0.009991926486220366,
+        "naive_iid_wilson": [
+          0.2674510288711387,
+          0.3065901348636384
+        ],
+        "standard_error": 0.0496193565736982,
+        "interval": [
+          0.16928995984740342,
+          0.4039522276525966
+        ],
+        "ess": 83.04742208142542,
+        "blocks": 64,
+        "block_size": 32,
+        "walker_fractions": [
+          0.1953125,
+          0.38671875,
+          0.0703125,
+          0.43359375,
+          0.41015625,
+          0.3671875,
+          0.3125,
+          0.1171875
+        ],
+        "block_means_se": 0.026807513776862746,
+        "between_walker_se": 0.0496193565736982
+      },
+      "exact_threshold_prefix": true,
+      "exact_log_masses": true,
+      "checkpoint_sha256": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+      "note": "Historical starts used the former recovery rule; current promotion is the frozen pooled rule."
+    },
+    {
+      "level": 12,
+      "candidate": {
+        "block_size": 32,
+        "blocks": 64,
+        "ess": 52.6729865499919,
+        "exceeds": 753,
+        "interval": [
+          0.21057780601119766,
+          0.5247737564888023
+        ],
+        "naive_iid_se": 0.010654607212361613,
+        "naive_iid_wilson": [
+          0.34705895891651917,
+          0.3887880785482968
+        ],
+        "order_index": 1294,
+        "ratio": 0.36767578125,
+        "sample_count": 2048,
+        "standard_error": 0.06643676056903457,
+        "status": "ok",
+        "threshold": -108187.99712765554,
+        "walker_fractions": [
+          0.4765625,
+          0.43359375,
+          0.4375,
+          0.0546875,
+          0.51953125,
+          0.5078125,
+          0.08203125,
+          0.4296875
+        ]
+      },
+      "candidate_hash": "c4e28c233244a2597e6f20631a57202e5d4cb85dd00878aea63c3c01667a370e",
+      "calibration": {
+        "ratio": 0.4609375,
+        "sample_count": 2048,
+        "exceeds": 944,
+        "naive_iid_se": 0.011014774370830644,
+        "naive_iid_wilson": [
+          0.4394421663105443,
+          0.482579099361726
+        ],
+        "standard_error": 0.01979454229970753,
+        "interval": [
+          0.4141308452289324,
+          0.5077441547710676
+        ],
+        "ess": 634.1474269819192,
+        "blocks": 64,
+        "block_size": 32,
+        "walker_fractions": [
+          0.3984375,
+          0.48828125,
+          0.51953125,
+          0.4921875,
+          0.40625,
+          0.4609375,
+          0.390625,
+          0.53125
+        ],
+        "block_means_se": 0.018688411581259536,
+        "between_walker_se": 0.01979454229970753
+      },
+      "exact_threshold_prefix": true,
+      "exact_log_masses": true,
+      "checkpoint_sha256": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+      "note": "Historical starts used the former recovery rule; current promotion is the frozen pooled rule."
+    }
+  ],
+  "lisa_dry_run": {
+    "kind": "dry_run_only",
+    "old_contour": -108187.99712765554,
+    "seed": 170100,
+    "promotion": {
+      "selection": {
+        "total_retained": 2048,
+        "eligible": 2048,
+        "eligible_fraction": 1.0,
+        "eligible_per_donor": [
+          256,
+          256,
+          256,
+          256,
+          256,
+          256,
+          256,
+          256
+        ],
+        "donor_ids": [
+          4,
+          0,
+          3,
+          4,
+          7,
+          4,
+          6,
+          4
+        ],
+        "retained_indices": [
+          244,
+          50,
+          179,
+          237,
+          247,
+          249,
+          14,
+          251
+        ],
+        "selected_flat_indices": [
+          1956,
+          400,
+          1435,
+          1900,
+          1983,
+          1996,
+          118,
+          2012
+        ],
+        "selected_pool_indices": [
+          1956,
+          400,
+          1435,
+          1900,
+          1983,
+          1996,
+          118,
+          2012
+        ],
+        "donor_multiplicities": [
+          1,
+          0,
+          0,
+          1,
+          4,
+          0,
+          1,
+          1
+        ],
+        "unique_promoted_states": 8,
+        "duplicates": 0,
+        "source_hashes": [
+          "f8f6177d00b125ddca1225a64a270bf4359c829f299daedf531b6f19fa13668e",
+          "4bda3dfd9d43267ab80ac6daa593ae3b10fa105fdd7eff52409aba2a4ed333fb",
+          "6fc972fdeffd0e8aa88eb201c4256e9c191cf9107c47ce09e762922dd4eaff34",
+          "bedb024ebb3db68e2d4ace14964496da3e53e7ea21a62879a96211b410d12262",
+          "defccf85af3360fecede526afaa8acf095a151427e6bf1fc67036dc8b1f467a4",
+          "59c0c69f68d7e0ee781ef5529833360c0001539b5fec3b42f4c0be01ed9253cf",
+          "a6d328de46f8865b1cf0b824768fd4991a113d24107232632fb33da9d8e2861e",
+          "d73a323facb0706daf442cb7c7e5eb9cd3e2b62d385f14162083cbbb2c292d15"
+        ],
+        "source_history_hash": "b7b86d71c8bfd7bb8ae795be78f4feeda5282d66154f591dcbf4aafaee27e768",
+        "duplicate_source_hashes": {}
+      },
+      "calibration": {
+        "total_retained": 2048,
+        "eligible": 2048,
+        "eligible_fraction": 1.0,
+        "eligible_per_donor": [
+          256,
+          256,
+          256,
+          256,
+          256,
+          256,
+          256,
+          256
+        ],
+        "donor_ids": [
+          5,
+          7,
+          3,
+          3,
+          2,
+          7,
+          1,
+          1
+        ],
+        "retained_indices": [
+          253,
+          121,
+          19,
+          223,
+          49,
+          81,
+          20,
+          243
+        ],
+        "selected_flat_indices": [
+          2029,
+          975,
+          155,
+          1787,
+          394,
+          655,
+          161,
+          1945
+        ],
+        "selected_pool_indices": [
+          2029,
+          975,
+          155,
+          1787,
+          394,
+          655,
+          161,
+          1945
+        ],
+        "donor_multiplicities": [
+          0,
+          2,
+          1,
+          2,
+          0,
+          1,
+          0,
+          2
+        ],
+        "unique_promoted_states": 8,
+        "duplicates": 0,
+        "source_hashes": [
+          "97e55ebd7f54b1bb05c928d9d0c0ecd9784c58264fe633e8dc93c43de45ddcfb",
+          "9750d813c0f47ceeca0cd39dd8036bf438501358cc42648dae7968d4b620aba6",
+          "af4ad3057ad2cc35714cdb37223190650a65f6de744c3e08dbc298c9211b4b09",
+          "a81752bc3f3ce10ca47db5a4ae133d9667c7525f9152e775fd42eb7c377636b8",
+          "beedbddab35dff8b983cb76efd954232c1044a0880e7c56c4e56cbb79b6afa44",
+          "2c55eed2de89f24be294f5ce098722a9e3308838ad98e56253565ea21ba88f7d",
+          "e3360240a14dfd4abbbd6a974e3ebc6ad428351277f366da8a4429f9e030f06f",
+          "676784e140873ff48e261ca0afb69df2f8cea01a27dc3d564bd25df30ea2da1f"
+        ],
+        "source_history_hash": "aba555f570c5cd19248e132151ce7d74533ed800fc0100c13ef17b794e8c87b3",
+        "duplicate_source_hashes": {}
+      }
+    },
+    "streams": {
+      "selection": {
+        "bank": "selection",
+        "iteration": 0,
+        "recipe": "SeedSequence-v1",
+        "promotion_seed": 4140325232,
+        "slice_seeds": [
+          297103703,
+          2239751355,
+          3274842741,
+          227853495,
+          1673117995,
+          3228272639,
+          1625992173,
+          1875645679
+        ],
+        "label_seed": 200479358,
+        "mh_seed": 3505289427
+      },
+      "calibration": {
+        "bank": "calibration",
+        "iteration": 0,
+        "recipe": "SeedSequence-v1",
+        "promotion_seed": 2394178820,
+        "slice_seeds": [
+          3016469818,
+          3247456034,
+          823478297,
+          2546868366,
+          2872849389,
+          240794392,
+          3228412529,
+          1651013752
+        ],
+        "label_seed": 2856073902,
+        "mh_seed": 2255520090
+      }
+    },
+    "numerical_contract": {
+      "version": 1,
+      "backend": "cpu",
+      "jax_enable_x64": true,
+      "dtype": "float64",
+      "rtol": 0.0,
+      "prior_atol": 1e-09,
+      "likelihood_atol": 1e-07
+    },
+    "environment": {
+      "backend": "cpu",
+      "x64": true,
+      "jax": "0.10.0",
+      "jaxlib": "0.10.0",
+      "numpy": "2.4.4",
+      "prng": "threefry2x32",
+      "schedule": "PCG64"
+    },
+    "kernel": {
+      "exact_state_dependent_selector_correction": true,
+      "f_star": 0.0018409808,
+      "frequency_bounds": [
+        0.001830003805175038,
+        0.0018500126839167937
+      ],
+      "max_shrinkage": 100,
+      "max_steps": 10,
+      "mixture": [
+        0.2,
+        0.4,
+        0.4
+      ],
+      "model_id": "saved-LISA-config",
+      "pairing": [
+        [
+          [
+            0,
+            7
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            0,
+            6
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            5,
+            7
+          ]
+        ],
+        [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      ],
+      "reciprocal_exchanges": 4,
+      "scales": "pi/sqrt(3)",
+      "sigma_f": 2.558e-07,
+      "slice_updates": 8,
+      "source_sha256": {
+        "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+        "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+        "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+        "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+        "examples/lisa_dns_stage4/analyze_frequency_exchange_design.py": "721af9cd56a6d8d6ddfd133a1e78bbaebc85dece5d18d2ea49f346a48878625e",
+        "examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+        "examples/lisa_dns_stage4/frequency_population_benchmark.py": "6ea735704f9538f0a42c478992eb8345f9560d01e0f95750b4e6d269ed15670d",
+        "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026"
+      },
+      "version": "frozen-population-v1"
+    },
+    "promoted_hashes": {
+      "selection": "11dffe30efa726ac218585c5bbcc22ca19e453ad273b6801227fffc7a7f97a4d",
+      "calibration": "b4daa859628d1b8d13c4efb1a2efc2d45ef60f0bca2059f4d48754ef9bf41068"
+    },
+    "prefix_unchanged": true,
+    "new_LISA_model_calls": 0,
+    "new_LISA_sweeps": 0,
+    "candidate_constructed": false,
+    "checkpoint_written": false,
+    "cache_recomputation": "Not performed: copied cached values retain saved provenance; a future live run must pass recomputation before sampling."
+  },
+  "toy": {
+    "final_history_hashes": {
+      "calibration": "7d6493240afe5554932f644e0cd716379d72357676245b73d84006fae2fc6993",
+      "selection": "34137bafc1a66130a757fba5241db724a2c3b5845dc9f984bc5531b1a89446d6"
+    },
+    "iteration": 4,
+    "log_masses": [
+      0.0,
+      -0.5598599583675966,
+      -1.6521446523046457,
+      -2.710091208660803,
+      -3.5836087258834413
+    ],
+    "mode_fractions": {
+      "calibration": 0.5,
+      "selection": 1.0
+    },
+    "records": [
+      {
+        "accepted": true,
+        "calibration": {
+          "between_walker_se": 0.0632572619740419,
+          "block_means_se": 0.04514557692244781,
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 61.20680262844302,
+          "exceeds": 1170,
+          "interval": [
+            0.4217094067468225,
+            0.7208687182531774
+          ],
+          "naive_iid_se": 0.010935666577759998,
+          "naive_iid_wilson": [
+            0.5497417398128187,
+            0.5925694503352877
+          ],
+          "ratio": 0.5712890625,
+          "sample_count": 2048,
+          "standard_error": 0.0632572619740419,
+          "walker_fractions": [
+            0.66796875,
+            0.53125,
+            0.73828125,
+            0.54296875,
+            0.87109375,
+            0.484375,
+            0.32421875,
+            0.41015625
+          ]
+        },
+        "calibration_sampling": {
+          "accepted_exchanges": 877,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "candidate": {
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 46.45718021355417,
+          "exceeds": 752,
+          "interval": [
+            0.19995634661045647,
+            0.5344186533895435
+          ],
+          "naive_iid_se": 0.0106516403117058,
+          "naive_iid_wilson": [
+            0.34657739011232924,
+            0.38829491317339004
+          ],
+          "order_index": 1294,
+          "ratio": 0.3671875,
+          "sample_count": 2048,
+          "standard_error": 0.07072208334025946,
+          "status": "ok",
+          "threshold": -1.5652682893751235,
+          "walker_fractions": [
+            0.37109375,
+            0.22265625,
+            0.15625,
+            0.44140625,
+            0.484375,
+            0.1015625,
+            0.7109375,
+            0.44921875
+          ]
+        },
+        "candidate_sha256": "ea1222e1114dc92517b4c3b68addd311dc4640e5e5ee67d06d804898665a8d21",
+        "iteration": 0,
+        "old_threshold": "-inf",
+        "promotion": {
+          "calibration": {
+            "donor_ids": [
+              3,
+              3,
+              3,
+              2,
+              0,
+              4,
+              7,
+              1
+            ],
+            "donor_multiplicities": [
+              1,
+              1,
+              1,
+              3,
+              1,
+              0,
+              0,
+              1
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 64,
+            "eligible_fraction": 1.0,
+            "eligible_per_donor": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ],
+            "retained_indices": [
+              2,
+              4,
+              7,
+              0,
+              0,
+              5,
+              6,
+              2
+            ],
+            "selected_flat_indices": [
+              19,
+              35,
+              59,
+              2,
+              0,
+              44,
+              55,
+              17
+            ],
+            "selected_pool_indices": [
+              19,
+              35,
+              59,
+              2,
+              0,
+              44,
+              55,
+              17
+            ],
+            "source_hashes": [
+              "980073d3aa31163557e81837fb7cdcc9a065b5fdecc269c01d6aecd4068a98d1",
+              "a7d79badecf2bffec2fe7363aaa360c60ca18f160a5833dbb07407e4cb2583ec",
+              "ba1e5b84427e0a9e412352a63c2a9f43f867f055d7d05f43610a563276672574",
+              "40da32ad5931860ae1dfe16a13c7cea17d6ab07850ca0faab9dad07aa9049e5d",
+              "5e2771dcab79079ed7d394669bf7ddda9c4b37b2706a2ebd2a64cdfda04f65dc",
+              "1879d345f7a0df0bd0599a834eb85a40a5d1de413ca1e467bd5bada39154f012",
+              "db846557d34437cd66ecb8671f9dcf6b529ec4166ca8cf2e50a063ec6842836f",
+              "4cc2fae14d80ac1cc5c941244a1762871c4b940d6346bf7317e56f392fd55f1e"
+            ],
+            "source_history_hash": "b33ad250e1921de0f2554b9e6c739a8c74ab431bfb6c298f8df14112df3e54ce",
+            "total_retained": 64,
+            "unique_promoted_states": 8
+          },
+          "selection": {
+            "donor_ids": [
+              7,
+              7,
+              4,
+              1,
+              2,
+              7,
+              7,
+              4
+            ],
+            "donor_multiplicities": [
+              0,
+              1,
+              1,
+              0,
+              2,
+              0,
+              0,
+              4
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 64,
+            "eligible_fraction": 1.0,
+            "eligible_per_donor": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ],
+            "retained_indices": [
+              0,
+              3,
+              5,
+              2,
+              0,
+              4,
+              1,
+              0
+            ],
+            "selected_flat_indices": [
+              7,
+              31,
+              44,
+              17,
+              2,
+              39,
+              15,
+              4
+            ],
+            "selected_pool_indices": [
+              7,
+              31,
+              44,
+              17,
+              2,
+              39,
+              15,
+              4
+            ],
+            "source_hashes": [
+              "db205f279d85ac5c18cce25d3246444897e3f67cc34b25e8109e1416e5fd9867",
+              "9ef3c9ab352bdc949be2396a6656fafe7152e79d9aa75637f2e173b9a8537adb",
+              "0f61e551c2eb11c731475657c1f715e3cddec1d09ab7d2474f294f9c8d7eacbf",
+              "6f99acdc8c2856b54f067b01e195c2f0c67e3dd19622612652e697b4218b3531",
+              "5626a4f46e64ada8c0a88e20b686f75ff75a61454f8d2d9380fb132e173c9572",
+              "2f78ffd3fddc02c05d9fda687afc075995bfa079a6f7b0b50a46c093ed0842e9",
+              "8729f9d940bb0210bffeb8694d541cf5f180429a851de10889ca6de39d5d3d7b",
+              "d2eb7ffa41185c4f0a4f048b699e80ad07c19934a07d3f913fe291b0f75f1f7c"
+            ],
+            "source_history_hash": "fc5c053d5c0ff1ebb8bb3d72bd0facf851b03dbc93eb2f08373a3e9f0dc12400",
+            "total_retained": 64,
+            "unique_promoted_states": 8
+          }
+        },
+        "selection_sampling": {
+          "accepted_exchanges": 913,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "streams": {
+          "calibration": {
+            "bank": "calibration",
+            "iteration": 0,
+            "label_seed": 1128718516,
+            "mh_seed": 1008712453,
+            "promotion_seed": 3438683042,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              2044318186,
+              617094318,
+              1871202097,
+              1267870484,
+              1425715177,
+              2429045566,
+              3709132781,
+              3678656341
+            ]
+          },
+          "selection": {
+            "bank": "selection",
+            "iteration": 0,
+            "label_seed": 2635731504,
+            "mh_seed": 3197766081,
+            "promotion_seed": 1365851761,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              2946754970,
+              195611359,
+              1818605253,
+              342559479,
+              3273634918,
+              471533836,
+              1080108177,
+              2212143350
+            ]
+          }
+        }
+      },
+      {
+        "accepted": true,
+        "calibration": {
+          "between_walker_se": 0.04312343744641854,
+          "block_means_se": 0.03959362498558626,
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 119.87488781845822,
+          "exceeds": 687,
+          "interval": [
+            0.23347849275215432,
+            0.4374199447478457
+          ],
+          "naive_iid_se": 0.01043307916271303,
+          "naive_iid_wilson": [
+            0.3153256594751638,
+            0.3561889221692752
+          ],
+          "ratio": 0.33544921875,
+          "sample_count": 2048,
+          "standard_error": 0.04312343744641854,
+          "walker_fractions": [
+            0.36328125,
+            0.13671875,
+            0.40625,
+            0.16796875,
+            0.4453125,
+            0.43359375,
+            0.42578125,
+            0.3046875
+          ]
+        },
+        "calibration_sampling": {
+          "accepted_exchanges": 941,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "candidate": {
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 73.73058965934635,
+          "exceeds": 752,
+          "interval": [
+            0.23444201622762137,
+            0.4999329837723786
+          ],
+          "naive_iid_se": 0.0106516403117058,
+          "naive_iid_wilson": [
+            0.34657739011232924,
+            0.38829491317339004
+          ],
+          "order_index": 1294,
+          "ratio": 0.3671875,
+          "sample_count": 2048,
+          "standard_error": 0.05613808776720563,
+          "status": "ok",
+          "threshold": -0.30785938654037753,
+          "walker_fractions": [
+            0.1953125,
+            0.30859375,
+            0.52734375,
+            0.51953125,
+            0.16796875,
+            0.28515625,
+            0.5859375,
+            0.34765625
+          ]
+        },
+        "candidate_sha256": "1abf58e108ca13f1a402102ffd5c37821c3c855689a7af3ad279d35be2be8ad7",
+        "iteration": 1,
+        "old_threshold": -1.5652682893751235,
+        "promotion": {
+          "calibration": {
+            "donor_ids": [
+              4,
+              7,
+              7,
+              4,
+              2,
+              3,
+              6,
+              3
+            ],
+            "donor_multiplicities": [
+              0,
+              0,
+              1,
+              2,
+              2,
+              0,
+              1,
+              2
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 1170,
+            "eligible_fraction": 0.5712890625,
+            "eligible_per_donor": [
+              171,
+              136,
+              189,
+              139,
+              223,
+              124,
+              83,
+              105
+            ],
+            "retained_indices": [
+              96,
+              67,
+              135,
+              119,
+              208,
+              92,
+              222,
+              57
+            ],
+            "selected_flat_indices": [
+              772,
+              543,
+              1087,
+              956,
+              1666,
+              739,
+              1782,
+              459
+            ],
+            "selected_pool_indices": [
+              482,
+              310,
+              680,
+              610,
+              973,
+              453,
+              1039,
+              247
+            ],
+            "source_hashes": [
+              "7902ffaafda839d5382350b768eb499a313b5a6c7e025d84ecce994683e39c68",
+              "57331a75e21798d31d12ff959a65925e1378fb5ac411c3ab40c6c4d3efcc0ed3",
+              "daa9db4c3416b64fec823bc830120301900a814e2be4661b57dd874a48f6636e",
+              "0510c4db5ec7f9a16f393638324060a6904d4fe22f662bd9784ad6caedf6c016",
+              "d11ca713a1f20f96e26162a370b8a7220a0d42ec962864eab2b1bfd16a0df542",
+              "d291f538b10c87e1f5cde67de3176b742212a0cf6d3726cc16b36038605f4ada",
+              "484e55fc0c35b0e963edc0cf72f287fd809f6ad50026be3f7225a051c7a08220",
+              "e9b1ddb097f1637a3ef4922cafb3bdc2e16f0b2f12241962420c2ce0f28f8f71"
+            ],
+            "source_history_hash": "0d4cb4fef85fdf23ec7053a4541ce1810dbf6f9b0fe84df25317704ee2dab209",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          },
+          "selection": {
+            "donor_ids": [
+              1,
+              1,
+              6,
+              6,
+              5,
+              0,
+              3,
+              4
+            ],
+            "donor_multiplicities": [
+              1,
+              2,
+              0,
+              1,
+              1,
+              1,
+              2,
+              0
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 752,
+            "eligible_fraction": 0.3671875,
+            "eligible_per_donor": [
+              95,
+              57,
+              40,
+              113,
+              124,
+              26,
+              182,
+              115
+            ],
+            "retained_indices": [
+              44,
+              56,
+              207,
+              201,
+              134,
+              244,
+              151,
+              92
+            ],
+            "selected_flat_indices": [
+              353,
+              449,
+              1662,
+              1614,
+              1077,
+              1952,
+              1211,
+              740
+            ],
+            "selected_pool_indices": [
+              115,
+              131,
+              570,
+              542,
+              284,
+              715,
+              361,
+              163
+            ],
+            "source_hashes": [
+              "e13de4e13b3463c86c2c2aef50b0f4a4105143aee6afbda3d15b5f5152dee1e2",
+              "db0b77c4af101d899e72796f3d085d0014c3c666f19ca3e090de49df69e3f0cf",
+              "0e5b30db018ef79299a3a8634b3920a2b012cb373ba98245182104ac281cef94",
+              "11ec3ea56f6609fb3e7d6526aa048d3245c8febb1526e97f4020970e6b02279f",
+              "b6bec94710703f3244900443d8f8526f4fc59ddbbfe41886351c4cf51b9dc7a4",
+              "56a01ac98868af9dcf7a53a653b6ab3f1a47148ed13e0c5a2a30ad4886bc3546",
+              "7e1f8834f2f6ed5933e5430a93469fe3c8ca2b02ffb71e7856e45a88bc09a04e",
+              "6eaeb31df2d9bdc5108f98caac64fc9a902ebfd56394076275165803197dea4d"
+            ],
+            "source_history_hash": "258736fb8f895233515a5cb53ecb1db56f4ab4023dbaccdef1af4ebcad4c65b6",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          }
+        },
+        "selection_sampling": {
+          "accepted_exchanges": 876,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "streams": {
+          "calibration": {
+            "bank": "calibration",
+            "iteration": 1,
+            "label_seed": 2495093697,
+            "mh_seed": 2094416759,
+            "promotion_seed": 1372034131,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              2903699972,
+              2306564288,
+              806053357,
+              2939833107,
+              2464294276,
+              577369682,
+              2387895874,
+              938116451
+            ]
+          },
+          "selection": {
+            "bank": "selection",
+            "iteration": 1,
+            "label_seed": 230398623,
+            "mh_seed": 1030498673,
+            "promotion_seed": 831764913,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              867671380,
+              731672920,
+              90005853,
+              344761878,
+              2237622332,
+              2849994571,
+              2858795573,
+              2846257324
+            ]
+          }
+        }
+      },
+      {
+        "accepted": true,
+        "calibration": {
+          "between_walker_se": 0.033864840547026494,
+          "block_means_se": 0.028705946695821712,
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 197.62552344747715,
+          "exceeds": 711,
+          "interval": [
+            0.2670903455161785,
+            0.4272455919838215
+          ],
+          "naive_iid_se": 0.010519753791602587,
+          "naive_iid_wilson": [
+            0.3268530851150182,
+            0.3680551168277397
+          ],
+          "ratio": 0.34716796875,
+          "sample_count": 2048,
+          "standard_error": 0.033864840547026494,
+          "walker_fractions": [
+            0.48046875,
+            0.4375,
+            0.296875,
+            0.375,
+            0.29296875,
+            0.3046875,
+            0.18359375,
+            0.40625
+          ]
+        },
+        "calibration_sampling": {
+          "accepted_exchanges": 918,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "candidate": {
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 230.52765707928006,
+          "exceeds": 750,
+          "interval": [
+            0.30280265251889005,
+            0.42961922248110995
+          ],
+          "naive_iid_se": 0.010645671223484268,
+          "naive_iid_wilson": [
+            0.3456143214561486,
+            0.38730851347137746
+          ],
+          "order_index": 1294,
+          "ratio": 0.3662109375,
+          "sample_count": 2048,
+          "standard_error": 0.03173047017357994,
+          "status": "ok",
+          "threshold": -0.05120758803228836,
+          "walker_fractions": [
+            0.296875,
+            0.40625,
+            0.30859375,
+            0.4609375,
+            0.38671875,
+            0.3203125,
+            0.3984375,
+            0.3515625
+          ]
+        },
+        "candidate_sha256": "7bd525413c865427d884d4bae7542cc947bdf9c077c0903b4c4e57c86ca2023d",
+        "iteration": 2,
+        "old_threshold": -0.30785938654037753,
+        "promotion": {
+          "calibration": {
+            "donor_ids": [
+              6,
+              4,
+              2,
+              0,
+              5,
+              2,
+              1,
+              3
+            ],
+            "donor_multiplicities": [
+              1,
+              1,
+              2,
+              1,
+              1,
+              1,
+              1,
+              0
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 687,
+            "eligible_fraction": 0.33544921875,
+            "eligible_per_donor": [
+              93,
+              35,
+              104,
+              43,
+              114,
+              111,
+              109,
+              78
+            ],
+            "retained_indices": [
+              155,
+              80,
+              121,
+              69,
+              22,
+              223,
+              37,
+              239
+            ],
+            "selected_flat_indices": [
+              1246,
+              644,
+              970,
+              552,
+              181,
+              1786,
+              297,
+              1915
+            ],
+            "selected_pool_indices": [
+              468,
+              267,
+              376,
+              230,
+              56,
+              602,
+              123,
+              647
+            ],
+            "source_hashes": [
+              "2c8a7f6c30b1777e5759af8162333ff30645161a2f2eec6e803e31dbe8108ffe",
+              "97f204297fb1d8aff11273bd9a25bc42d7b487f766886c6228ce3b32f3ee0588",
+              "78758d6d05320fe022bca22197eba303c38aa634f7da6439aea80bd9029f6a98",
+              "9f2eb53e9595e6cceb06c0b546306a27c5a1088beae0eabad2fe6cb4b04b5760",
+              "b44027f3375fb532b421870f90278f23e4d702463a9fda1342f9fa053c199734",
+              "75e25eca7c9bcdd51e2b38e7acd25931952a5fa1af9d2e970c05d1cd599ded4b",
+              "e311f004b61cabae15f11a6458a625272642d2fbb14e3a31d62ce52ffc462948",
+              "f02b51d52bfa55319bf7ad8e92d27bb9338a034da844cd6266632b4456f0aee7"
+            ],
+            "source_history_hash": "ead2911ff3b926f9f22657d2bd685811bd1c56c0def267b5bbe4f63be5a7dd3f",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          },
+          "selection": {
+            "donor_ids": [
+              5,
+              2,
+              3,
+              2,
+              4,
+              2,
+              1,
+              3
+            ],
+            "donor_multiplicities": [
+              0,
+              1,
+              3,
+              2,
+              1,
+              1,
+              0,
+              0
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 752,
+            "eligible_fraction": 0.3671875,
+            "eligible_per_donor": [
+              50,
+              79,
+              135,
+              133,
+              43,
+              73,
+              150,
+              89
+            ],
+            "retained_indices": [
+              193,
+              43,
+              94,
+              37,
+              114,
+              70,
+              194,
+              52
+            ],
+            "selected_flat_indices": [
+              1549,
+              346,
+              755,
+              298,
+              916,
+              562,
+              1553,
+              419
+            ],
+            "selected_pool_indices": [
+              539,
+              138,
+              269,
+              115,
+              309,
+              206,
+              541,
+              171
+            ],
+            "source_hashes": [
+              "89955ecf1551d17e63ccc664cb33618a782f3cf5b76a22c3f5ddb4de5a567f25",
+              "55a4aa2fd55d16be25eae87407ab550a34c3d8ed16e6192226df34bb8021442a",
+              "100d3b8884ea7e9bef4a9b199d4f2631d1d3de2a280c807eb0be8ab990752cc8",
+              "ba2de7824897ff94f2b014ea101cb3af2b0751339d2ba2bae45fd60733efe651",
+              "b63e29936ad2df39ee38f67a88e23cd4e70b16155dcd5ad4e33ffd8a249b5192",
+              "b987f8a2e88f62f2c9fbe0a25f8a35235575c4974716a77afbe40f64ae392e8a",
+              "7bae25da4692d974ae4da201fb2c1b25cd3a4a2b322e553f17d458917c195d7e",
+              "cc6cf46e91c9e3c02f3660dd93430b037c89784be836413d9e2c28dcf4b6ba27"
+            ],
+            "source_history_hash": "ebeeac870f4c9c5276b1e562c01ca8210ced5d20c4a83cb2cf90489045fc63e2",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          }
+        },
+        "selection_sampling": {
+          "accepted_exchanges": 906,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "streams": {
+          "calibration": {
+            "bank": "calibration",
+            "iteration": 2,
+            "label_seed": 3156217901,
+            "mh_seed": 1108736120,
+            "promotion_seed": 2994367788,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              1517077896,
+              1697384823,
+              1101548239,
+              612448762,
+              4207776217,
+              2401642685,
+              952511457,
+              560647569
+            ]
+          },
+          "selection": {
+            "bank": "selection",
+            "iteration": 2,
+            "label_seed": 1933698058,
+            "mh_seed": 3177416249,
+            "promotion_seed": 4054270762,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              328569169,
+              3126071760,
+              1157108141,
+              1087958892,
+              385935924,
+              32679590,
+              2263812922,
+              1790749048
+            ]
+          }
+        }
+      },
+      {
+        "accepted": true,
+        "calibration": {
+          "between_walker_se": 0.030637459847755844,
+          "block_means_se": 0.02739567055033087,
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 259.0843281686563,
+          "exceeds": 855,
+          "interval": [
+            0.3450343881867964,
+            0.4899265493132036
+          ],
+          "naive_iid_se": 0.01089703512398216,
+          "naive_iid_wilson": [
+            0.3962966086063726,
+            0.43897331512629856
+          ],
+          "ratio": 0.41748046875,
+          "sample_count": 2048,
+          "standard_error": 0.030637459847755844,
+          "walker_fractions": [
+            0.45703125,
+            0.5078125,
+            0.4921875,
+            0.3671875,
+            0.421875,
+            0.34375,
+            0.48828125,
+            0.26171875
+          ]
+        },
+        "calibration_sampling": {
+          "accepted_exchanges": 833,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "candidate": {
+          "block_size": 32,
+          "blocks": 64,
+          "ess": 213.66704271254432,
+          "exceeds": 751,
+          "interval": [
+            0.28874253177551756,
+            0.44465590572448244
+          ],
+          "naive_iid_se": 0.010648661652036859,
+          "naive_iid_wilson": [
+            0.34609584428578954,
+            0.3878017248208332
+          ],
+          "order_index": 1294,
+          "ratio": 0.36669921875,
+          "sample_count": 2048,
+          "standard_error": 0.032967896240585236,
+          "status": "ok",
+          "threshold": -0.009589699124387183,
+          "walker_fractions": [
+            0.53515625,
+            0.2890625,
+            0.35546875,
+            0.34375,
+            0.265625,
+            0.47265625,
+            0.37109375,
+            0.30078125
+          ]
+        },
+        "candidate_sha256": "db59e797b6ce44e15a4d0a9f609a0142921db50f383fcc0c09996864d1a74bb4",
+        "iteration": 3,
+        "old_threshold": -0.05120758803228836,
+        "promotion": {
+          "calibration": {
+            "donor_ids": [
+              1,
+              3,
+              4,
+              3,
+              4,
+              2,
+              7,
+              0
+            ],
+            "donor_multiplicities": [
+              1,
+              1,
+              1,
+              2,
+              2,
+              0,
+              0,
+              1
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 711,
+            "eligible_fraction": 0.34716796875,
+            "eligible_per_donor": [
+              123,
+              112,
+              76,
+              96,
+              75,
+              78,
+              47,
+              104
+            ],
+            "retained_indices": [
+              113,
+              151,
+              245,
+              174,
+              3,
+              53,
+              252,
+              71
+            ],
+            "selected_flat_indices": [
+              905,
+              1211,
+              1964,
+              1395,
+              28,
+              426,
+              2023,
+              568
+            ],
+            "selected_pool_indices": [
+              280,
+              431,
+              675,
+              494,
+              16,
+              143,
+              698,
+              186
+            ],
+            "source_hashes": [
+              "fd3f14ed2598f3e928149e02035066acf97d1e1bb55bb08755f61b4fe1b77369",
+              "fb9b68d452545c6b793ffda0fd009c19abd8d4496219df16f23d4673e6e0b7f3",
+              "f7fbf0d89d12c1c3b9c05cc6060ed4a5bb4ca2301546d21d773c20b8c9bec73f",
+              "f46505fd1aeb2457fab10118067d217db63ef9633faa9d754602c550a058fc86",
+              "c922a856742e94ae5553deb7b94dfe568fe57a81b1060fc2d8665edef058b923",
+              "c6b2311b97912eb3b5620a9781ffe28deb136e1b892302fa291c6d553b4d42e0",
+              "9515bb49ff0a271147ebe78ff23f76f9945e5f6d9bdea323d3c58f6e3c9c543c",
+              "1fbcb0eca380e3b7c42c0b2c29d7448330e0aac439e97fecd94f2f926b6753e3"
+            ],
+            "source_history_hash": "69bbeccde54904906d4bed0cb8abae7390706467552808acd25e68cd1c96bdd7",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          },
+          "selection": {
+            "donor_ids": [
+              4,
+              4,
+              3,
+              7,
+              2,
+              5,
+              5,
+              1
+            ],
+            "donor_multiplicities": [
+              0,
+              1,
+              1,
+              1,
+              2,
+              2,
+              0,
+              1
+            ],
+            "duplicate_source_hashes": {},
+            "duplicates": 0,
+            "eligible": 750,
+            "eligible_fraction": 0.3662109375,
+            "eligible_per_donor": [
+              76,
+              104,
+              79,
+              118,
+              99,
+              82,
+              102,
+              90
+            ],
+            "retained_indices": [
+              227,
+              193,
+              102,
+              3,
+              148,
+              156,
+              77,
+              133
+            ],
+            "selected_flat_indices": [
+              1820,
+              1548,
+              819,
+              31,
+              1186,
+              1253,
+              621,
+              1065
+            ],
+            "selected_pool_indices": [
+              661,
+              572,
+              320,
+              13,
+              456,
+              466,
+              237,
+              420
+            ],
+            "source_hashes": [
+              "81227579b176cff4d1c75284ba48d5c500de0edc0cf384e4caf857fcd1163798",
+              "902d64b8c6c00dc6749d41938ccc23108db3b8f7061209d76ba91fb2a6970c74",
+              "195557668bf4df1faaf33622e5be4f634f272bf2576abdbd0d6d428e7947c718",
+              "0abb0fc0ccf424a28868352979e6ab59d76a758ffe73951eed4610ff72f86229",
+              "cc3904807bf7f4af06cd3495d8897f88acb943e357b6a51032c0bdf0666aac7c",
+              "e4c93327a3d475985493259c68239ca1ea6ab6c7a7c61a5e4b34b348d9190a7e",
+              "6d4fdd853e516f3a9a69a912b4e1b2a5d96d7db3ff6bd1f3f51f7a9da3184d13",
+              "eb0b6bd4b472f3f15c1d6fc1f912efb81516f0a8052a37e59c21cf9b45367bfa"
+            ],
+            "source_history_hash": "12c397fb63be1f475d86448806d7f29aec1fdc2cfab4e96ace3e6525e9845aa6",
+            "total_retained": 2048,
+            "unique_promoted_states": 8
+          }
+        },
+        "selection_sampling": {
+          "accepted_exchanges": 883,
+          "all_constituent_checks_passed": true,
+          "completed_sweeps": 384,
+          "exchange_proposals": 1536,
+          "retained": 256
+        },
+        "streams": {
+          "calibration": {
+            "bank": "calibration",
+            "iteration": 3,
+            "label_seed": 665422122,
+            "mh_seed": 3845160107,
+            "promotion_seed": 2193114844,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              3129926908,
+              4270684616,
+              732565966,
+              778094523,
+              1655719602,
+              2972427246,
+              2780630985,
+              3414882513
+            ]
+          },
+          "selection": {
+            "bank": "selection",
+            "iteration": 3,
+            "label_seed": 1899099442,
+            "mh_seed": 49236484,
+            "promotion_seed": 3629092222,
+            "recipe": "SeedSequence-v1",
+            "slice_seeds": [
+              3389258049,
+              1606586682,
+              3316772465,
+              2471552556,
+              851617264,
+              2486418555,
+              44744506,
+              2521973342
+            ]
+          }
+        }
+      }
+    ],
+    "status": "ready",
+    "thresholds": [
+      "-inf",
+      -1.5652682893751235,
+      -0.30785938654037753,
+      -0.05120758803228836,
+      -0.009589699124387183
+    ]
+  },
+  "restart": {
+    "passed": true,
+    "fresh_process": true,
+    "continuous_levels": 4,
+    "checkpoint_after": 2,
+    "comparisons": [
+      "thresholds",
+      "log_masses",
+      "retained coordinate and cache bytes",
+      "promotion/candidate/calibration records",
+      "next RNG iteration"
+    ],
+    "test": "tests/ns/test_dns_automatic_toy.py::test_multiple_toy_levels_and_fresh_process_restart"
+  },
+  "protected_hashes": {
+    "/tmp/lisa_dns_stage4_ladder_batch/checkpoint_level9.json": "c476746952ee6660f6adf8d634dfb639d5a79dc643431b3ba008b1da62e5e319",
+    "/tmp/lisa_dns_stage4_ladder_batch/report.json": "3f4fa26271c7c83adbe0824bf31e5a10f7b0ab5f635b0e3ecf05246b999689cf",
+    "examples/lisa_dns_stage4/run_ladder_batch.py": "be2e6842e7907ddc82d0f5d1603005bf491db4f7791789b5194a704d5774f53c",
+    "/tmp/lisa_dns_stage4o_hybrid/bottleneck_audit.json": "b1d6c6b1c78ca7e96ce8fd05dc06f4aa84449a85905f530887ec83c91fcfa9df",
+    "/tmp/lisa_dns_stage4h_continuation/initial_states.npz": "91ae54f5688e9bb79844dcb01475fe6fc07ff8c158b78157d152c3c5f9636254",
+    "/tmp/lisa_dns_stage4_ladder_batch/level9_selection_trace.npz": "d2fdadfc770774da659f179bccd1fcf4ac2328b16de914e0d1c1079575f22ad5",
+    "/tmp/lisa_dns_stage4_ladder_batch/level9_calibration_trace.npz": "08e951221f0263cad77a04ffb5307b2458ec93b2927c7e75ac7ae4172a3a62b4",
+    "/tmp/lisa_dns_stage4_ladder_batch/level10_selection_trace.npz": "c31383a48a32641028c5696d9d06fa3ac5c6384b1fb3bb6fbc3079bff290d433",
+    "/tmp/lisa_dns_stage4_ladder_batch/level10_calibration_trace.npz": "08c5031b8bad0c6683355b085519a333b26b13ab5c77ee28862cea37eef4dcc0",
+    "/tmp/lisa_dns_stage4h_continuation/trace.npz": "d8e3839bf0662232de7c40083e6769ce80c61144478067d3a9e3f6d5ee0288c8",
+    "/tmp/lisa_dns_stage4h_continuation/report.json": "56a1784f2d1bfd050bc8a21a34d003b71f92bdd40996a1cda11f80fe8695ac63",
+    "/tmp/lisa_dns_stage4o_hybrid/initial_states.npz": "081c3e056c7ec3c92eda52d04ba5ca1d3fa7e099b14581ecc240537242242d10",
+    "/tmp/lisa_dns_stage4o_hybrid/hybrid_pair/trace.npz": "1f6c44234d319ba1090dba36842cf3114f1cf853d9008ee14f854749b3549920",
+    "/tmp/lisa_dns_stage4o_hybrid/report.json": "bd9e77258611b30c7fe6abb72dea19e2052ee877cb61a640a005f3916931a6e0",
+    "/tmp/lisa_dns_stage4_prior_smoke/report.json": "6dd1d09b75bf6a1001300b16ee90dbb5de9177d5a444798318d535e36372a8b4",
+    "/tmp/lisa_dns_stage4t_frequency_design/design.json": "5a9f3ca4b69ba93417907d78d3a2a59cffcd7ae8c04d77f3f7fee2cb24f29f12",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/frequency_population_benchmark.py": "6ea735704f9538f0a42c478992eb8345f9560d01e0f95750b4e6d269ed15670d",
+    "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026",
+    "blackjax/mcmc/ss.py": "d2c9d5ac7045aecf196ab48a0d88869ac4b4c7ee159f00648d8e2526ac0a5d87",
+    "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+    "blackjax/ns/dns_diagnostics.py": "64cf8bbcb0a5dd375516c9bc97ab0d04b1a758cacc1a400d62c7cc67b89cbbfb",
+    "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+    "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+    "/r5/home/rruiz/projects/sbi/BayesLISAx/src/jax_samplers/problems/lisa_gb_transdim_problem.py": "3c5c4f429142aa4f61b5131dc52a2ad666ff58ac11ce4e627caa38e3acc1a6a3",
+    "/r5/home/rruiz/projects/sbi/BayesLISAx/automation/snakemake_lisa_gb/results/model_order/gb_0004/configs/k9.json": "bfafd9e8784bca263bd7298e10491d0010d27483222358b84bd1b4a877536670",
+    "/tmp/lisa_dns_stage4u_population/initial_states.npz": "081c3e056c7ec3c92eda52d04ba5ca1d3fa7e099b14581ecc240537242242d10",
+    "/tmp/lisa_dns_stage4u_population/random_schedule.npz": "eaaaff660979a598f7bb649ddaa89905779934c665e6469ef1c1c08009fc3113",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level10_construction.py": "af74b13d4e9f18f685fcb253916c82d9f77dc0af4ee5301458b14ba6eeaffe41",
+    "examples/lisa_dns_stage4/analyze_population_level10.py": "8c13fbd332d65106366bac6dae369f01e1c462cf72465d7d45d19c8d99dc9b85",
+    "/tmp/lisa_dns_stage4u_population/design.json": "2ced9fbc2ca9583bd66981b426f6cdfdf7299d673675dab25533fadd1e6c40f9",
+    "/tmp/lisa_dns_stage4u_population/report.json": "476be2a9a420c4dc49f0d94de8146115a26fc30d00b515c4fd39bdf83062a9ec",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/preflight.json": "8b7eed558c8ea7a5a903f8954ed17b6fa80692e34776ea0b555d3477c78bda2f",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/report.json": "374629f33e2176216044c45976ce639f00acdca77d0d3f8d7577302785d2289e",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/hybrid_level10_construction.py": "6f2d8a8c41b8f418f24013a751989d2fd39563342ed6af8c497452c989c096c2",
+    "examples/lisa_dns_stage4/analyze_frequency_exchange_design.py": "721af9cd56a6d8d6ddfd133a1e78bbaebc85dece5d18d2ea49f346a48878625e",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/selection_initial_states.npz": "ad54f980638f5676edb6d4e73668219167b323d61b973059d2b091a00ce65dc4",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/calibration_initial_states.npz": "611d85aef3baccae3fbc1bf2e7191e6d97beeeb8d5be8fabf0da16d93f7952f1",
+    "/tmp/lisa_dns_stage4v_population_level10/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4v_population_level10/calibration/trace.npz": "06b0ce9536ce03169b34a3a0a77e679a36f8620a714a57fc87e7302925d9b55b",
+    "/tmp/lisa_dns_stage4v_population_level10/validation.json": "1af6e1744a79a68d7ff4a2f5e19e5028343ca24ab3bc49427ec00e1f1a3f0092",
+    "/tmp/lisa_dns_stage4u_population/comparison.json": "42b5622ad4e0d52973aedfe21f41cecbbf8af8385010d4ed0d8a824a6b0da96f",
+    "/tmp/lisa_dns_stage4u_population/trace.npz": "ce8565cda6ddaa993b8fa124ed100749161814e926177f98b207bff2afc5d16d",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level10_population_validation.py": "47e24311155531a7f3499ce2c431c15fb3b031f031a9e704c716cede811c84c8",
+    "examples/lisa_dns_stage4/analyze_level10_population.py": "922a8008bfbf062b0e3e5f7bea32ab9acb617cc420941b96bf03178f2cc1e588",
+    "/tmp/lisa_dns_stage4w_level10_validation/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4w_level10_validation/initial_states.npz": "5fa3921e2dae87dfb6ad32c880fb12d174abe3757a1a72d26ea32cce10ca5290",
+    "/tmp/lisa_dns_stage4w_level10_validation/random_schedule.npz": "9957e91765dc5e46947e630b17fe8a96c7058f6879daaf705e15768298437c7a",
+    "/tmp/lisa_dns_stage4v_population_level10/comparison.json": "0953b2985befd1d4c1355c908767da6492a6f19e45de049655e06611ff49956c",
+    "/tmp/lisa_dns_stage4w_level10_validation/validation.json": "109ff9d9893c45f1ec450dfc0f61f34f9f7b6acd808111e6eab944311e260bdd",
+    "/tmp/lisa_dns_stage4w_level10_validation/decision.json": "4dd259c16f040baafd21e16340cbdd87ea6842518b4c9ca4adac9909fe1ac7f1",
+    "/tmp/lisa_dns_stage4w_level10_validation/design.json": "c4c42a03f2c39c5afe9f9c3c7e10bd32dfe24692abb9ab50e50dd998241bb9c2",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level11_construction.py": "0e2698b7ebd2a345b1bde98ed3d3d84d114c8f00c24399cbb8e1500ac2371ec0",
+    "examples/lisa_dns_stage4/analyze_population_level11.py": "8f171d74d0c8c07bee577c4666d25ba3c7af287ca0321398f443e6dedbae8362",
+    "/tmp/lisa_dns_stage4v_population_level10/selection/trace.npz": "114da5f7a30530a6db319a55182ce284beef41a0ac2fc334669c22d115682074",
+    "/tmp/lisa_dns_stage4x_population_level11/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4x_population_level11/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4x_population_level11/calibration/trace.npz": "9427128d9711592778d3d98f9964b431f79f33a3a3c91fa8d340ea2bc2ec3576",
+    "/tmp/lisa_dns_stage4x_population_level11/validation.json": "82f49d6bc3fa84211e317467685c8ca51161b45c49bb9a2f890b1fc027810a10",
+    "/tmp/lisa_dns_stage4w_level10_validation/comparison.json": "b0fdb7c8d1ae62c1ebda4cb404de3d5ceb06c02e353b319f7743d17a71ecddac",
+    "/tmp/lisa_dns_stage4w_level10_validation/report.json": "484916be418e753f122fd867ef45e47056ca3e655bd4339fe97a1a3e4bbaba42",
+    "/tmp/lisa_dns_stage4w_level10_validation/provenance_transfers.json": "177cbffcda5d1a6db9ad7d59429677b302da800e2e9f7bbc5b734c1b3aea4703",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level11_population_validation.py": "cf7c251f63515d303827ff7164e0f10ea4c129e4d9d715a4d789a12650a9a2bc",
+    "examples/lisa_dns_stage4/analyze_level11_population.py": "17640c861c5fd30420bce25b443f0bb923647b726fccaf77bd8bc361690040a7",
+    "/tmp/lisa_dns_stage4y_level11_validation/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4y_level11_validation/initial_states.npz": "0211458c66b5810b2d4505900e1be787eb1013504a401e14ff721f8bffcc5792",
+    "/tmp/lisa_dns_stage4y_level11_validation/random_schedule.npz": "237e8b21ec0b8480063964e0427389b91ed9699620c96c9dd4d3459d5f50433c",
+    "/tmp/lisa_dns_stage4x_population_level11/comparison.json": "eecbed7c14cede24de00d28b426caa5b4a8004534f5826b735161e9a6417dddf",
+    "/tmp/lisa_dns_stage4y_level11_validation/validation.json": "6574b6b3a496fb4ed15949c080a328f1e53e99e6cf0d35d84732b5356d0a0fbb",
+    "/tmp/lisa_dns_stage4y_level11_validation/decision.json": "7e89e5c505ae88654f9821622c9d529e7e3672d15d70fc6c7df72a3c1ac6e836",
+    "/tmp/lisa_dns_stage4y_level11_validation/design.json": "b94c80a008ade2e1dbe11fcd0f620efc75740921ecba9e7994a171109dbf46b4",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level12_construction.py": "aed7e3cfa1def8d577cb861b0113162bfdb2fcd263f7d4da4171d44410a69796",
+    "examples/lisa_dns_stage4/analyze_population_level12.py": "3a887f4d1bcea58713c4a89fbd067c3381d0ba0c6521fc4fa3a12544eb051650",
+    "/tmp/lisa_dns_stage4x_population_level11/selection/trace.npz": "1d9edd611b723311d626cf14a235072a1783b221478b9166a5ac7dbc3ffc64cb",
+    "/tmp/lisa_dns_stage4z_population_level12/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4z_population_level12/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage4z_population_level12/calibration/trace.npz": "de6a48ac5f546d5c4589d68baa2a162e564fec1926fc69d60e958578a6c173c0",
+    "/tmp/lisa_dns_stage4z_population_level12/report.json": "4f533ed12d4cd5d831805ffb2a64a33b496d5da9ae906a9f48416ff683bb2cb5",
+    "/tmp/lisa_dns_stage4z_population_level12/comparison.json": "ef5a96ec12d4e3c94803515ce5febfd58ae19f4ad069b11aff23c328f12f92e2",
+    "/tmp/lisa_dns_stage4z_population_level12/levels.npz": "8bcdad7a099832ded0cc2a2c8234c2cef874379fd938b9a0e619e3af3c26ddc5",
+    "/tmp/lisa_dns_stage4y_level11_validation/comparison.json": "a54cec56ea5150a04855ef54b39fe6397cda60a27923b12823e651c537c32d74",
+    "/tmp/lisa_dns_stage4y_level11_validation/report.json": "7b7a113e66b84823889962aa7d0c3d96b777ed731c22a40bc7c7816a6052017d",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level12_population_validation.py": "adf9012b4fd3478834fcf23b9f79b42aca52eb6f74de0e50bf91260c8b0b4c05",
+    "examples/lisa_dns_stage4/analyze_level12_population.py": "760ffc4021538c0e9094c3edf07cfddbd17de4b29992b7cf81140084f325ce0e",
+    "/tmp/lisa_dns_stage5a_level12_validation/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage5a_level12_validation/initial_states.npz": "965e0949c7ecae72114d995fdb34a10aa3b9c5b973de645773ddbdeb2b454a5f",
+    "/tmp/lisa_dns_stage5a_level12_validation/random_schedule.npz": "0f0198bcea9e17adf0aba5cdc73ae26a07ed8909aedbb501c45aca06db0a2482",
+    "/tmp/lisa_dns_stage5a_level12_validation/validation.json": "ed844dfd6bcdbc64d2670ec038a7f7a3f223bfb6d6d31070d4fcdec87df89095",
+    "/tmp/lisa_dns_stage5a_level12_validation/decision.json": "44087f2f0947d0bd7b10512d00dae9806340d5b46eaacaef9c972dcb1d583b7f",
+    "/tmp/lisa_dns_stage5a_level12_validation/design.json": "26eaa3dfc97b2d51284e318da4df60067a7bfdc013f60e109040a0ee21f3e528",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level13_construction.py": "dc2cab1c6807c0b2d05cda05fb074f62a57dfbdce1b81e29ab6c142a2e11f5d1",
+    "examples/lisa_dns_stage4/analyze_population_level13.py": "238891f54a5f0cb42bc1f67474c523825a3496f9c1fad709c1651bb7aa137fe9",
+    "/tmp/lisa_dns_stage4z_population_level12/selection/trace.npz": "0c626a84d5b0ebdde836a05a1e22ffa7108ae7a18e9fc1c9207b881ce190161c",
+    "/tmp/lisa_dns_stage5b_population_level13/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/initial_states.npz": "3288e6c354b05d0abe7d0c2ce1a0ffcda7d385754d5e71b19c7186853623766a",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/random_schedule.npz": "48fee2a738a9fa73ed080ef8272a1a78cea1ff4588bec86bde77ea6d11b53548",
+    "/tmp/lisa_dns_stage5b_population_level13/preflight.json": "8f18c50b3852fd989d07f44275e6383ad578e5809bd4f4f404917e294c54bb09",
+    "/tmp/lisa_dns_stage5b_population_level13/report.json": "e24b713d8ee7e5d7fa402ec7b0e4a577910a9d21a76f5ac6d03f3d72a31c1966",
+    "/tmp/lisa_dns_stage5b_population_level13/selection_candidate.json": "c5fce9bfaef12306b0d215f157dc667661a4cd7e782c0ecf22fa2d840c2fbd60",
+    "/tmp/lisa_dns_stage5b_population_level13/comparison.json": "9c974d47084743604292056ae580bb284903952b010d048ade130e647a2dbc8b",
+    "/tmp/lisa_dns_stage5b_population_level13/interpretation.json": "bae6107780db94abdae978c938823acb5a312abcc9c092f1ca6c3fb7e71c1dbd",
+    "/tmp/lisa_dns_stage5b_population_level13/tests.log": "8a8618cb4d6e816a95f8351ff543d5616b001cef4713e302b25fa4edfffff465",
+    "/tmp/lisa_dns_stage5b_population_level13/validation.json": "526b488e6bad080f91cdd300f43ec6451d05651cab8780913fb9c0e06d5c94b9",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/design.json": "f434521fd24accb383ac790314158ce0859391b8537599905367055d9afcde0e",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/report.json": "2b1b121a7749652bad77274048590cf9adc084ccb162e5aa90d36c5b7ec03724",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/provenance.json": "fafc031800e3fd6df90d94894ca31212bac2a1f0ceaff5b3d01ee6e4fecc0033",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/trace.npz": "3b17c71c933412feeb4b3a461bfb5a987a91c8cf5e3b09b2b4d82f01f18b6141",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/exchanges.npz": "48ee91636a1a6df1a24d6cefadd268a7113f304e07e6a5b4a39ab77973c53e4d",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/provenance_transfers.json": "e7c4fd64a445231329ca75cae38a9dcc9965521320171141582e94ccb4034e3b",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/initial_states.npz": "965e0949c7ecae72114d995fdb34a10aa3b9c5b973de645773ddbdeb2b454a5f",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/random_schedule.npz": "052739a9912e32a6f3f79e3c3c2057fc82231833a51f91f275d80e5f571a7820",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/design.json": "f160bf2021daffbba0319bc7ce67bcd678fe565293e89c5b0b85ec3384a84d43",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/report.json": "db74f6588e31d9673dca5131b015e34129e7f912f97b9ecb8861c0ba1bcd27ab",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/provenance.json": "9e451c27954f17500caeaf53a3ab64a2fb2cf455e78c523647c4c221b40e658d",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/trace.npz": "2b4d47d3fa7a5f547cfc47ba0af8c814d4dd46800461f5dc515d417979d63b1d",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/exchanges.npz": "68fd054911115365bb866336a3adc4c89678e9ccefab5efa96f8a76680ca6db2",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/provenance_transfers.json": "8c04d2f52a2b0e0169a34ce1a966863a365a06f33c75eddfc67e1bad8e9e113a",
+    "/tmp/lisa_dns_pooled_promotion_validation/preflight.json": "7f7c674f1715bf7d0509cb0cd1ed1c0b9a11d679843bb747b73366b0b5ede7c4",
+    "/tmp/lisa_dns_pooled_promotion_validation/promotion.json": "aa830c88ef656be5f452430cd841c5f3d1e8e9bd3725823e5630ecc2c26ca98d",
+    "/tmp/lisa_dns_pooled_promotion_validation/validation.json": "5b68dd4faac4ca1245b190f19eb88cdf74ada72596c27feab9f1e047f7430edb",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/initial_states.npz": "b45d654ec96855c8947e65739bf5460b833e6d587198a613220bef4838a56092",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/random_schedule.npz": "4638358b6c45f16df420a294f45fe73cf6d739efe7da90ab5aebf0622049a74b",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/design.json": "0c633700547b8c96e36b785513cafa737f0ff5140d959f32fe213d72df82c954",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/sampling_started": "cbe26cc5c921a6dba8b18ebaf61ecdce178b82ed894cf72a1704a361d72b40b2",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/report.json": "ec3d78ff29b721aa98108e83781b560e451f446ef4a90662a42172e8f46179d1",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/provenance.json": "e3e51f04b587e2131328651afe3e722f38f3392e6b74ff82eeb77dc0943f9966",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/initial_states.npz": "c92590a0298d62d1866bfd7daf398f5acb595c439a086b870582b30d0a7debb8",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/random_schedule.npz": "f8ee5793a9aa2092cd743bcdb8e9c273b822470f6d2982e445ce6479162fadf9",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/design.json": "7f902db11661fe00d87d799fd0807f95e893a9e12b80564c9633d7bb7364f453",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/audit_cpu_reproducibility.py": "27362383267166c069347952b3c040e4142107bc9a2719ad62c1dd533e797fd1",
+    "examples/lisa_dns_stage4/numerical_cache_contract.py": "331f2fa62080e5bfb860be9ff68940be183dd852f7bb9fd91ffb83cd78d5b1d7",
+    "/tmp/lisa_dns_stage6a_numerical_audit/contract.json": "3d349a31b043dcc3196ebfae97ec1a21d77ceb8cf8ea8d8e5a4b443f356ff3a3",
+    "/tmp/lisa_dns_stage6a_numerical_audit/saved_states.npz": "aabcd856e38fad5c357ef49e71cd0dee3626f5c29ed575b52d919907b4ab7fac",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/stage6b_pooled_promotion_validation.py": "0b302dace307c9745680a7db5f4506475c678ab9bf38bf212a10170ae2447c52",
+    "examples/lisa_dns_stage4/frequency_population_benchmark.py": "6ea735704f9538f0a42c478992eb8345f9560d01e0f95750b4e6d269ed15670d",
+    "examples/lisa_dns_stage4/level12_population_validation.py": "adf9012b4fd3478834fcf23b9f79b42aca52eb6f74de0e50bf91260c8b0b4c05",
+    "examples/lisa_dns_stage4/audit.py": "350edcffe1de3adb783bec9918c8e0f57e599b39ad0cfc49119f879d577cb5c9",
+    "/tmp/lisa_dns_stage5a_level12_validation/comparison.json": "843efd098f218420be2d96b9c744c0e61b0cd1d3c49050fa61c50a119d00bff7",
+    "/tmp/lisa_dns_stage5a_level12_validation/report.json": "1e5f0225c217c826ce0a86f3c1b564e9bc25b98c8c2a0ba1dc0247b329a4043a",
+    "examples/lisa_dns_stage4/analyze_stage6b_pooled_promotion.py": "a8a2ac58137fd960f10a99e80439a7a10f5f05c86e737acae7c3ce05ff197337",
+    "/tmp/lisa_dns_stage6a_numerical_audit/results.json": "98afc03dd4c6cb5fa603aa561d0076750149fddbe28341760688cbe946d60439"
+  },
+  "protected_hashes_unchanged": true,
+  "no_LISA_model_calls": true,
+  "no_LISA_trajectory": true,
+  "no_new_LISA_level": true,
+  "decision": "PASS",
+  "ready_for": "inference reconstruction validation",
+  "next_phase_started": false,
+  "production_LISA": false,
+  "evidence_implemented": false,
+  "final_DNS_termination_implemented": false,
+  "test_results": {
+    "passed": 392,
+    "seconds": 134.36,
+    "log_sha256": "ebad0a35f5ddf0af7534643ac51533cb89d0e4c422a731becf3ac3cc5877e795",
+    "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python -m pytest -q tests/ns/test_dns*.py tests/experimental/test_dns_gb*.py"
+  },
+  "failed_gate_test": {
+    "result": "STOP",
+    "attempts": 1,
+    "compression": 0,
+    "ess": 0,
+    "levels_appended": 0,
+    "no_retry": true
+  },
+  "checkpoint_scope": "Completed iteration boundaries; no mid-sweep retry or restart",
+  "historical_checkpoints_unchanged": true,
+  "no_level13_checkpoint": true,
+  "implementation_sha256": {
+    "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+    "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+    "examples/dns_automatic_ladder.py": "63f8e976439dcd28bab72330e6ecc94ea87b180fb0debf996613070a00eb870c",
+    "examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+    "tests/ns/test_dns_automatic.py": "cfe5dba33516844154be77d8c800504268ebeac91497f209898d5bef9e0daede",
+    "tests/ns/test_dns_automatic_toy.py": "52e6c6da560fcb58a7d218070c4f0114a586901db769074d38cb2d55e677a31a",
+    "tests/experimental/test_dns_gb_automatic_integration.py": "75999a5a067c6e3ac6030c16bcda108eeacc5eed5e93c66a03d0dc11bdae4f38"
+  }
+}
