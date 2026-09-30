@@ -1,0 +1,116 @@
+{
+  "source": "/tmp/lisa_dns_stage6a_numerical_audit/saved_states.npz",
+  "source_sha256": "aabcd856e38fad5c357ef49e71cd0dee3626f5c29ed575b52d919907b4ab7fac",
+  "states": [
+    {
+      "bank": "selection",
+      "walker": 0,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 1,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 2,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 3,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 4,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 5,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 6,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "selection",
+      "walker": 7,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 0,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 1,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 2,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 3,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 4,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 5,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 6,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    },
+    {
+      "bank": "calibration",
+      "walker": 7,
+      "kind": "stage5b_start",
+      "absolute_index": null
+    }
+  ],
+  "fixture_sha256": "320fa55b032f5ea6869ad66453116fa122c25af7327d83f3626ff7b29b03653d",
+  "contract": {
+    "version": 1,
+    "backend": "cpu",
+    "jax_enable_x64": true,
+    "dtype": "float64",
+    "prior_atol": 1e-09,
+    "likelihood_atol": 1e-07,
+    "rtol": 0.0,
+    "finite_coordinates_and_scalars": true,
+    "strict_cached_and_recomputed_contour": true,
+    "copied_coordinates": "byte-exact float64 copy; no tolerance",
+    "copied_scalar_caches": "byte-exact from source; recomputation uses numerical tolerances"
+  }
+}
