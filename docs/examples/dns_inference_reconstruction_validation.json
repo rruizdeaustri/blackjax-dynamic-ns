@@ -1,0 +1,3432 @@
+{
+  "LISA_model_calls": 0,
+  "decision": "PASS",
+  "design": {
+    "builder": {
+      "block_size": 64,
+      "burn_in": 256,
+      "min_ess": 20,
+      "new_levels": 3,
+      "retained": 1024,
+      "target_compression": 0.36787944117144233,
+      "walkers": 8
+    },
+    "diagnostics": {
+      "exact_mass_diagnostic": "analytic Gaussian; numerical Gaussian-mixture contour roots/prior CDF, separate from reconstruction",
+      "mass_sensitivity": "independent logit-normal compression perturbations from recorded conservative SE; sensitivity only, not a confidence interval",
+      "mass_sensitivity_draws": 128,
+      "quantiles": [
+        0.05,
+        0.16,
+        0.5,
+        0.84,
+        0.95
+      ],
+      "shell": "empirical shell likelihood means and terminal constrained mean, independent inference records"
+    },
+    "frozen_sha256": {
+      "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+      "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+      "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+      "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+      "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+      "examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+      "examples/lisa_dns_stage4/numerical_cache_contract.py": "331f2fa62080e5bfb860be9ff68940be183dd852f7bb9fd91ffb83cd78d5b1d7",
+      "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026"
+    },
+    "models": {
+      "gaussian": {
+        "sigma_likelihood": 0.7,
+        "sigma_prior": 1.5,
+        "y": 1.0
+      },
+      "mixture": {
+        "centers": [
+          -2.0,
+          2.2
+        ],
+        "component_weights": [
+          0.65,
+          0.35
+        ],
+        "sigma_prior": 2.0,
+        "widths": [
+          0.45,
+          0.7
+        ]
+      }
+    },
+    "reconstruction": {
+      "allocation": "equal counts at every included level",
+      "block_size": 64,
+      "burn_in": 512,
+      "estimator": "deterministic-mixture importance sampling; plug-in calibrated X",
+      "levels": "0..3",
+      "repeat_all_on_restarted_ladder": true,
+      "retained": 1024,
+      "sample_source": "fresh independent fixed-contour streams after ladder freeze",
+      "walkers": 8
+    },
+    "seeds": {
+      "gaussian": 7101,
+      "mass_sensitivity": 7301,
+      "mixture": 7102,
+      "reconstruction_gaussian": 7201,
+      "reconstruction_mixture": 7202
+    },
+    "stage": "7B",
+    "tolerances": {
+      "Z_relative": 0.25,
+      "gaussian_cdf": 0.1,
+      "gaussian_mean_absolute": 0.18,
+      "gaussian_quantile_absolute": 0.3,
+      "gaussian_variance_absolute": 0.16,
+      "logZ_absolute": 0.22,
+      "mixture_cdf": 0.1,
+      "mixture_component_probability_absolute": 0.08,
+      "mixture_mean_absolute": 0.3,
+      "mixture_quantile_absolute": 0.5,
+      "mixture_region_probability_absolute": 0.08,
+      "mixture_variance_absolute": 0.8,
+      "weight_sum_absolute": 1e-12
+    }
+  },
+  "frozen_hashes_unchanged": true,
+  "models": {
+    "gaussian": {
+      "accounted_prior_mass": 1.0,
+      "accuracy_checks": {
+        "cdf": true,
+        "logZ": true,
+        "mean": true,
+        "quantiles": true,
+        "relative_Z": true,
+        "variance": true,
+        "weights": true
+      },
+      "cache_check": {
+        "max_likelihood_error": 0.0,
+        "max_prior_error": 0.0,
+        "passed": true
+      },
+      "calibration": [
+        {
+          "between_walker_se": 0.041590163410871926,
+          "block_means_se": 0.03065568183910648,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 138.78005013740403,
+          "exceeds": 3279,
+          "interval": [
+            0.30192344565844537,
+            0.49861366371655463
+          ],
+          "naive_iid_se": 0.0054132635911265745,
+          "naive_iid_wilson": [
+            0.3897078817087558,
+            0.41092271757627263
+          ],
+          "ratio": 0.4002685546875,
+          "sample_count": 8192,
+          "standard_error": 0.041590163410871926,
+          "walker_fractions": [
+            0.3271484375,
+            0.5595703125,
+            0.212890625,
+            0.466796875,
+            0.5439453125,
+            0.34375,
+            0.400390625,
+            0.34765625
+          ]
+        },
+        {
+          "between_walker_se": 0.017405739447284147,
+          "block_means_se": 0.01872536938798231,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 652.0928447928834,
+          "exceeds": 2899,
+          "interval": [
+            0.31682770919803377,
+            0.39093596267696623
+          ],
+          "naive_iid_se": 0.005283115911722444,
+          "naive_iid_wilson": [
+            0.3435978062354131,
+            0.3643028392286984
+          ],
+          "ratio": 0.3538818359375,
+          "sample_count": 8192,
+          "standard_error": 0.01872536938798231,
+          "walker_fractions": [
+            0.296875,
+            0.3779296875,
+            0.28125,
+            0.390625,
+            0.3359375,
+            0.3759765625,
+            0.34375,
+            0.4287109375
+          ]
+        },
+        {
+          "between_walker_se": 0.0083212719779188,
+          "block_means_se": 0.01447957750342383,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 1139.3610315186247,
+          "exceeds": 3232,
+          "interval": [
+            0.365878779181981,
+            0.423183720818019
+          ],
+          "naive_iid_se": 0.0053999731306008025,
+          "naive_iid_wilson": [
+            0.383999296387286,
+            0.4051620717672606
+          ],
+          "ratio": 0.39453125,
+          "sample_count": 8192,
+          "standard_error": 0.01447957750342383,
+          "walker_fractions": [
+            0.3779296875,
+            0.3984375,
+            0.4208984375,
+            0.4091796875,
+            0.4033203125,
+            0.3623046875,
+            0.3642578125,
+            0.419921875
+          ]
+        }
+      ],
+      "checkpoint_complete": true,
+      "construction_records": [
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.041590163410871926,
+            "block_means_se": 0.03065568183910648,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 138.78005013740403,
+            "exceeds": 3279,
+            "interval": [
+              0.30192344565844537,
+              0.49861366371655463
+            ],
+            "naive_iid_se": 0.0054132635911265745,
+            "naive_iid_wilson": [
+              0.3897078817087558,
+              0.41092271757627263
+            ],
+            "ratio": 0.4002685546875,
+            "sample_count": 8192,
+            "standard_error": 0.041590163410871926,
+            "walker_fractions": [
+              0.3271484375,
+              0.5595703125,
+              0.212890625,
+              0.466796875,
+              0.5439453125,
+              0.34375,
+              0.400390625,
+              0.34765625
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 3075,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 133.6430155644881,
+            "exceeds": 3010,
+            "interval": [
+              0.2688193573570823,
+              0.4660439238929177
+            ],
+            "naive_iid_se": 0.005326562615647697,
+            "naive_iid_wilson": [
+              0.357056167587989,
+              0.37793138543960086
+            ],
+            "order_index": 5178,
+            "ratio": 0.367431640625,
+            "sample_count": 8192,
+            "standard_error": 0.041703151442134455,
+            "status": "ok",
+            "threshold": -1.694779510430953,
+            "walker_fractions": [
+              0.220703125,
+              0.2861328125,
+              0.3359375,
+              0.302734375,
+              0.3017578125,
+              0.4287109375,
+              0.5,
+              0.5634765625
+            ]
+          },
+          "candidate_sha256": "ec327d858037797d2e20e3b8fc94d76d35027c8b81ed7cbefe8c748023a10ab4",
+          "iteration": 0,
+          "old_threshold": "-inf",
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                2,
+                2,
+                5,
+                6,
+                1,
+                0,
+                7,
+                5
+              ],
+              "donor_multiplicities": [
+                1,
+                1,
+                2,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 128,
+              "eligible_fraction": 1.0,
+              "eligible_per_donor": [
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16
+              ],
+              "retained_indices": [
+                6,
+                5,
+                12,
+                9,
+                5,
+                8,
+                6,
+                4
+              ],
+              "selected_flat_indices": [
+                50,
+                42,
+                101,
+                78,
+                41,
+                64,
+                55,
+                37
+              ],
+              "selected_pool_indices": [
+                50,
+                42,
+                101,
+                78,
+                41,
+                64,
+                55,
+                37
+              ],
+              "source_hashes": [
+                "f7b0d723d94409f32d4ee260f4e5b78cee2f70d3792a9c1cd4c5fc306410ba2d",
+                "2b4c368342108c42cf2fd3c1984bf485562ad6775bc1218d0eaa4ec4478e0c0b",
+                "df3dc8c42fd513286fd7fa88657bc1e8304476310dac7e51223e267fc7446e35",
+                "e791870b257ce748859b90eacb1641ec25b786b35ff30f1996cccdf9acb556df",
+                "a98dba0147347ecf73005cf71edd13e61fa3560336e50deeecef2ea5ccfc8a74",
+                "e1bef9dc44b76fc8b2f49156e0bda540ac0b5f8d63e45488147487381041c39a",
+                "9258a3e5324ae9978594cc9cb17928f0776481ea3dbe409632ca3e12441a4c2a",
+                "d5fa4302974a43721e4115ae95ef950aedb6110e9479e000737cba663f3d5254"
+              ],
+              "source_history_hash": "e6be7d52211391a2ad03ac5be1712496768a0b2fe849d4860300df82b94f735e",
+              "total_retained": 128,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                6,
+                0,
+                1,
+                7,
+                6,
+                2,
+                2,
+                1
+              ],
+              "donor_multiplicities": [
+                1,
+                2,
+                2,
+                0,
+                0,
+                0,
+                2,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 128,
+              "eligible_fraction": 1.0,
+              "eligible_per_donor": [
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16
+              ],
+              "retained_indices": [
+                9,
+                8,
+                3,
+                15,
+                10,
+                1,
+                9,
+                15
+              ],
+              "selected_flat_indices": [
+                78,
+                64,
+                25,
+                127,
+                86,
+                10,
+                74,
+                121
+              ],
+              "selected_pool_indices": [
+                78,
+                64,
+                25,
+                127,
+                86,
+                10,
+                74,
+                121
+              ],
+              "source_hashes": [
+                "c9106147af821962918dd61422f5c1304f3277d6e30b40396f82e5c1d832aaf9",
+                "fa50291222762f86c6978d6f179aa7b557142b5a6dbc054d8573c98cdada99a5",
+                "50e1e45151b77fbefa6848d7b20b4841806f08bbf9e0c0bb3e734acad70fd214",
+                "21c92d171d6cc40af4101e5db658f7fb9a0170c61703944d9369713b68642747",
+                "f3df2a2c33fb151480e7c98f0ad9d5d114f941a9c01f655c57cb070d1c5ae21d",
+                "6bc2eaece41a1dbb6379fdde76322d5237ad8544e83b005916b0608a03d5927a",
+                "89fd71c1caa0a3a6303bd8985817c638b4f48c2cddd1ddc376a925de09693217",
+                "b7d8aa051b684c0a97af6d19f15d68feef7845f1bccf4e5552ddfa09e7891ff1"
+              ],
+              "source_history_hash": "870e2d08cdb5e6375b5df105b73cb0bdf29c3c19bd4628481eca458900c801b4",
+              "total_retained": 128,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 2950,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 0,
+              "label_seed": 2802600024,
+              "mh_seed": 4259897420,
+              "promotion_seed": 3654743285,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                3296239285,
+                1396221172,
+                3531637379,
+                4110326484,
+                2844401767,
+                1771454922,
+                23062108,
+                1356872986
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 0,
+              "label_seed": 1865361504,
+              "mh_seed": 562307355,
+              "promotion_seed": 2449446430,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                739339473,
+                2216600347,
+                3741688423,
+                705817824,
+                2916077311,
+                577932279,
+                3077357630,
+                1687570599
+              ]
+            }
+          }
+        },
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.017405739447284147,
+            "block_means_se": 0.01872536938798231,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 652.0928447928834,
+            "exceeds": 2899,
+            "interval": [
+              0.31682770919803377,
+              0.39093596267696623
+            ],
+            "naive_iid_se": 0.005283115911722444,
+            "naive_iid_wilson": [
+              0.3435978062354131,
+              0.3643028392286984
+            ],
+            "ratio": 0.3538818359375,
+            "sample_count": 8192,
+            "standard_error": 0.01872536938798231,
+            "walker_fractions": [
+              0.296875,
+              0.3779296875,
+              0.28125,
+              0.390625,
+              0.3359375,
+              0.3759765625,
+              0.34375,
+              0.4287109375
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 3212,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 315.06785137318263,
+            "exceeds": 3012,
+            "interval": [
+              0.30344214414803133,
+              0.43190941835196867
+            ],
+            "naive_iid_se": 0.005327303606180806,
+            "naive_iid_wilson": [
+              0.3572987425141107,
+              0.3781768629020103
+            ],
+            "order_index": 5178,
+            "ratio": 0.36767578125,
+            "sample_count": 8192,
+            "standard_error": 0.027164416104885004,
+            "status": "ok",
+            "threshold": -0.7081386045518494,
+            "walker_fractions": [
+              0.3037109375,
+              0.4619140625,
+              0.3203125,
+              0.5048828125,
+              0.2880859375,
+              0.36328125,
+              0.337890625,
+              0.361328125
+            ]
+          },
+          "candidate_sha256": "dab881c9a32429e0908748cdc255b2d380b6836176a7cb84c366e77bc2c56170",
+          "iteration": 1,
+          "old_threshold": -1.694779510430953,
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                1,
+                7,
+                2,
+                6,
+                6,
+                3,
+                0,
+                1
+              ],
+              "donor_multiplicities": [
+                1,
+                2,
+                1,
+                1,
+                0,
+                0,
+                2,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 3279,
+              "eligible_fraction": 0.4002685546875,
+              "eligible_per_donor": [
+                335,
+                573,
+                218,
+                478,
+                557,
+                352,
+                410,
+                356
+              ],
+              "retained_indices": [
+                873,
+                208,
+                19,
+                234,
+                444,
+                344,
+                907,
+                783
+              ],
+              "selected_flat_indices": [
+                6985,
+                1671,
+                154,
+                1878,
+                3558,
+                2755,
+                7256,
+                6265
+              ],
+              "selected_pool_indices": [
+                2988,
+                674,
+                70,
+                787,
+                1599,
+                1208,
+                3056,
+                2733
+              ],
+              "source_hashes": [
+                "0dfc1b5314030f3387df19bafaae7e927a4c4ad3add175e0a76dc567905d3fb3",
+                "71040aec5abbff2127205465ff3ed2dcbe2688ed033d518b37654b9aa3f1d484",
+                "06091db337ac803d9352909b5e7aa62d2f54ae4da13d194de07b38d57731a70f",
+                "fe6b5b2948898b11398b5f4180d50ac4dbaa048a34063808c6aeb4db2ae68479",
+                "a2f91c11e369e3f67b27e9025f92d93620f79cdb18d5ebf249cd160318440b5d",
+                "88487a7f09b3976cacd27cbf3ed12fb4c109c7cb08d7504dc6ccc646289ca2c8",
+                "8f2c8bf45868409dde87b81b9d10acaa0b0161bb65b97ef36cb363218f351393",
+                "9444cde858ac1ef042406e55b345793f046d0d47ce8c7289762c23897ce5ea12"
+              ],
+              "source_history_hash": "fb0bb0ec148ac8a5300da90c61011123eaa4cca5f11687904af52d14bf47beb8",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                3,
+                1,
+                2,
+                0,
+                2,
+                0,
+                7,
+                5
+              ],
+              "donor_multiplicities": [
+                2,
+                1,
+                2,
+                1,
+                0,
+                1,
+                0,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 3010,
+              "eligible_fraction": 0.367431640625,
+              "eligible_per_donor": [
+                226,
+                293,
+                344,
+                310,
+                309,
+                439,
+                512,
+                577
+              ],
+              "retained_indices": [
+                184,
+                781,
+                478,
+                46,
+                527,
+                396,
+                952,
+                821
+              ],
+              "selected_flat_indices": [
+                1475,
+                6249,
+                3826,
+                368,
+                4218,
+                3168,
+                7623,
+                6573
+              ],
+              "selected_pool_indices": [
+                568,
+                2179,
+                1516,
+                150,
+                1666,
+                1245,
+                2775,
+                2308
+              ],
+              "source_hashes": [
+                "5e9f2bd1a9ba31c5fa964be6d68f622da1d0d63a59f30981c9add36608a843ac",
+                "20ee84ffc2cef174c5c5ae34d32f905de389faec7c67a10413e030f5865ddd37",
+                "85e693636ff8f30398b8901fb9b1b56078b158c9d1363dfd8c3116f8ab5eaee2",
+                "7e3135532618a33721bad5b4ba01e903b5ea0f0cd2129fafafe58975501a3cc5",
+                "06500b7ba6cb13a5c3853445932ab5fdfb4164326f15acd16bd8305f906ff4ef",
+                "67e13421eb65f573f713c386341d3f8b617ded25723d6926771e270c5e4d4ba0",
+                "509ffc078df1de97452af287b6b0e9ab899a9485b47f8731b7ac90e593ae8017",
+                "d19c9006738bbb9ec3b7e9fc4a39cf1e6822857d0d074218908d6c221ac84459"
+              ],
+              "source_history_hash": "cbe9053e2401b2e9705b4aeb1e6c4a3165f2e4ce21422754ff751106f415cff7",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 3082,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 1,
+              "label_seed": 2184991482,
+              "mh_seed": 811170052,
+              "promotion_seed": 1902434364,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                737997315,
+                1147768610,
+                2073762469,
+                1320745031,
+                2402654474,
+                3691344686,
+                4007254935,
+                4068249955
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 1,
+              "label_seed": 237052789,
+              "mh_seed": 1855549572,
+              "promotion_seed": 3243160408,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                3232600818,
+                662616535,
+                435608651,
+                3903008684,
+                3685857134,
+                2956075259,
+                963934537,
+                374954902
+              ]
+            }
+          }
+        },
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.0083212719779188,
+            "block_means_se": 0.01447957750342383,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 1139.3610315186247,
+            "exceeds": 3232,
+            "interval": [
+              0.365878779181981,
+              0.423183720818019
+            ],
+            "naive_iid_se": 0.0053999731306008025,
+            "naive_iid_wilson": [
+              0.383999296387286,
+              0.4051620717672606
+            ],
+            "ratio": 0.39453125,
+            "sample_count": 8192,
+            "standard_error": 0.01447957750342383,
+            "walker_fractions": [
+              0.3779296875,
+              0.3984375,
+              0.4208984375,
+              0.4091796875,
+              0.4033203125,
+              0.3623046875,
+              0.3642578125,
+              0.419921875
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 2928,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 439.2196727114745,
+            "exceeds": 3010,
+            "interval": [
+              0.31303610520724956,
+              0.42182717604275044
+            ],
+            "naive_iid_se": 0.005326562615647697,
+            "naive_iid_wilson": [
+              0.357056167587989,
+              0.37793138543960086
+            ],
+            "order_index": 5178,
+            "ratio": 0.367431640625,
+            "sample_count": 8192,
+            "standard_error": 0.023003881221767154,
+            "status": "ok",
+            "threshold": -0.5815898827700305,
+            "walker_fractions": [
+              0.41796875,
+              0.3916015625,
+              0.33984375,
+              0.34375,
+              0.2978515625,
+              0.49609375,
+              0.33984375,
+              0.3125
+            ]
+          },
+          "candidate_sha256": "0c55c66317ac811b9233add9278afc665cc4322f7bb7c80103f2879b0ed9403d",
+          "iteration": 2,
+          "old_threshold": -0.7081386045518494,
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                7,
+                5,
+                7,
+                4,
+                3,
+                1,
+                2,
+                7
+              ],
+              "donor_multiplicities": [
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                3
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 2899,
+              "eligible_fraction": 0.3538818359375,
+              "eligible_per_donor": [
+                304,
+                387,
+                288,
+                400,
+                344,
+                385,
+                352,
+                439
+              ],
+              "retained_indices": [
+                448,
+                973,
+                948,
+                890,
+                121,
+                57,
+                640,
+                963
+              ],
+              "selected_flat_indices": [
+                3591,
+                7789,
+                7591,
+                7124,
+                971,
+                457,
+                5122,
+                7711
+              ],
+              "selected_pool_indices": [
+                1255,
+                2698,
+                2611,
+                2482,
+                347,
+                164,
+                1810,
+                2654
+              ],
+              "source_hashes": [
+                "5059630a5d4cbb1259690a7a3b40c07e57705d0cef7e50ebafb93d51882ca966",
+                "a51232ce4e550b8d069e36ab61a826ec35e86e18b69c4384bf61fd5007721bce",
+                "e4b189834b44cc856835e607513d0462df24b195c232a03154c80bf4d5c21ae6",
+                "afdce915822065a4469a77591567a251de8bc2c40041cc9796283b89f38adb3e",
+                "efbf52d186720044c622e4100ba1dd32989071e84798c2240ea44cb519cf176a",
+                "5fa35eaf99345041cedd6ba9808236ac986c472e63d68eda05a8e7c2b60dc20f",
+                "20cbdc463c6d90cd47d7f07836b9f4c2f59821428657ced49583db399b24b5af",
+                "1e3fcc3f971ab4501fc1e99b467d420e9ef4493865c145575d60be2b8044e1ad"
+              ],
+              "source_history_hash": "86666ab5fb506d2ff372aff96dca95d77a2334ae79f0868c2fac9a8a611c5a83",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                4,
+                3,
+                1,
+                4,
+                3,
+                1,
+                6,
+                2
+              ],
+              "donor_multiplicities": [
+                0,
+                2,
+                1,
+                2,
+                2,
+                0,
+                1,
+                0
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 3012,
+              "eligible_fraction": 0.36767578125,
+              "eligible_per_donor": [
+                311,
+                473,
+                328,
+                517,
+                295,
+                372,
+                346,
+                370
+              ],
+              "retained_indices": [
+                853,
+                83,
+                668,
+                795,
+                53,
+                805,
+                408,
+                560
+              ],
+              "selected_flat_indices": [
+                6828,
+                667,
+                5345,
+                6364,
+                427,
+                6441,
+                3270,
+                4482
+              ],
+              "selected_pool_indices": [
+                2531,
+                211,
+                1983,
+                2349,
+                130,
+                2377,
+                1169,
+                1653
+              ],
+              "source_hashes": [
+                "7652c4750043ae9be89c583b6e3a248090bc8567d0f5874b9ee83f83e2b3dc9e",
+                "48e0b9b4b549df99897b8d13cd8f74c355e938d262b94e80a9932545c1d9813c",
+                "8c285613b2594b92a7c21905a4dad9e7fefe06f6cb41bb3e901943124c8cbf86",
+                "d018b8d2dcdac0f33e99dd9dcbf4a2956a2959358f534e28aa5e8dca082ab7c1",
+                "e4095e2ac1f267d94a28d957b8ca4387d99d4dd149bc28464b1a05d448dfcfd7",
+                "b57dd654ffd37a60e712f1e6feb5003d7a040c0e2147c3976eab3414030094e8",
+                "833903bc5606edd30f8eb9ebbbb90e54fb7351e7b76a47ef60e8f5b11066dd0c",
+                "8df1adfa41af230390cff60cec91d9a779197b9741545819b9f9c40ab0025a85"
+              ],
+              "source_history_hash": "947f4abb263e8f7f822eadb501735e5b3cb8faf98f49935acb855fd0eecabd65",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 2919,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 2,
+              "label_seed": 3188695940,
+              "mh_seed": 3257070049,
+              "promotion_seed": 2620198803,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                4043525042,
+                1057756214,
+                4020660461,
+                2314666525,
+                2555990600,
+                3223807565,
+                4281079911,
+                590374026
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 2,
+              "label_seed": 2368160661,
+              "mh_seed": 3108905956,
+              "promotion_seed": 2170051153,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                3869114694,
+                607854590,
+                4160141109,
+                3908762798,
+                114169830,
+                601083286,
+                1419411161,
+                1728965481
+              ]
+            }
+          }
+        }
+      ],
+      "correlation": {
+        "evidence_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 167.29976449898865,
+              "between_walker_se": 0.020525077635770224,
+              "block_means_se": 0.01020645671641093,
+              "conservative_mean_se": 0.020525077635770224,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1015.811890368191,
+              "between_walker_se": 0.004213766556853132,
+              "block_means_se": 0.006298469533131616,
+              "conservative_mean_se": 0.006298469533131616,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1643.788396673183,
+              "between_walker_se": 0.0014869380507964893,
+              "block_means_se": 0.00196379468533395,
+              "conservative_mean_se": 0.00196379468533395,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1399.9965320546114,
+              "between_walker_se": 1.3756128308912511e-05,
+              "block_means_se": 1.6337014698942035e-05,
+              "conservative_mean_se": 1.6337014698942035e-05,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 4226.896583594974
+        },
+        "loglikelihood": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 104.83250858254321,
+              "between_walker_se": 0.43734163662347875,
+              "block_means_se": 0.2371458827488892,
+              "conservative_mean_se": 0.43734163662347875,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 357.2131513240273,
+              "between_walker_se": 0.009253124066297027,
+              "block_means_se": 0.017353303094756616,
+              "conservative_mean_se": 0.017353303094756616,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 725.7984476876442,
+              "between_walker_se": 0.0016125714975765983,
+              "block_means_se": 0.001038602898647041,
+              "conservative_mean_se": 0.0016125714975765983,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1398.645966935508,
+              "between_walker_se": 0.00012685421151580645,
+              "block_means_se": 0.00015077714415812646,
+              "conservative_mean_se": 0.00015077714415812646,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 2586.4900745297227
+        },
+        "mode_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 205.7864641655047,
+              "between_walker_se": 0.013583978521864808,
+              "block_means_se": 0.008890460909919433,
+              "conservative_mean_se": 0.013583978521864808,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1507.3693948224204,
+              "between_walker_se": 0.001121187931910955,
+              "block_means_se": 0.0014335049411665093,
+              "conservative_mean_se": 0.0014335049411665093,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1643.78839667318,
+              "between_walker_se": 0.00014705572186229227,
+              "block_means_se": 0.00019421605687365565,
+              "conservative_mean_se": 0.00019421605687365565,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1399.9965320546967,
+              "between_walker_se": 1.3604584114448881e-06,
+              "block_means_se": 1.6157038205731827e-06,
+              "conservative_mean_se": 1.6157038205731827e-06,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 4756.940787715801
+        },
+        "posterior_mean_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 65.95553373746122,
+              "between_walker_se": 0.04098977419195148,
+              "block_means_se": 0.017748683679682433,
+              "conservative_mean_se": 0.04098977419195148,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 401.90422325942876,
+              "between_walker_se": 0.01359084179735346,
+              "block_means_se": 0.013494000390282807,
+              "conservative_mean_se": 0.01359084179735346,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 682.178097729908,
+              "between_walker_se": 0.0022512909567751773,
+              "block_means_se": 0.0017830803055019354,
+              "conservative_mean_se": 0.0022512909567751773,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1261.9892487535624,
+              "between_walker_se": 0.0001844414523635237,
+              "block_means_se": 0.0002379418780514986,
+              "conservative_mean_se": 0.0002379418780514986,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 2412.0271034803604
+        }
+      },
+      "decision": "PASS",
+      "environment": {
+        "backend": "cpu",
+        "jax": "0.10.0",
+        "jaxlib": "0.10.0",
+        "numpy": "2.4.4",
+        "prng": "threefry2x32",
+        "schedule": "PCG64",
+        "x64": true
+      },
+      "exact": {
+        "Z": 0.20080936672222277,
+        "component_means": [
+          0.8211678832116789
+        ],
+        "component_probabilities": [
+          1.0
+        ],
+        "component_variances": [
+          0.40237226277372257
+        ],
+        "logZ": -1.6053992452294796,
+        "mean": 0.8211678832116789,
+        "quantile_probabilities": [
+          0.05,
+          0.16,
+          0.5,
+          0.84,
+          0.95
+        ],
+        "quantiles": [
+          -0.22220915394076157,
+          0.1903552061716377,
+          0.8211678832116789,
+          1.45198056025172,
+          1.864544920364119
+        ],
+        "region_probabilities": [
+          0.09773821372445385,
+          0.9022617862755462
+        ],
+        "standard_deviation": 0.6343281979966857,
+        "variance": 0.4023722627737225
+      },
+      "exact_contour_log_masses": [
+        0.0,
+        -0.846935214562621,
+        -1.8319649057595422,
+        -2.8375038171392584
+      ],
+      "exact_mass_diagnostic": {
+        "cdf_discrepancy": 0.007333620862364387,
+        "component_probabilities": [
+          1.0000000000000004
+        ],
+        "entropy": 10.10327380625932,
+        "errors": {
+          "Z_relative": 0.007422847523239653,
+          "component_probability_absolute": [
+            4.440892098500626e-16
+          ],
+          "logZ_absolute": 0.007450533949080906,
+          "mean_absolute": 0.0010701522668934427,
+          "quantile_absolute": [
+            0.013988729802365207,
+            0.017526214045956334,
+            0.0014623732601573014,
+            0.00872092665352886,
+            0.014249962124264437
+          ],
+          "region_probability_absolute": [
+            0.0039522099169440605,
+            0.003952209916944005
+          ],
+          "standard_deviation_absolute": 0.002417654467193997,
+          "variance_absolute": 0.0030613277499848546
+        },
+        "logZ": -1.6128497791785605,
+        "mass_treatment": "explicit-mass-sensitivity",
+        "maximum_weight": 0.00011225391542540827,
+        "mean": 0.8222380354785723,
+        "per_level_counts": [
+          8192,
+          8192,
+          8192,
+          8192
+        ],
+        "quantiles": [
+          -0.20822042413839636,
+          0.20788142021759404,
+          0.8226302564718362,
+          1.4607014869052488,
+          1.8502949582398545
+        ],
+        "raw_samples": 32768,
+        "region_probabilities": [
+          0.09378600380750979,
+          0.9062139961924902
+        ],
+        "standard_deviation": 0.6319105435294917,
+        "variance": 0.39931093502373766,
+        "weight_ess": 20354.06128199703,
+        "weight_sum": 1.0000000000000002,
+        "weights_finite": true,
+        "weights_nonnegative": true
+      },
+      "mass_sensitivity": {
+        "columns": [
+          "logZ",
+          "posterior_mean",
+          "component_0"
+        ],
+        "draws": 128,
+        "method": "independent logit-normal compression perturbations from recorded conservative SE; sensitivity only, not a confidence interval",
+        "q05_q50_q95": [
+          [
+            -1.8234157217059455,
+            0.8030361067661427,
+            0.9999999999999986
+          ],
+          [
+            -1.6739246119234847,
+            0.8170670943467144,
+            0.9999999999999994
+          ],
+          [
+            -1.5509282134334137,
+            0.8265676941239438,
+            1.0000000000000004
+          ]
+        ],
+        "seed": 7301
+      },
+      "model": "gaussian",
+      "numerical_contract": {
+        "backend": "cpu",
+        "dtype": "float64",
+        "jax_enable_x64": true,
+        "likelihood_atol": 1e-07,
+        "prior_atol": 1e-09,
+        "rtol": 0.0,
+        "version": 1
+      },
+      "parameters": {
+        "sigma_likelihood": 0.7,
+        "sigma_prior": 1.5,
+        "y": 1.0
+      },
+      "primary": {
+        "cdf_discrepancy": 0.011820178693278671,
+        "component_probabilities": [
+          0.9999999999999994
+        ],
+        "entropy": 10.09608254241913,
+        "errors": {
+          "Z_relative": 0.06421748621910349,
+          "component_probability_absolute": [
+            5.551115123125783e-16
+          ],
+          "logZ_absolute": 0.06637218657532351,
+          "mean_absolute": 0.0045743541334473115,
+          "quantile_absolute": [
+            0.02239968726036279,
+            0.0016291009265135825,
+            0.004298220834523692,
+            0.011197982783891502,
+            0.0049492409947127225
+          ],
+          "region_probability_absolute": [
+            0.001160137678624898,
+            0.001160137678624995
+          ],
+          "standard_deviation_absolute": 0.006596177548022664,
+          "variance_absolute": 0.008411792393651918
+        },
+        "logZ": -1.6717714318048031,
+        "mass_treatment": "recorded-calibration-plugin",
+        "maximum_weight": 0.00011906684521934418,
+        "mean": 0.8165935290782316,
+        "per_level_counts": [
+          8192,
+          8192,
+          8192,
+          8192
+        ],
+        "quantiles": [
+          -0.24460884120112436,
+          0.18872610524512412,
+          0.8168696623771552,
+          1.4631785430356115,
+          1.8595956793694062
+        ],
+        "raw_samples": 32768,
+        "region_probabilities": [
+          0.09889835140307875,
+          0.9011016485969212
+        ],
+        "standard_deviation": 0.6409243755447084,
+        "variance": 0.41078405516737443,
+        "weight_ess": 20031.93937606276,
+        "weight_sum": 0.9999999999999996,
+        "weights_finite": true,
+        "weights_nonnegative": true
+      },
+      "progressive_levels": [
+        {
+          "cdf_discrepancy": 0.03703793121603832,
+          "component_probabilities": [
+            0.9999999999999998
+          ],
+          "entropy": 8.364538785868682,
+          "errors": {
+            "Z_relative": 0.06363003896560827,
+            "component_probability_absolute": [
+              2.220446049250313e-16
+            ],
+            "logZ_absolute": 0.06574462308284357,
+            "mean_absolute": 0.015390631779099273,
+            "quantile_absolute": [
+              0.02239968726036279,
+              0.005282674190205283,
+              0.052203457206775106,
+              0.021679710589419532,
+              0.009135323356182612
+            ],
+            "region_probability_absolute": [
+              0.0012526647940302171,
+              0.0012526647940303004
+            ],
+            "standard_deviation_absolute": 0.010290392506240531,
+            "variance_absolute": 0.01316086444825687
+          },
+          "logZ": -1.6711438683123232,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.0003699904322182333,
+          "mean": 0.8057772514325796,
+          "per_level_counts": [
+            8192
+          ],
+          "quantiles": [
+            -0.24460884120112436,
+            0.18507253198143242,
+            0.7689644260049038,
+            1.4736602708411395,
+            1.8554095970079363
+          ],
+          "raw_samples": 8192,
+          "region_probabilities": [
+            0.09899087851848407,
+            0.9010091214815159
+          ],
+          "standard_deviation": 0.6446185905029262,
+          "variance": 0.4155331272219794,
+          "weight_ess": 3770.1239659839357,
+          "weight_sum": 0.9999999999999999,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.011251599647038923,
+          "component_probabilities": [
+            1.0
+          ],
+          "entropy": 9.468972073845087,
+          "errors": {
+            "Z_relative": 0.06273488988179998,
+            "component_probability_absolute": [
+              0.0
+            ],
+            "logZ_absolute": 0.06478910173752084,
+            "mean_absolute": 0.001013081592324605,
+            "quantile_absolute": [
+              0.02239968726036279,
+              0.0010643109086564684,
+              0.0020106838217232026,
+              0.010916037555286362,
+              0.0049492409947127225
+            ],
+            "region_probability_absolute": [
+              0.0010036970600927064,
+              0.0010036970600927342
+            ],
+            "standard_deviation_absolute": 0.0072635601080865975,
+            "variance_absolute": 0.009267721294250186
+          },
+          "logZ": -1.6701883469670005,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00011887850142343117,
+          "mean": 0.8201548016193543,
+          "per_level_counts": [
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -0.24460884120112436,
+            0.18929089526298123,
+            0.8231785670334021,
+            1.4628965978070063,
+            1.8595956793694062
+          ],
+          "raw_samples": 16384,
+          "region_probabilities": [
+            0.09874191078454655,
+            0.9012580892154535
+          ],
+          "standard_deviation": 0.6415917581047723,
+          "variance": 0.4116399840679727,
+          "weight_ess": 12207.05824970085,
+          "weight_sum": 1.0,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.015604578610986797,
+          "component_probabilities": [
+            0.9999999999999996
+          ],
+          "entropy": 9.923070682123438,
+          "errors": {
+            "Z_relative": 0.07177904502085294,
+            "component_probability_absolute": [
+              4.440892098500626e-16
+            ],
+            "logZ_absolute": 0.0744854764989018,
+            "mean_absolute": 0.006671900915842577,
+            "quantile_absolute": [
+              0.02357951624979615,
+              0.003708205550897292,
+              0.014172889499121433,
+              0.013468121336913441,
+              0.004387695231863331
+            ],
+            "region_probability_absolute": [
+              0.001965792512766351,
+              0.0019657925127664067
+            ],
+            "standard_deviation_absolute": 0.008810489595684978,
+            "variance_absolute": 0.011255108704314454
+          },
+          "logZ": -1.6798847217283814,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00012003679849031392,
+          "mean": 0.8144959822958363,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -0.24578867019055772,
+            0.1866470006207404,
+            0.8069949937125575,
+            1.4654486815886334,
+            1.8601572251322556
+          ],
+          "raw_samples": 24576,
+          "region_probabilities": [
+            0.0997040062372202,
+            0.9002959937627798
+          ],
+          "standard_deviation": 0.6431386875923707,
+          "variance": 0.41362737147803696,
+          "weight_ess": 18486.228989813066,
+          "weight_sum": 0.9999999999999996,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.011820178693278671,
+          "component_probabilities": [
+            0.9999999999999994
+          ],
+          "entropy": 10.09608254241913,
+          "errors": {
+            "Z_relative": 0.06421748621910349,
+            "component_probability_absolute": [
+              5.551115123125783e-16
+            ],
+            "logZ_absolute": 0.06637218657532351,
+            "mean_absolute": 0.0045743541334473115,
+            "quantile_absolute": [
+              0.02239968726036279,
+              0.0016291009265135825,
+              0.004298220834523692,
+              0.011197982783891502,
+              0.0049492409947127225
+            ],
+            "region_probability_absolute": [
+              0.001160137678624898,
+              0.001160137678624995
+            ],
+            "standard_deviation_absolute": 0.006596177548022664,
+            "variance_absolute": 0.008411792393651918
+          },
+          "logZ": -1.6717714318048031,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00011906684521934418,
+          "mean": 0.8165935290782316,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -0.24460884120112436,
+            0.18872610524512412,
+            0.8168696623771552,
+            1.4631785430356115,
+            1.8595956793694062
+          ],
+          "raw_samples": 32768,
+          "region_probabilities": [
+            0.09889835140307875,
+            0.9011016485969212
+          ],
+          "standard_deviation": 0.6409243755447084,
+          "variance": 0.41078405516737443,
+          "weight_ess": 20031.93937606276,
+          "weight_sum": 0.9999999999999996,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        }
+      ],
+      "recorded_log_masses": [
+        0.0,
+        -0.9156195704346408,
+        -1.9544117887922743,
+        -2.884468716430577
+      ],
+      "restart": {
+        "exact_masses": true,
+        "exact_records": true,
+        "exact_thresholds": true,
+        "identical_logZ": true,
+        "identical_summaries": true,
+        "identical_weights": true
+      },
+      "shell_diagnostic": {
+        "accounted_prior_mass": 1.0,
+        "logZ": -1.675152069913857,
+        "representative_log_mean_likelihood": [
+          -3.346508983375271,
+          -1.0660614354556204,
+          -0.6348954194391174,
+          -0.5684868788467572
+        ],
+        "shell_counts": [
+          4873,
+          5180,
+          5268,
+          8192
+        ],
+        "shell_masses": [
+          0.5997314453125,
+          0.2586207836866379,
+          0.08576329884817822,
+          0.0558844721526839
+        ],
+        "status": "ok"
+      },
+      "thresholds": [
+        "-inf",
+        -1.694779510430953,
+        -0.7081386045518494,
+        -0.5815898827700305
+      ]
+    },
+    "mixture": {
+      "accounted_prior_mass": 1.0,
+      "accuracy_checks": {
+        "cdf": true,
+        "components": true,
+        "logZ": true,
+        "mean": true,
+        "quantiles": true,
+        "regions": true,
+        "relative_Z": true,
+        "variance": true,
+        "weights": true
+      },
+      "cache_check": {
+        "max_likelihood_error": 0.0,
+        "max_prior_error": 0.0,
+        "passed": true
+      },
+      "calibration": [
+        {
+          "between_walker_se": 0.01256036826824325,
+          "block_means_se": 0.022696795449427883,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 441.6094216883002,
+          "exceeds": 2867,
+          "interval": [
+            0.30506272372701726,
+            0.39488844814798274
+          ],
+          "naive_iid_se": 0.005269734523798974,
+          "naive_iid_wilson": [
+            0.33971959513791156,
+            0.36037221210970166
+          ],
+          "ratio": 0.3499755859375,
+          "sample_count": 8192,
+          "standard_error": 0.022696795449427883,
+          "walker_fractions": [
+            0.408203125,
+            0.3603515625,
+            0.283203125,
+            0.33203125,
+            0.337890625,
+            0.365234375,
+            0.36328125,
+            0.349609375
+          ]
+        },
+        {
+          "between_walker_se": 0.07944206674180501,
+          "block_means_se": 0.02273421533066461,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 26.05832384385811,
+          "exceeds": 1700,
+          "interval": [
+            0.01966889363567534,
+            0.39537016886432463
+          ],
+          "naive_iid_se": 0.00448052392620478,
+          "naive_iid_wilson": [
+            0.19887594179735596,
+            0.2164372967423358
+          ],
+          "ratio": 0.20751953125,
+          "sample_count": 8192,
+          "standard_error": 0.07944206674180501,
+          "walker_fractions": [
+            0.0,
+            0.4775390625,
+            0.3955078125,
+            0.0,
+            0.0,
+            0.4365234375,
+            0.0,
+            0.3505859375
+          ]
+        },
+        {
+          "between_walker_se": 0.016240595412208375,
+          "block_means_se": 0.013859558037345671,
+          "block_size": 64,
+          "blocks": 128,
+          "ess": 874.2915425776616,
+          "exceeds": 2955,
+          "interval": [
+            0.32231486766548556,
+            0.39912067920951444
+          ],
+          "naive_iid_se": 0.005305607446968002,
+          "naive_iid_wilson": [
+            0.350386488981109,
+            0.3711796233618744
+          ],
+          "ratio": 0.3607177734375,
+          "sample_count": 8192,
+          "standard_error": 0.016240595412208375,
+          "walker_fractions": [
+            0.3193359375,
+            0.412109375,
+            0.388671875,
+            0.3828125,
+            0.3388671875,
+            0.416015625,
+            0.3388671875,
+            0.2890625
+          ]
+        }
+      ],
+      "checkpoint_complete": true,
+      "construction_records": [
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.01256036826824325,
+            "block_means_se": 0.022696795449427883,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 441.6094216883002,
+            "exceeds": 2867,
+            "interval": [
+              0.30506272372701726,
+              0.39488844814798274
+            ],
+            "naive_iid_se": 0.005269734523798974,
+            "naive_iid_wilson": [
+              0.33971959513791156,
+              0.36037221210970166
+            ],
+            "ratio": 0.3499755859375,
+            "sample_count": 8192,
+            "standard_error": 0.022696795449427883,
+            "walker_fractions": [
+              0.408203125,
+              0.3603515625,
+              0.283203125,
+              0.33203125,
+              0.337890625,
+              0.365234375,
+              0.36328125,
+              0.349609375
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 3016,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 515.2718684089658,
+            "exceeds": 3007,
+            "interval": [
+              0.325047067182099,
+              0.409083792192901
+            ],
+            "naive_iid_se": 0.005325448374790379,
+            "naive_iid_wilson": [
+              0.35669231059453715,
+              0.37756316385025596
+            ],
+            "order_index": 5178,
+            "ratio": 0.3670654296875,
+            "sample_count": 8192,
+            "standard_error": 0.02123405483345938,
+            "status": "ok",
+            "threshold": -2.151669488653418,
+            "walker_fractions": [
+              0.4169921875,
+              0.3173828125,
+              0.4052734375,
+              0.337890625,
+              0.271484375,
+              0.365234375,
+              0.41015625,
+              0.412109375
+            ]
+          },
+          "candidate_sha256": "79ceba739cd2096c66d3ccac83208b842ea385bb239aab0a46d0d30f5b9d6249",
+          "iteration": 0,
+          "old_threshold": "-inf",
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                7,
+                4,
+                4,
+                0,
+                3,
+                0,
+                6,
+                1
+              ],
+              "donor_multiplicities": [
+                2,
+                1,
+                0,
+                1,
+                2,
+                0,
+                1,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 128,
+              "eligible_fraction": 1.0,
+              "eligible_per_donor": [
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16
+              ],
+              "retained_indices": [
+                4,
+                11,
+                7,
+                9,
+                9,
+                8,
+                7,
+                6
+              ],
+              "selected_flat_indices": [
+                39,
+                92,
+                60,
+                72,
+                75,
+                64,
+                62,
+                49
+              ],
+              "selected_pool_indices": [
+                39,
+                92,
+                60,
+                72,
+                75,
+                64,
+                62,
+                49
+              ],
+              "source_hashes": [
+                "05539a6cca56b966a0b7be990885d76353c4800ccb11542fbcb4e40f49b37465",
+                "b77090258dfbb9417fc7874746befd0d3c39625857aa940b69c0d107a3abb9df",
+                "f0ac4d1bdf5cc7f898181c4b5d8a820b790b3741ef1287ab661fcc73e78493f1",
+                "c6ec3be5c877f71e6c169ee38a988d8ec34e1e5d575803301339d90d2d6a438f",
+                "ec7b35e701a2df0d312a0333394e904658a3086c331069ff828e2b859dce5a4c",
+                "da9fe27eef1abca557eedc32b42c5115ccbeedd8275aece4baa354895f995207",
+                "135bcea4b997cdf7781d364767c9ab81effe9d64f21df222508b979522b4c8a3",
+                "63c85a19bcfbbe02506ca2071fa8273b53805e82dd46307f7fee236a4d30ae47"
+              ],
+              "source_history_hash": "7b262649110d6a31a4a0efc736e66d6d1485d8a08a7f79f99e1dfff6d5022a9e",
+              "total_retained": 128,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                0,
+                5,
+                3,
+                4,
+                5,
+                7,
+                5,
+                1
+              ],
+              "donor_multiplicities": [
+                1,
+                1,
+                0,
+                1,
+                1,
+                3,
+                0,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 128,
+              "eligible_fraction": 1.0,
+              "eligible_per_donor": [
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16,
+                16
+              ],
+              "retained_indices": [
+                10,
+                11,
+                12,
+                0,
+                5,
+                8,
+                10,
+                15
+              ],
+              "selected_flat_indices": [
+                80,
+                93,
+                99,
+                4,
+                45,
+                71,
+                85,
+                121
+              ],
+              "selected_pool_indices": [
+                80,
+                93,
+                99,
+                4,
+                45,
+                71,
+                85,
+                121
+              ],
+              "source_hashes": [
+                "ed2aae7c48330d218f41311cf4c1a5f5d639b29d8623102da85103e92b722b6d",
+                "1f776373582c891f0de7a6644e93d7577483b0dc0da0464871d9a4a41db2bf68",
+                "b094919d435e705af705d4199b9fadbc1deccf4c5bd4223d21a461bbb180f6cc",
+                "1fbffcce4515d95b741436646f5792b2277e434c80a61d43b5b199bb06fbd559",
+                "85cedc8d01f857e96a66bbe96e32c066cfcaee6d7bb35c45369ac2e6a38e5a7a",
+                "1ed66f0a17a5d69931912456622a5cc4b6b745b6975c7b4f683ae291aa5b0847",
+                "b6ba96d6f2e1653293cbf576e2b1384bf17f0db01e1cd927420c3c79f3d35aff",
+                "7c8269556182c3881c46c3fd313af1227fb4ed13f9091653e5edb2e642f43e67"
+              ],
+              "source_history_hash": "28df1e535a92546d47c5d861de8c3d5ef9ad09dd1abd3a1c3c8bbbb4920298ba",
+              "total_retained": 128,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 3067,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 0,
+              "label_seed": 3263126805,
+              "mh_seed": 3500932169,
+              "promotion_seed": 1432048796,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                3286772653,
+                2404734659,
+                519186764,
+                3774758877,
+                79725637,
+                3116445191,
+                534581779,
+                1875077856
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 0,
+              "label_seed": 3207848868,
+              "mh_seed": 2895929339,
+              "promotion_seed": 3985825640,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                1483681914,
+                3571373038,
+                1012212481,
+                1803510792,
+                3770168077,
+                1962908479,
+                2639857437,
+                25489043
+              ]
+            }
+          }
+        },
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.07944206674180501,
+            "block_means_se": 0.02273421533066461,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 26.05832384385811,
+            "exceeds": 1700,
+            "interval": [
+              0.01966889363567534,
+              0.39537016886432463
+            ],
+            "naive_iid_se": 0.00448052392620478,
+            "naive_iid_wilson": [
+              0.19887594179735596,
+              0.2164372967423358
+            ],
+            "ratio": 0.20751953125,
+            "sample_count": 8192,
+            "standard_error": 0.07944206674180501,
+            "walker_fractions": [
+              0.0,
+              0.4775390625,
+              0.3955078125,
+              0.0,
+              0.0,
+              0.4365234375,
+              0.0,
+              0.3505859375
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 3026,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 79.32542621096654,
+            "exceeds": 3011,
+            "interval": [
+              0.2395483488129631,
+              0.4955590730620369
+            ],
+            "naive_iid_se": 0.005326933294533613,
+            "naive_iid_wilson": [
+              0.3571774546914346,
+              0.37805412453042087
+            ],
+            "order_index": 5178,
+            "ratio": 0.3675537109375,
+            "sample_count": 8192,
+            "standard_error": 0.05413348951247283,
+            "status": "ok",
+            "threshold": -0.8018929445174949,
+            "walker_fractions": [
+              0.43359375,
+              0.4130859375,
+              0.3583984375,
+              0.3857421875,
+              0.4697265625,
+              0.46484375,
+              0.0,
+              0.4150390625
+            ]
+          },
+          "candidate_sha256": "5077818b95b1ac066e3b4769f5f27c9ecb8163be801374a5867664c90659f676",
+          "iteration": 1,
+          "old_threshold": -2.151669488653418,
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                4,
+                6,
+                0,
+                2,
+                4,
+                1,
+                6,
+                4
+              ],
+              "donor_multiplicities": [
+                1,
+                1,
+                1,
+                0,
+                3,
+                0,
+                2,
+                0
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 2867,
+              "eligible_fraction": 0.3499755859375,
+              "eligible_per_donor": [
+                418,
+                369,
+                290,
+                340,
+                346,
+                374,
+                372,
+                358
+              ],
+              "retained_indices": [
+                904,
+                142,
+                891,
+                236,
+                763,
+                181,
+                738,
+                760
+              ],
+              "selected_flat_indices": [
+                7236,
+                1142,
+                7128,
+                1890,
+                6108,
+                1449,
+                5910,
+                6084
+              ],
+              "selected_pool_indices": [
+                2621,
+                351,
+                2576,
+                540,
+                2172,
+                405,
+                2028,
+                2157
+              ],
+              "source_hashes": [
+                "1ec9e50688b127b9207f62824579853df549be658726a9da57e11e183b56fcaf",
+                "d869d3fe64384b59e3898dd947687cdfff5f924a60d729c1a5ecdffa5b08c827",
+                "41e7c758c8eabbac1f57f547c68642d755da55c1746a064ede428f17b82c3188",
+                "c62394ef88a620616f4fbc736dc7378a06ba5114958a8285cb4b11c452ff60a5",
+                "22f06d7c7012d2f5505260cceb92e7c0573069b14cf051b5d452f42c45c6bf98",
+                "e41659afa0bcf25c4f5ba47d4b9c542269c91a1cc78a22e7e6e4ab3e4db638b1",
+                "f1cba2f9689019b34836f5c4d1a892b17d4fb2ad086b76516f0985fcad87c5e9",
+                "667edb055d7035a8d16708584bc3510a3e1cc529b49cf1573075834141dec035"
+              ],
+              "source_history_hash": "fee7a56fc952001114a4be65dc94de4bdbe227cc14fd4d08c1ad0c6abb00f993",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                0,
+                7,
+                4,
+                5,
+                5,
+                5,
+                2,
+                3
+              ],
+              "donor_multiplicities": [
+                1,
+                0,
+                1,
+                1,
+                1,
+                3,
+                0,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 3007,
+              "eligible_fraction": 0.3670654296875,
+              "eligible_per_donor": [
+                427,
+                325,
+                415,
+                346,
+                278,
+                374,
+                420,
+                422
+              ],
+              "retained_indices": [
+                466,
+                77,
+                986,
+                805,
+                905,
+                874,
+                771,
+                253
+              ],
+              "selected_flat_indices": [
+                3728,
+                623,
+                7892,
+                6445,
+                7245,
+                6997,
+                6170,
+                2027
+              ],
+              "selected_pool_indices": [
+                1305,
+                264,
+                2889,
+                2225,
+                2556,
+                2417,
+                2128,
+                716
+              ],
+              "source_hashes": [
+                "6d691da4a0662e275ddf102fb17791b75588ec8367b0f6d70945178c8a24cccb",
+                "d395afc6dfab2c2aa68caa8bb017a2f0707ef532127124df000a59da42428494",
+                "3094e8a672f4a388c6cc31256946eb65b31c5708daaed1af6d3043d520de5cae",
+                "da29095a30bc43e13627674c0d5fe854d61082ca798fa242bbe0575968527d43",
+                "f864b2a03d3c3393e862e0d3f9d1b3712591a45cfd35b51d230ff7844b59a455",
+                "da6dafe048a11262b4ec24120f96ac0fc8e4d5f6f8bb47cbafb6351c3693b70b",
+                "53b3a8a78850287916868593173c180e8006be2ddbee44a0e3f08d06c6f2a159",
+                "25c11b6dcbddfeaa07101faa1508a9b92b22dec9b833822887d8117411a45ddd"
+              ],
+              "source_history_hash": "762a8e6ede1d880e24223e0a29e264f2760c201efd6fa8f95540378b49fa5783",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 2937,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 1,
+              "label_seed": 986438393,
+              "mh_seed": 883587392,
+              "promotion_seed": 1010760027,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                2863497102,
+                77488980,
+                3485547557,
+                3227867798,
+                1212330593,
+                3331241556,
+                868553265,
+                2312433031
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 1,
+              "label_seed": 4096371400,
+              "mh_seed": 356820941,
+              "promotion_seed": 3084248015,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                662223827,
+                1614456740,
+                4187111306,
+                410413239,
+                2692090109,
+                3062675298,
+                2537062128,
+                3713716731
+              ]
+            }
+          }
+        },
+        {
+          "accepted": true,
+          "calibration": {
+            "between_walker_se": 0.016240595412208375,
+            "block_means_se": 0.013859558037345671,
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 874.2915425776616,
+            "exceeds": 2955,
+            "interval": [
+              0.32231486766548556,
+              0.39912067920951444
+            ],
+            "naive_iid_se": 0.005305607446968002,
+            "naive_iid_wilson": [
+              0.350386488981109,
+              0.3711796233618744
+            ],
+            "ratio": 0.3607177734375,
+            "sample_count": 8192,
+            "standard_error": 0.016240595412208375,
+            "walker_fractions": [
+              0.3193359375,
+              0.412109375,
+              0.388671875,
+              0.3828125,
+              0.3388671875,
+              0.416015625,
+              0.3388671875,
+              0.2890625
+            ]
+          },
+          "calibration_sampling": {
+            "accepted_exchanges": 2866,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "candidate": {
+            "block_size": 64,
+            "blocks": 128,
+            "ess": 1175.846805533129,
+            "exceeds": 3013,
+            "interval": [
+              0.3345457310893319,
+              0.4010499720356681
+            ],
+            "naive_iid_se": 0.005327673550665854,
+            "naive_iid_wilson": [
+              0.35742003105586745,
+              0.3782996005545191
+            ],
+            "order_index": 5178,
+            "ratio": 0.3677978515625,
+            "sample_count": 8192,
+            "standard_error": 0.014062327429302924,
+            "status": "ok",
+            "threshold": -0.5811231188756006,
+            "walker_fractions": [
+              0.3505859375,
+              0.451171875,
+              0.376953125,
+              0.333984375,
+              0.330078125,
+              0.392578125,
+              0.3447265625,
+              0.3623046875
+            ]
+          },
+          "candidate_sha256": "3057ed6387e775969cfb289254021214b2f95c9dec22acefc385bd49efbed548",
+          "iteration": 2,
+          "old_threshold": -0.8018929445174949,
+          "promotion": {
+            "calibration": {
+              "donor_ids": [
+                1,
+                2,
+                1,
+                1,
+                5,
+                2,
+                1,
+                7
+              ],
+              "donor_multiplicities": [
+                0,
+                4,
+                2,
+                0,
+                0,
+                1,
+                0,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 1700,
+              "eligible_fraction": 0.20751953125,
+              "eligible_per_donor": [
+                0,
+                489,
+                405,
+                0,
+                0,
+                447,
+                0,
+                359
+              ],
+              "retained_indices": [
+                575,
+                654,
+                166,
+                77,
+                196,
+                982,
+                630,
+                270
+              ],
+              "selected_flat_indices": [
+                4601,
+                5234,
+                1329,
+                617,
+                1573,
+                7858,
+                5041,
+                2167
+              ],
+              "selected_pool_indices": [
+                878,
+                1013,
+                266,
+                102,
+                287,
+                1616,
+                978,
+                394
+              ],
+              "source_hashes": [
+                "be3cc16d6c54969551773b90b30af1a2ad14cc66acaa09f35cd9f7d7fb947dd8",
+                "40a9e0bcca749bad62d6d9a9019e4b13ca84d91c7fec0f7a089d1fbee9fde440",
+                "c3f29c150f6b0242b928f89af7d27b2e7bcf190617119481832ef35d8098d317",
+                "dbe683ae50204bbb918a1c26e4ae55e2a52e72090deb8d2e145c5d1ee919ed5e",
+                "940f82b9b3a99c3202f481cbc7ca6a922caa1d9ba6b99997920929522d78840b",
+                "0362cf9a6e121e1e9e83b9e3d0b2f875d10a395ff0fd3a2e1fe401708447143d",
+                "4df2dd6eb238149f58646d5f6aa6ff21ce971c98db95f9bc95bc3fccbceedcea",
+                "384f533b7b6b117681e6223cf256cd44257784d3b94d1df657cab1c106869998"
+              ],
+              "source_history_hash": "27ed09adc3faaec6443140bf635bf32e808eee43a16ed518235f5cc893f2e030",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            },
+            "selection": {
+              "donor_ids": [
+                4,
+                5,
+                0,
+                2,
+                7,
+                3,
+                5,
+                2
+              ],
+              "donor_multiplicities": [
+                1,
+                0,
+                2,
+                1,
+                1,
+                2,
+                0,
+                1
+              ],
+              "duplicate_source_hashes": {},
+              "duplicates": 0,
+              "eligible": 3011,
+              "eligible_fraction": 0.3675537109375,
+              "eligible_per_donor": [
+                444,
+                423,
+                367,
+                395,
+                481,
+                476,
+                0,
+                425
+              ],
+              "retained_indices": [
+                385,
+                225,
+                749,
+                426,
+                145,
+                581,
+                35,
+                460
+              ],
+              "selected_flat_indices": [
+                3084,
+                1805,
+                5992,
+                3410,
+                1167,
+                4651,
+                285,
+                3682
+              ],
+              "selected_pool_indices": [
+                1159,
+                737,
+                2154,
+                1269,
+                504,
+                1671,
+                134,
+                1376
+              ],
+              "source_hashes": [
+                "0f59544c9521e7fed4b84745bbeed184486b7f841e2d66645f457b4d594d6dcd",
+                "0aeccf51c6a187525936b175d727a20757ff7301701f2612503b8206f36f3d83",
+                "1dd29a3f914f93f01f9799eaecee5783a8c1b308b7a16a989b00cb1a8fa153b1",
+                "180d8b1cb2019bf7a94625e270be1abb251d76e830f3e725460e2106238d5879",
+                "639bc9b43be98ac60121097b5933e79ea7f7959d501978d29fb083f4925ca4ee",
+                "b03c7606a97035dc7b075d62030ad17482913263e292b145669f49701f0b36a9",
+                "f43c269928d359a5c69fe4c66c26697a5360c85e6ade30b62fcf3a8af54569d0",
+                "fda41634e99100925da9b57352e2b3dc550891408e5a8a15b404422ebeace29f"
+              ],
+              "source_history_hash": "c2eef7df8203bd9817da8ff3c35b2f1b0c7e140ed0648abce55dcc4e1f074232",
+              "total_retained": 8192,
+              "unique_promoted_states": 8
+            }
+          },
+          "selection_sampling": {
+            "accepted_exchanges": 2982,
+            "all_constituent_checks_passed": true,
+            "completed_sweeps": 1280,
+            "exchange_proposals": 5120,
+            "retained": 1024
+          },
+          "streams": {
+            "calibration": {
+              "bank": "calibration",
+              "iteration": 2,
+              "label_seed": 2298438241,
+              "mh_seed": 2638169777,
+              "promotion_seed": 2104406319,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                768431853,
+                3079522175,
+                2674881428,
+                3384195657,
+                2832319745,
+                2489626854,
+                384445745,
+                172340314
+              ]
+            },
+            "selection": {
+              "bank": "selection",
+              "iteration": 2,
+              "label_seed": 3701204485,
+              "mh_seed": 2463914674,
+              "promotion_seed": 3740686807,
+              "recipe": "SeedSequence-v1",
+              "slice_seeds": [
+                2202225316,
+                252110603,
+                304401423,
+                1113034802,
+                246664404,
+                1268843756,
+                2103812814,
+                4078830075
+              ]
+            }
+          }
+        }
+      ],
+      "correlation": {
+        "evidence_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 617.4745844691525,
+              "between_walker_se": 0.01068657159465426,
+              "block_means_se": 0.010797139202080348,
+              "conservative_mean_se": 0.010797139202080348,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 174.85988080953632,
+              "between_walker_se": 0.01531955531124288,
+              "block_means_se": 0.005296976224261599,
+              "conservative_mean_se": 0.01531955531124288,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 519.1112232940304,
+              "between_walker_se": 0.0034148025965694854,
+              "block_means_se": 0.002769652297304343,
+              "conservative_mean_se": 0.0034148025965694854,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1992.9977303268386,
+              "between_walker_se": 1.7528274809960533e-05,
+              "block_means_se": 1.7670745736717206e-05,
+              "conservative_mean_se": 1.7670745736717206e-05,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 3304.443418899558
+        },
+        "loglikelihood": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 180.0633915814771,
+              "between_walker_se": 0.33221681833090855,
+              "block_means_se": 0.24405683087154834,
+              "conservative_mean_se": 0.33221681833090855,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 12.49748778616352,
+              "between_walker_se": 0.14365138951702744,
+              "block_means_se": 0.010985216850538385,
+              "conservative_mean_se": 0.14365138951702744,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 658.2741482909389,
+              "between_walker_se": 0.0029075302892981273,
+              "block_means_se": 0.002802118384941489,
+              "conservative_mean_se": 0.0029075302892981273,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1994.6937247988158,
+              "between_walker_se": 0.0001996131906459116,
+              "block_means_se": 0.00020141357777618443,
+              "conservative_mean_se": 0.00020141357777618443,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 2845.528752457395
+        },
+        "mode_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 175.3737183189237,
+              "between_walker_se": 0.0145790934563796,
+              "block_means_se": 0.008475884158753028,
+              "conservative_mean_se": 0.0145790934563796,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 7.870197290794107,
+              "between_walker_se": 0.07548852143723586,
+              "block_means_se": 0.0021829219230479844,
+              "conservative_mean_se": 0.07548852143723586,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 519.1112232940301,
+              "between_walker_se": 0.0011359094330729105,
+              "block_means_se": 0.0009213048432142489,
+              "conservative_mean_se": 0.0011359094330729105,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 1992.9977303269952,
+              "between_walker_se": 5.83065408294062e-06,
+              "block_means_se": 5.878046008262357e-06,
+              "conservative_mean_se": 5.878046008262357e-06,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 2695.352869230743
+        },
+        "posterior_mean_integrand": {
+          "interpretation": "Observable-specific block/ensemble ESS; not importance weight ESS or calibrated-mass uncertainty",
+          "per_level": [
+            {
+              "approximate_ess": 143.70971132620704,
+              "between_walker_se": 0.06326345436967692,
+              "block_means_se": 0.033800348787215474,
+              "conservative_mean_se": 0.06326345436967692,
+              "level": 0,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 8.288600001139285,
+              "between_walker_se": 0.29807905445431265,
+              "block_means_se": 0.009035046722747382,
+              "conservative_mean_se": 0.29807905445431265,
+              "level": 1,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 626.9426615527233,
+              "between_walker_se": 0.004507048034771472,
+              "block_means_se": 0.004062851421193313,
+              "conservative_mean_se": 0.004507048034771472,
+              "level": 2,
+              "raw_count": 8192
+            },
+            {
+              "approximate_ess": 745.1810903291478,
+              "between_walker_se": 0.00020985768829511408,
+              "block_means_se": 0.00015304230401433377,
+              "conservative_mean_se": 0.00020985768829511408,
+              "level": 3,
+              "raw_count": 8192
+            }
+          ],
+          "sum_approximate_ess": 1524.1220632092172
+        }
+      },
+      "decision": "PASS",
+      "environment": {
+        "backend": "cpu",
+        "jax": "0.10.0",
+        "jaxlib": "0.10.0",
+        "numpy": "2.4.4",
+        "prng": "threefry2x32",
+        "schedule": "PCG64",
+        "x64": true
+      },
+      "exact": {
+        "Z": 0.11703310668785585,
+        "component_means": [
+          -1.9036287923854849,
+          1.9599109131403119
+        ],
+        "component_probabilities": [
+          0.671547841742549,
+          0.3284521582574509
+        ],
+        "component_variances": [
+          0.19274241522903038,
+          0.43652561247216026
+        ],
+        "logZ": -2.1452984210668338,
+        "mean": -0.6346408375921805,
+        "quantile_probabilities": [
+          0.05,
+          0.16,
+          0.5,
+          0.84,
+          0.95
+        ],
+        "quantiles": [
+          -2.5373136433720256,
+          -2.2161813175392,
+          -1.6149998809502695,
+          1.981223472990193,
+          2.6383975382713944
+        ],
+        "region_probabilities": [
+          0.6720377782407402,
+          0.3279622217592598
+        ],
+        "standard_deviation": 1.8881918473179178,
+        "variance": 3.565268452277851
+      },
+      "exact_contour_log_masses": [
+        0.0,
+        -1.038977957247712,
+        -2.56267385521657,
+        -3.6256644590261757
+      ],
+      "exact_mass_diagnostic": {
+        "cdf_discrepancy": 0.01541899475501074,
+        "component_probabilities": [
+          0.670980901963473,
+          0.32901909803651885
+        ],
+        "entropy": 10.069948032104389,
+        "errors": {
+          "Z_relative": 0.019994486911388675,
+          "component_probability_absolute": [
+            0.0005669397790759589,
+            0.0005669397790679653
+          ],
+          "logZ_absolute": 0.02019708173271928,
+          "mean_absolute": 0.016306886699837375,
+          "quantile_absolute": [
+            0.008278470369546653,
+            0.0037894913107234807,
+            0.010784928064480725,
+            0.023302195046384977,
+            0.05620164530180505
+          ],
+          "region_probability_absolute": [
+            0.0005915411904251489,
+            0.0005915411904251489
+          ],
+          "standard_deviation_absolute": 0.005996586658114644,
+          "variance_absolute": 0.02260945302762618
+        },
+        "logZ": -2.165495502799553,
+        "mass_treatment": "explicit-mass-sensitivity",
+        "maximum_weight": 0.00012472248620402937,
+        "mean": -0.6509477242920179,
+        "per_level_counts": [
+          8192,
+          8192,
+          8192,
+          8192
+        ],
+        "quantiles": [
+          -2.5455921137415722,
+          -2.2199708088499235,
+          -1.6257848090147502,
+          1.957921277943808,
+          2.5821958929695894
+        ],
+        "raw_samples": 32768,
+        "region_probabilities": [
+          0.671446237050315,
+          0.32855376294968497
+        ],
+        "standard_deviation": 1.8821952606598031,
+        "variance": 3.5426589992502246,
+        "weight_ess": 18990.886079465643,
+        "weight_sum": 0.9999999999999994,
+        "weights_finite": true,
+        "weights_nonnegative": true
+      },
+      "mass_sensitivity": {
+        "columns": [
+          "logZ",
+          "posterior_mean",
+          "component_0",
+          "component_1"
+        ],
+        "draws": 128,
+        "method": "independent logit-normal compression perturbations from recorded conservative SE; sensitivity only, not a confidence interval",
+        "q05_q50_q95": [
+          [
+            -2.3826444568514202,
+            -0.8693511916507887,
+            0.60072971986712,
+            0.2754770369359004
+          ],
+          [
+            -2.1720495505870323,
+            -0.6402644378390989,
+            0.6684455870519784,
+            0.33155441294801524
+          ],
+          [
+            -1.9961203240187657,
+            -0.3675944977362114,
+            0.7245229630640982,
+            0.39927028013287724
+          ]
+        ],
+        "seed": 7301
+      },
+      "model": "mixture",
+      "numerical_contract": {
+        "backend": "cpu",
+        "dtype": "float64",
+        "jax_enable_x64": true,
+        "likelihood_atol": 1e-07,
+        "prior_atol": 1e-09,
+        "rtol": 0.0,
+        "version": 1
+      },
+      "parameters": {
+        "centers": [
+          -2.0,
+          2.2
+        ],
+        "component_weights": [
+          0.65,
+          0.35
+        ],
+        "sigma_prior": 2.0,
+        "widths": [
+          0.45,
+          0.7
+        ]
+      },
+      "primary": {
+        "cdf_discrepancy": 0.010481342553336437,
+        "component_probabilities": [
+          0.6668833534282026,
+          0.3331166465717971
+        ],
+        "entropy": 10.06395546394938,
+        "errors": {
+          "Z_relative": 0.03764055478513664,
+          "component_probability_absolute": [
+            0.004664488314346404,
+            0.004664488314346238
+          ],
+          "logZ_absolute": 0.03836725442935096,
+          "mean_absolute": 5.2581173719423724e-05,
+          "quantile_absolute": [
+            0.012996703512770935,
+            0.0037894913107234807,
+            0.00106230829030185,
+            0.014873546825211026,
+            0.04909522559784163
+          ],
+          "region_probability_absolute": [
+            0.004680559470333412,
+            0.004680559470333412
+          ],
+          "standard_deviation_absolute": 0.0005898451815007366,
+          "variance_absolute": 0.002227133808440307
+        },
+        "logZ": -2.1836656754961847,
+        "mass_treatment": "recorded-calibration-plugin",
+        "maximum_weight": 0.00012598820031043,
+        "mean": -0.6346934187658999,
+        "per_level_counts": [
+          8192,
+          8192,
+          8192,
+          8192
+        ],
+        "quantiles": [
+          -2.5503103468847965,
+          -2.2199708088499235,
+          -1.6160621892405713,
+          1.966349926164982,
+          2.589302312673553
+        ],
+        "raw_samples": 32768,
+        "region_probabilities": [
+          0.6673572187704068,
+          0.33264278122959323
+        ],
+        "standard_deviation": 1.887602002136417,
+        "variance": 3.5630413184694105,
+        "weight_ess": 18775.109561377674,
+        "weight_sum": 0.9999999999999999,
+        "weights_finite": true,
+        "weights_nonnegative": true
+      },
+      "progressive_levels": [
+        {
+          "cdf_discrepancy": 0.07038281409227964,
+          "component_probabilities": [
+            0.7291289387556538,
+            0.270871061244344
+          ],
+          "entropy": 8.180524631934293,
+          "errors": {
+            "Z_relative": 0.046825627794100357,
+            "component_probability_absolute": [
+              0.057581097013104765,
+              0.057581097013106874
+            ],
+            "logZ_absolute": 0.047957420180778865,
+            "mean_absolute": 0.24619884067204767,
+            "quantile_absolute": [
+              0.06895352820900191,
+              0.04100487615145498,
+              0.08531918970154817,
+              0.2558704935087721,
+              0.02844550221752451
+            ],
+            "region_probability_absolute": [
+              0.05756961626582291,
+              0.05756961626582291
+            ],
+            "standard_deviation_absolute": 0.1017923862581489,
+            "variance_absolute": 0.374045417803218
+          },
+          "logZ": -2.1932558412476126,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.0006305794797831567,
+          "mean": -0.8808396782642282,
+          "per_level_counts": [
+            8192
+          ],
+          "quantiles": [
+            -2.6062671715810275,
+            -2.257186193690655,
+            -1.7003190706518176,
+            1.7253529794814209,
+            2.60995203605387
+          ],
+          "raw_samples": 8192,
+          "region_probabilities": [
+            0.7296073945065631,
+            0.2703926054934369
+          ],
+          "standard_deviation": 1.7863994610597689,
+          "variance": 3.191223034474633,
+          "weight_ess": 2752.4756175624184,
+          "weight_sum": 0.9999999999999999,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.0122653785909973,
+          "component_probabilities": [
+            0.6681675562161608,
+            0.33183244378383486
+          ],
+          "entropy": 9.384829610987346,
+          "errors": {
+            "Z_relative": 0.03391619031133683,
+            "component_probability_absolute": [
+              0.003380285526388249,
+              0.003380285526383975
+            ],
+            "logZ_absolute": 0.034504689020934176,
+            "mean_absolute": 0.002436014097889405,
+            "quantile_absolute": [
+              0.0123186904386281,
+              0.004906616937453645,
+              0.0015994836376087562,
+              0.020965624467562005,
+              0.05260085448287022
+            ],
+            "region_probability_absolute": [
+              0.003398183195673532,
+              0.003398183195673532
+            ],
+            "standard_deviation_absolute": 0.004425558322673995,
+            "variance_absolute": 0.016693020722938545
+          },
+          "logZ": -2.179803110087768,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00016129066105148812,
+          "mean": -0.6370768516900699,
+          "per_level_counts": [
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -2.5496323338106537,
+            -2.2112747006017464,
+            -1.6165993645878782,
+            1.960257848522631,
+            2.5857966837885242
+          ],
+          "raw_samples": 16384,
+          "region_probabilities": [
+            0.6686395950450666,
+            0.33136040495493335
+          ],
+          "standard_deviation": 1.8837662889952438,
+          "variance": 3.5485754315549123,
+          "weight_ess": 10288.27303897436,
+          "weight_sum": 1.0000000000000004,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.00908725559002066,
+          "component_probabilities": [
+            0.6656983088735147,
+            0.3343016911264827
+          ],
+          "entropy": 9.908147757935964,
+          "errors": {
+            "Z_relative": 0.04105196084471229,
+            "component_probability_absolute": [
+              0.005849532869034335,
+              0.005849532869031837
+            ],
+            "logZ_absolute": 0.04191838788643887,
+            "mean_absolute": 0.005447202196967593,
+            "quantile_absolute": [
+              0.012996703512770935,
+              0.003973444217933331,
+              0.003573827331577739,
+              0.012936155504607472,
+              0.04909522559784163
+            ],
+            "region_probability_absolute": [
+              0.0058639182689607106,
+              0.0058639182689607106
+            ],
+            "standard_deviation_absolute": 0.0005285834137087608,
+            "variance_absolute": 0.001996413185210155
+          },
+          "logZ": -2.1872168089532726,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00012643639655509048,
+          "mean": -0.6291936353952129,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -2.5503103468847965,
+            -2.2201547617571333,
+            -1.6114260536186917,
+            1.9682873174855855,
+            2.589302312673553
+          ],
+          "raw_samples": 24576,
+          "region_probabilities": [
+            0.6661738599717795,
+            0.33382614002822053
+          ],
+          "standard_deviation": 1.8887204307316265,
+          "variance": 3.567264865463061,
+          "weight_ess": 17641.482190928313,
+          "weight_sum": 0.9999999999999993,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        {
+          "cdf_discrepancy": 0.010481342553336437,
+          "component_probabilities": [
+            0.6668833534282026,
+            0.3331166465717971
+          ],
+          "entropy": 10.06395546394938,
+          "errors": {
+            "Z_relative": 0.03764055478513664,
+            "component_probability_absolute": [
+              0.004664488314346404,
+              0.004664488314346238
+            ],
+            "logZ_absolute": 0.03836725442935096,
+            "mean_absolute": 5.2581173719423724e-05,
+            "quantile_absolute": [
+              0.012996703512770935,
+              0.0037894913107234807,
+              0.00106230829030185,
+              0.014873546825211026,
+              0.04909522559784163
+            ],
+            "region_probability_absolute": [
+              0.004680559470333412,
+              0.004680559470333412
+            ],
+            "standard_deviation_absolute": 0.0005898451815007366,
+            "variance_absolute": 0.002227133808440307
+          },
+          "logZ": -2.1836656754961847,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00012598820031043,
+          "mean": -0.6346934187658999,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -2.5503103468847965,
+            -2.2199708088499235,
+            -1.6160621892405713,
+            1.966349926164982,
+            2.589302312673553
+          ],
+          "raw_samples": 32768,
+          "region_probabilities": [
+            0.6673572187704068,
+            0.33264278122959323
+          ],
+          "standard_deviation": 1.887602002136417,
+          "variance": 3.5630413184694105,
+          "weight_ess": 18775.109561377674,
+          "weight_sum": 0.9999999999999999,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        }
+      ],
+      "recorded_log_masses": [
+        0.0,
+        -1.0498918813959193,
+        -2.622421698630901,
+        -3.642081116069991
+      ],
+      "restart": {
+        "exact_masses": true,
+        "exact_records": true,
+        "exact_thresholds": true,
+        "identical_logZ": true,
+        "identical_summaries": true,
+        "identical_weights": true
+      },
+      "shell_diagnostic": {
+        "accounted_prior_mass": 1.0,
+        "logZ": -2.1829245556290284,
+        "representative_log_mean_likelihood": [
+          -3.7255651569914647,
+          -1.5584141259702857,
+          -0.6711075847142922,
+          -0.5615744592764678
+        ],
+        "shell_counts": [
+          5575,
+          6496,
+          5373,
+          8192
+        ],
+        "shell_masses": [
+          0.6500244140625,
+          0.27734881639480585,
+          0.04642900294129504,
+          0.026197766601399056
+        ],
+        "status": "ok"
+      },
+      "thresholds": [
+        "-inf",
+        -2.151669488653418,
+        -0.8018929445174949,
+        -0.5811231188756006
+      ]
+    }
+  },
+  "production_stopping_implemented": false,
+  "stage": "7B",
+  "predeclared_design_sha256": "4d7fbd0125837fb751b8ef5f314e4316802eb8259b9be7b92e9462d01f9ed82d",
+  "saved_runtime_decision": "PASS",
+  "test_count": 419,
+  "tests": {
+    "status": "PASS",
+    "source": "/tmp/dns-stage7b-tests.log",
+    "count": 419,
+    "rerun": false
+  },
+  "recovery_checks": {
+    "design_sha256": "4d7fbd0125837fb751b8ef5f314e4316802eb8259b9be7b92e9462d01f9ed82d",
+    "models": {
+      "gaussian": {
+        "archive_checks_pass": true,
+        "records_identical": true,
+        "event_ids_identical": true,
+        "origin_levels_identical": true,
+        "checkpoint_payloads_identical": true,
+        "structural_checks_pass": true,
+        "samples": 32768,
+        "fresh_process_archive_load": true,
+        "fresh_process_sampling_continuation_demonstrated": true,
+        "fresh_process_sampling_continuation_evidence": "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/checkpoint"
+      },
+      "mixture": {
+        "archive_checks_pass": true,
+        "records_identical": true,
+        "event_ids_identical": true,
+        "origin_levels_identical": true,
+        "checkpoint_payloads_identical": true,
+        "structural_checks_pass": true,
+        "samples": 32768,
+        "fresh_process_archive_load": true,
+        "fresh_process_sampling_continuation_demonstrated": false
+      }
+    },
+    "scope": "Fresh-process saved-archive integrity validation only; no sampling, estimator evaluations, or completed calculations rerun"
+  },
+  "progress": {
+    "gaussian_ladder": "complete",
+    "gaussian_completed_levels": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "gaussian_incomplete_levels": [],
+    "gaussian_saved_restart": "PASS: same-process checkpoint reload and continuation",
+    "gaussian_fresh_process_continuation": "PASS: single saved continuation, exact comparison completed read-only",
+    "multimodal_ladder": "complete",
+    "multimodal_reconstruction": "complete levels 0..3, original and repeated",
+    "regression_tests": "419 passed"
+  },
+  "scope": {
+    "completed_calculations_rerun": false,
+    "new_sampling": false,
+    "estimator_modified": false,
+    "design_modified": false,
+    "bounded_fresh_process_continuation_attempts": 1,
+    "read_only_comparison_sampling_calls": 0
+  },
+  "fresh_process_restart": {
+    "decision": "PASS",
+    "checks_passed": [
+      "candidate.json bytes",
+      "candidate_hash.json bytes",
+      "decision.json bytes",
+      "promotion.json bytes",
+      "preflight.json bytes",
+      "checkpoint/checkpoint.json bytes",
+      "checkpoint payload",
+      "checkpoint hash",
+      "canonical checkpoint checksum",
+      "serialized array fields",
+      "selection_position",
+      "selection_logdensity",
+      "selection_loglikelihood",
+      "calibration_position",
+      "calibration_logdensity",
+      "calibration_loglikelihood",
+      "bank archive hash",
+      "reconstruction thresholds",
+      "reconstruction log_masses",
+      "reconstruction position",
+      "reconstruction logprior",
+      "reconstruction loglikelihood",
+      "reconstruction origin_level",
+      "reconstruction walker",
+      "reconstruction draw",
+      "reconstruction event_id",
+      "stream IDs",
+      "mixture metadata",
+      "fresh endpoint source provenance",
+      "fresh thresholds",
+      "fresh masses",
+      "normalized weights",
+      "log importance",
+      "logZ",
+      "mean",
+      "variance",
+      "q05",
+      "q16",
+      "median",
+      "q84",
+      "q95",
+      "completed continuation artifacts immutable"
+    ],
+    "first_divergent_quantity": null,
+    "prior_cache_field": "logdensity",
+    "original_sampling_attempts": 1,
+    "sampling_calls": 0,
+    "continuation_reruns": 0,
+    "reconstruction_streams_rerun": 0,
+    "analytic_truth_recalculated": false,
+    "artifact_sha256": {
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/result.json": "15968a9f42e1cce97a3fd50dd3099bc022687de55741f5290812dff1b9e380d6",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/preflight.json": "ab0a9df459a443097b271c9cff24f72d114f16f03c320739fd18bd26454ae8be",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/promotion.json": "8d0877c8632405c477a941b8111689ef2ac6b541318bf5ea1e46ff8f5d8250ab",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/candidate.json": "0c55c66317ac811b9233add9278afc665cc4322f7bb7c80103f2879b0ed9403d",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/candidate_hash.json": "f2e44df926f3984720c248369979573060c687b1b875443d3d1d8705cda4d1d6",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/decision.json": "91f809dd1fce34453f129e5eb4ab8098a204818c5e3801eaac84c280abc69965",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/checkpoint/banks.npz": "eb5c0bb8cec6fda19a592ad2cf34de6f38383252e686d7551b2fece4c7fb5087",
+      "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/checkpoint/checkpoint.json": "884054133982089b0eda06c0da1edd9226302e53d00c9333131ec460f3829b2a"
+    },
+    "artifacts_unchanged": true,
+    "inference": {
+      "logZ": -1.6717714318048031,
+      "mean": 0.8165935290782316,
+      "variance": 0.41078405516737443,
+      "quantiles": [
+        -0.24460884120112436,
+        0.18872610524512412,
+        0.8168696623771552,
+        1.4631785430356115,
+        1.8595956793694062
+      ]
+    },
+    "reconstruction_comparison": "Reuse existing continuous and restarted reconstruction records under byte-identical fresh-process checkpoint/masses/source-bank hash. No fresh reconstruction archive is claimed.",
+    "checksum_semantics": "Sorted compact JSON separators per existing checkpoint implementation",
+    "saved_output_reverification": {
+      "decision": "PASS",
+      "checks_passed": 45,
+      "comparison_semantics": "Identical dtype, shape, and array bytes; identical serialized decision/checkpoint bytes and metadata; no numerical tolerances added.",
+      "final_checkpoint_sha256": "1ecdcb2a1988ea39c740d02732553e558d0146ca340f63207d39338ff82ab2d9",
+      "artifact_hashes_sizes_and_mtimes_unchanged": true,
+      "sampling_calls": 0,
+      "continuation_reruns": 0,
+      "reconstruction_streams_rerun": 0,
+      "tests_rerun": false,
+      "analytic_truth_recalculated": false,
+      "reconstruction_records": "Existing gaussian/inference and gaussian/inference_restarted archives, linked to the fresh endpoint by identical thresholds, log masses, and checkpoint bank-history hash."
+    }
+  },
+  "validation_status": {
+    "evidence_reconstruction": "PASS",
+    "posterior_reconstruction": "PASS",
+    "multimodal_mode_probabilities": "PASS",
+    "fresh_process_checkpoint_continuation": "PASS",
+    "previously_completed_tests": "PASS",
+    "test_count": 419
+  },
+  "decision_provenance": "Saved numerical validation PASS plus completed exact comparison of the single fresh-process Gaussian continuation. Initial comparison harness used a nonexistent logprior attribute; serialized prior field is logdensity. Comparator correction is not a stochastic restart retry."
+}
