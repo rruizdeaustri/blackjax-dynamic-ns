@@ -1,0 +1,765 @@
+{
+  "LISA_model_calls": 0,
+  "decision": "FAIL",
+  "design": {
+    "accuracy": {
+      "Z_relative": 0.25,
+      "cdf": 0.1,
+      "component_probability_absolute": 0.08,
+      "logZ_absolute": 0.22,
+      "mean_absolute": 0.25,
+      "quantile_absolute": 0.5,
+      "region_probability_absolute": 0.08,
+      "variance_absolute": 0.625,
+      "weight_sum_absolute": 1e-12
+    },
+    "builder": {
+      "block_size": 64,
+      "burn_in": 256,
+      "min_ess": 20.0,
+      "retained": 1024,
+      "target_compression": 0.36787944117144233
+    },
+    "continuation": {
+      "Z_absolute": "<=U_J at original stop",
+      "cdf": 0.02,
+      "component_probability_absolute": 0.02,
+      "logZ_absolute": 0.009950330853168083,
+      "mean_absolute": 0.05,
+      "quantile_absolute": 0.1,
+      "region_probability_absolute": 0.02,
+      "variance_absolute": 0.125
+    },
+    "deeper_additional_levels": 3,
+    "environment": {
+      "backend": "cpu",
+      "jax": "0.10.0",
+      "jaxlib": "0.10.0",
+      "numpy": "2.4.4",
+      "prng": "threefry2x32",
+      "schedule": "PCG64",
+      "x64": true
+    },
+    "frozen_sha256": {
+      "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+      "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+      "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+      "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+      "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+      "blackjax/ns/dns_reconstruction.py": "a4afacbe41194b875c44ecd9a98d4fbf12a086d23e68d3a227da49d2b3e23b66",
+      "blackjax/ns/dns_termination.py": "32088e8aeb190499eb319705d35d91f3e6cdd8297a22b26f26847332d0843ec7",
+      "docs/examples/dns_termination_semantics_audit.md": "54d4b0dc20845aad22565ba93a79c12ba35f77333ab001a5d5a67f4929d0d9f4",
+      "examples/dns_automatic_termination.py": "5702b770addbe67834db4ad39fd293451b157ec42fb0bd01d4eac8ef82ca646e",
+      "examples/dns_inference_reconstruction.py": "f6022dbf0938936a2268163085a267ee71ff4f6229d0d833dd9193a7e9c6be9a",
+      "examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+      "examples/lisa_dns_stage4/numerical_cache_contract.py": "331f2fa62080e5bfb860be9ff68940be183dd852f7bb9fd91ffb83cd78d5b1d7",
+      "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026"
+    },
+    "harness_sha256": {
+      "/tmp/dns-heldout-driver.py": "944ea86c5e8ad00ec7a983e86903ef0d97d0694d37f7c0f378894e7d6f3f405e",
+      "/tmp/dns-heldout-intervals.py": "c3377c156f3e84459c9c74b7af4806ec2ab94853a654768a5fdccea75c6adcd6"
+    },
+    "heldout_preflight": {
+      "checked_json_files": [
+        "docs/examples/dns_stage3_results_float32.json",
+        "docs/examples/dns_stage3_results_float64.json",
+        "docs/examples/dns_pooled_promotion_toy_results.json",
+        "docs/examples/dns_pooled_promotion_lisa_validation.json",
+        "docs/examples/dns_stage6b_pooled_promotion_lisa_validation.json",
+        "docs/examples/dns_automatic_ladder_validation.json",
+        "docs/examples/dns_inference_reconstruction_validation.json",
+        "docs/examples/dns_automatic_termination_validation.json",
+        "/tmp/dns-stage7b-validation/design.json",
+        "/tmp/dns-stage7b-validation/results.json",
+        "/tmp/dns-stage7b-validation/recovery_checks.json",
+        "/tmp/dns-stage7b-validation/fresh_process_saved_comparison.json",
+        "/tmp/dns-stage7b-validation/gaussian/exact_truth.json",
+        "/tmp/dns-stage7b-validation/gaussian/results.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/promotion.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/candidate.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/decision.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000000/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/promotion.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/candidate.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/decision.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000001/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/promotion.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/candidate.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/decision.json",
+        "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/promotion.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/candidate.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/decision.json",
+        "/tmp/dns-stage7b-validation/gaussian/restarted/attempt_000002/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference/level_0_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference/level_1_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference/level_2_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference/level_3_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference/records/records.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference_restarted/level_0_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference_restarted/level_1_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference_restarted/level_2_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference_restarted/level_3_preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian/inference_restarted/records/records.json",
+        "/tmp/dns-stage7b-validation/mixture/exact_truth.json",
+        "/tmp/dns-stage7b-validation/mixture/results.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/promotion.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/candidate.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/decision.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000000/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/promotion.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/candidate.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/decision.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000001/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/promotion.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/candidate.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/decision.json",
+        "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/promotion.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/candidate.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/decision.json",
+        "/tmp/dns-stage7b-validation/mixture/restarted/attempt_000002/checkpoint/checkpoint.json",
+        "/tmp/dns-stage7b-validation/mixture/inference/level_0_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference/level_1_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference/level_2_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference/level_3_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference/records/records.json",
+        "/tmp/dns-stage7b-validation/mixture/inference_restarted/level_0_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference_restarted/level_1_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference_restarted/level_2_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference_restarted/level_3_preflight.json",
+        "/tmp/dns-stage7b-validation/mixture/inference_restarted/records/records.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/result.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/preflight.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/promotion.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/candidate.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/candidate_hash.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/decision.json",
+        "/tmp/dns-stage7b-validation/gaussian_fresh_process_restart/continuation/attempt_000002/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/design.json",
+        "/tmp/dns-stage8-validation/results.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/result.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000003/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000004/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_4/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_4/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_5/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_5/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_6/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/level_6/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/continuous/final_records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/result.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000003/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000004/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/ladder/attempt_000005/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_4/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_4/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_5/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_5/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_6/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/level_6/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/restarted/final_records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/result.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000006/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/promotion.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/candidate.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/candidate_hash.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/decision.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/level_7/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/level_7/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/level_8/preflight.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/level_8/records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/deeper/final_records/records.json",
+        "/tmp/dns-stage8-validation/gaussian/boundary/result.json",
+        "/tmp/dns-stage8-validation/gaussian/boundary/final_records/records.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/result.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/decision.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000003/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/decision.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000004/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/decision.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000005/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/decision.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_4/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_4/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_5/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_5/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_6/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_6/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_7/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/level_7/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/continuous/final_records/records.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/result.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/decision.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000003/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/decision.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000004/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/decision.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000005/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/decision.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/ladder/attempt_000006/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_4/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_4/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_5/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_5/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_6/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_6/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_7/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/level_7/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/restarted/final_records/records.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/result.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/decision.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000007/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/promotion.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/candidate.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/candidate_hash.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/decision.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/checkpoint/checkpoint.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/level_8/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/level_8/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/level_9/preflight.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/level_9/records/records.json",
+        "/tmp/dns-stage8-validation/mixture/deeper/final_records/records.json",
+        "/tmp/dns-stage8-validation/mixture/boundary/result.json",
+        "/tmp/dns-stage8-validation/mixture/boundary/final_records/records.json",
+        "/tmp/dns-stage7a-integration/results.json"
+      ],
+      "derivation_and_tuning_used_this_model": false,
+      "prior_model_matches": [],
+      "scope": "Repository saved example results and Stage-7A/7B/8 artifacts; frozen audit explicitly records no held-out evaluation",
+      "verified": true
+    },
+    "heldout_validations_authorized": 1,
+    "historical_stage8_decision": "FAIL",
+    "identifier": "Stage-8R-heldout-trimodal-1",
+    "independent_reference": {
+      "contour_box_width": 1e-12,
+      "max_absolute_uncertainty": 1e-10,
+      "method": "outward Decimal intervals, Machin pi, CDF alternating series/Mills inequality, interval contour subdivision",
+      "normal_cdf_series_terms": 257,
+      "precision": 90,
+      "tail_domain_prior_SD": 10
+    },
+    "initial_prior_states_per_walker": 16,
+    "likelihood": "sum_k c_k NormalPDF(theta; mu_k,s_k)",
+    "likelihood_upper": 0.7059713883574373,
+    "likelihood_upper_definition": "sum_k c_k/(sqrt(2*pi)*s_k), outward-rounded independent Decimal upper endpoint",
+    "max_stop_level": 12,
+    "model": {
+      "centers": [
+        -3.0,
+        0.2,
+        3.4
+      ],
+      "component_weights": [
+        0.3,
+        0.4,
+        0.3
+      ],
+      "sigma_prior": 2.5,
+      "widths": [
+        0.4,
+        0.6,
+        0.85
+      ]
+    },
+    "prior": "u~N(0,I_54); theta=2.5*u[0]",
+    "protocol_path": "docs/examples/dns_termination_semantics_audit.md",
+    "protocol_sha256": "54d4b0dc20845aad22565ba93a79c12ba35f77333ab001a5d5a67f4929d0d9f4",
+    "python": "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+    "quantile_probabilities": [
+      0.05,
+      0.16,
+      0.5,
+      0.84,
+      0.95
+    ],
+    "reconstruction": {
+      "allocation": "equal retained counts per level including zero",
+      "block_size": 64,
+      "burn_in": 512,
+      "retained": 1024
+    },
+    "region_boundaries": [
+      -1.4,
+      1.8
+    ],
+    "restart": "identical dtype/shape/bytes arrays; canonical identity metadata/decisions/summaries; new CPU/x64 interpreter, no retry; boundary adds no samples",
+    "restart_level": 1,
+    "rng": {
+      "prng": "threefry2x32",
+      "recipe": "SeedSequence-v1",
+      "schedule": "PCG64"
+    },
+    "seeds": {
+      "construction": 81301,
+      "reconstruction": 81302
+    },
+    "stage": "termination-heldout",
+    "stopping": {
+      "D": "sum_i=1..J X_i_lower*(ell_i-ell_(i-1)); ell_0=0",
+      "U": "X_J_upper * likelihood_upper",
+      "definition": "U_J/(D_J-U_J)<=epsilon_stop; D_J-U_J>0",
+      "epsilon_stop": 0.01,
+      "mass_SE_multiplier": 2.0,
+      "mass_clip": [
+        1e-12,
+        0.999999999999
+      ],
+      "mass_envelope": "products of clip(r_i +/- 2*SE_i,1e-12,1-1e-12); X0=1"
+    },
+    "tuning": false,
+    "verbatim_protocol": "# Stage 8R: DNS termination semantics audit\n\n**Stage 8 remains officially FAIL under its original predeclared criterion.**\nThis audit changes neither its implementation nor its decision. It uses only\nsaved Stage-8 numerical results and the frozen estimator source. No estimator\nevaluation, analytic-truth calculation, trajectory, restart, test suite, or\nLISA calculation is run for this audit.\n\nNumerical evidence comes from\n[dns_automatic_termination_validation.json](dns_automatic_termination_validation.json)\nand the existing `/tmp/dns-stage8-validation/` artifacts. Mathematical\nsemantics are tied to\n[dns_reconstruction.py](../../blackjax/ns/dns_reconstruction.py) and\n[dns_termination.py](../../blackjax/ns/dns_termination.py).\n\n## 1. What is reconstructed at level J?\n\nLet pi(u) be the normalized prior, L(u) the nonnegative likelihood,\nell_j the likelihood threshold (the saved threshold is log ell_j), and\nC_j={u:L(u)>ell_j}. Write ell_0=0, C_0 equal to prior support, and\nX_j=integral_Cj pi(u)du. These X_j denote true masses; saved calibrated\nmasses are written Xhat_j. Define\n\n\\[\n Z=\\int\\pi L,\\qquad T_J=\\int_{C_J}\\pi L,\n \\qquad Z_{\\mathrm{out},J}=Z-T_J.\n\\]\n\nThe independent fixed-contour proposal at level j is\nq_j=pi 1_Cj/X_j. For allocation alpha_j=n_j/N, the actual ideal proposal\nmixture and its calibrated counterpart are\n\n\\[\n S_J=\\sum_{j=0}^J\\alpha_j\\,1_{C_j}/X_j,\\quad\n \\widehat S_J=\\sum_{j=0}^J\\alpha_j\\,1_{C_j}/\\widehat X_j,\n \\quad q_J=\\pi S_J.\n\\]\n\nThe implemented evidence estimator is exactly\n\n\\[\n \\widehat Z_J=\\frac1N\\sum_{j=0}^J\\sum_{t=1}^{n_j}\n \\frac{L(U_{jt})}{\\widehat S_J(U_{jt})}.\n\\]\n\nIt does not discard samples above ell_J. Because alpha_0>0 and X_0=1,\nits proposal has full prior support at every included depth. With true\nmasses and exact stationary stratum sampling, its expected evidence is Z\nfor every J, including J=0. Adding a level changes proposal allocation,\nimportance weights, and sampling precision, rather than adding an omitted\npiece of the target integral. Correlation changes variance; stationary\nmarginals suffice for this expectation identity and do not imply independent\nevents. Finite burn-in can leave nonstationary marginals.\n\n## 2. Explicit error decomposition without double counting\n\nCondition on the frozen ladder, calibration output, allocation and starting\nprovenance, denoted F. For any retained region R, put\n\n\\[\n Z_R=\\int_R\\pi L,\\quad\n f_R(u)=1_R(u)L(u)/\\widehat S_J(u),\\quad\n \\mu_R=\\int q_J f_R,\\quad\n m_R=E[\\widehat Z_R\\mid F].\n\\]\n\nHere q_J denotes the ideal mixture of true constrained priors, whereas m_R\nuses the actual finite-stream sampling law. The following telescoping\nidentity is exact whenever these quantities exist:\n\n\\[\n Z-\\widehat Z_R=\n \\underbrace{(Z-Z_R)}_{A:\\ \\mathrm{omitted\\ target}}\n +\\underbrace{(Z_R-\\mu_R)}_{B:\\ \\mathrm{mass\\ plug\\!\\!\\!-in}}\n +\\underbrace{(\\mu_R-m_R)}_{E:\\ \\mathrm{sampling\\ bias}}\n +\\underbrace{(m_R-\\widehat Z_R)}_{C/D:\\ \\mathrm{sampling\\ fluctuation}}.\n\\]\n\n- **A, terminal omission:** If R is the complement of C_J, A=T_J. For\n  the actual Stage-7B full-support reconstruction, R is all prior support\n  and A=0. A poorly sampled terminal contour is a precision issue, not\n  automatically an omitted target region.\n- **B, calibrated-mass error:** Explicitly,\n  `Z_R-mu_R = integral_R pi L (1-S_J/Shat_J)`.\n  This affects every region whose denominator depends on erroneous masses,\n  including already reconstructed regions. It vanishes if Xhat=X.\n- **C, finite reconstruction-sample error:** The realized centered\n  fluctuation m_R-Zhat_R includes finite retained counts and dependence\n  between events.\n- **D, importance-weight Monte Carlo error:** This is part of C, not an\n  independent additive error. The integrand being averaged is f_R, and\n  its weight variability contributes to the same finite-sample fluctuation.\n  Adding a separate D to C would double count it. Posterior expectations\n  also use random self-normalization and therefore can have ratio bias.\n- **E, possible estimator bias:** Nonstationary starts, inadequate mixing,\n  or an incorrect constrained sampling law can make mu_R differ from m_R.\n  Repeated-calibration plug-in bias is the unconditional average of B,\n  not a second copy of B. Taking log Z or normalizing posterior weights\n  can introduce additional nonlinear bias even when the evidence estimator\n  itself is unbiased under oracle masses and stationary sampling.\n\nFor the actual estimator, therefore,\n\n\\[\n Z-\\widehat Z_J=(Z-\\mu_{\\mathrm{all}})\n +(\\mu_{\\mathrm{all}}-E[\\widehat Z_J\\mid F])\n +(E[\\widehat Z_J\\mid F]-\\widehat Z_J),\\qquad A=0.\n\\]\n\nThese signed terms can cancel. Saved aggregate errors do not uniquely\nidentify how much came from B, C/D or E; this audit does not infer that split.\nAn equivalent realized identity uses an oracle-mass estimator on the same\nsamples: `Z-Zhat_plugin = (Z-Zhat_oracle)+(Zhat_oracle-Zhat_plugin)`.\nNo oracle estimator is evaluated here.\n\nIf L(u)<=L_upper globally and X_J<=X_J_upper, then\n\n\\[\n 0\\le T_J\\le U_J:=X_J^{\\mathrm{upper}}L_{\\mathrm{upper}}.\n\\]\n\nThis controls A for an actually omitted terminal contour, or the target\nmass of a contour treated as potentially unresolved. It does not bound B,\nC/D or E outside that contour, nor their total. An observed likelihood\nmaximum is not a certified global upper bound. The saved toys used the\njustified bound `sum_k c_k/(sqrt(2*pi)*s_k)` on their Gaussian-component\nlikelihood densities. The saved two-SE mass envelopes are descriptive,\nnot simultaneous probabilistic confidence bounds.\n\n## 3. Termination error versus estimator error\n\nDefine the hypothetical truncation functional\n\n\\[\n \\Delta_{\\mathrm{tail}}(J):=Z-Z_{\\mathrm{out},J}=T_J.\n\\]\n\nIt measures what would be lost by omitting C_J entirely. Calling it a\nresolution budget for an unresolved contour is also legitimate, provided\nit is not described as evidence actually omitted by this implementation.\nFor the ideal full-support DNS estimator, stopping at finite J changes no\ntarget integral: its ideal target bias due to truncation is zero.\n\nFor a specific saved continuation to K>J, define instead the observable\n\n\\[\n d_Z(J,K)=|\\widehat Z_K-\\widehat Z_J|,\\qquad\n d_{\\log Z}(J,K)=|\\log\\widehat Z_K-\\log\\widehat Z_J|.\n\\]\n\nThese measure practical sensitivity to continuing that experiment. They\ninclude changed mixture denominators outside C_J, additional samples and\nmass calibration effects; they are not equal to T_J. No deterministic\ninequality `d_Z<=U_J` follows merely from the terminal-integral bound.\nThe saved deeper reference is a finite comparison, not an exact\ninfinite-depth counterfactual, and shared prefix records make it correlated\nwith the stopped estimate. Even perfect stability can coexist with a\nshared error relative to truth.\n\nThus \u201cerror caused by stopping\u201d has two precise uses: an omitted target\nintegral, if truncation is performed; or empirical sensitivity to foregoing\nfurther proposal refinement, when full-support reconstruction is retained.\nThe present implementation has the second behavior. These uses must not\nbe silently interchanged.\n\n## 4. Gaussian: saved level 6 versus saved level 8\n\n| Quantity | Saved value |\n|---|---:|\n| Stop level / reference level | 6 / 8 |\n| Calibrated X_stop | 0.0025636425354013657 |\n| Absolute log Z error to analytic truth | 0.0677338079131502 |\n| Absolute Z error to analytic truth | 0.0131511661895381 |\n| Uncertainty-expanded terminal-cap estimate U_J | 0.0026312112537538635 |\n| Recorded actual terminal integral T_J | 0.001612647283574832 |\n| Absolute Z change after deeper continuation | 0.000015619731144694837 |\n| Absolute log Z change after deeper continuation | 0.00008323154054679094 |\n| Absolute posterior mean change | 0.000015261828865242855 |\n| Absolute posterior variance change | 0.000031428758758389463 |\n| Posterior CDF sup-distance | 0.00008068371513880734 |\n| q05, q16, median, q84, q95 changes | 0, 0, 0, 0, 0 |\n\nThe actual terminal integral and the observed evidence continuation effect\nare both below the cap, while total evidence error is above it. The cap\nis about 168 times the observed absolute Z continuation change. The saved\nStage-8 metric rho=U_J/D_J was 0.0286685165264942, and its reported\n`log(1+rho)` was 0.028265263579564746; these are dimensionless quantities,\nwhereas U_J is in evidence units and cannot directly be compared with a\nlog Z difference.\n\n**Answer:** The cap conservatively covers the observed evidence effect of\nthe predeclared level-6-to-level-8 continuation, and posterior changes are\npractically small. It is not a theorem about every possible future\nreconstruction run or an attribution of all the observed change to C_6.\nUnchanged empirical quantiles mean the same retained order statistics were\nselected, not that their uncertainty is zero.\n\n## 5. Asymmetric mixture: saved level 7 versus saved level 9\n\n| Quantity | Saved value |\n|---|---:|\n| Stop level / reference level | 7 / 9 |\n| Calibrated X_stop | 0.0004822163078971016 |\n| Absolute log Z error to analytic truth | 0.03527063249994056 |\n| Absolute Z error to analytic truth | 0.004055884434416693 |\n| Uncertainty-expanded terminal-cap estimate U_J | 0.0010702637853929567 |\n| Recorded actual terminal integral T_J | 0.00027625530098043024 |\n| Absolute Z change after deeper continuation | 0.0000013657793103277749 |\n| Absolute log Z change after deeper continuation | 0.000012088906309770664 |\n| Absolute posterior mean change | 0.000016457319869989107 |\n| Absolute posterior variance change | 0.00002060519021851448 |\n| Maximum component probability change | 0.0000040145407739222705 |\n| Maximum region probability change | 0.000004008830040702627 |\n| Posterior CDF sup-distance | 0.000020993057814389093 |\n| q05, q16, median, q84, q95 changes | 0, 0, 0, 0, 0 |\n\nStopped component probabilities are\n`[0.667913294233111, 0.3320867057669006]`; the deeper probabilities are\n`[0.6679173087738633, 0.33208269122612666]`. The saved exact component\nprobabilities are `[0.671547841742549, 0.3284521582574509]`. Component and\nregion probabilities passed the frozen Stage-7B criteria. Lower proposal\nstrata retain secondary-mode support even when the deepest contour excludes\nthat mode.\n\n**Answer:** The observed evidence continuation effect is smaller than the\ncap by a factor of about 784. Mean, variance, quantiles and mode probabilities\nalso remain stable. The saved metric rho was 0.026164915197649026, with\nreported `log(1+rho)=0.02582846989200815`. Coverage of this particular\ncontinuation effect is empirical, not a general bound on proposal-change\nMonte Carlo noise.\n\nFor both toys the saved mass envelope encloses the true stopping-contour\nmass. The Gaussian nominal plug-in cap, 0.0014610648560101872, did not\ncover its actual terminal integral; the uncertainty-expanded cap did.\nThis distinction must be preserved in a future protocol.\n\n## 6. Ordinary nested sampling and the DNS mapping\n\nFor ordinary shell-quadrature nested sampling, a partial evidence sum\naccounts for removed prior shells. If the retained prior region has mass X,\nits unaccounted evidence is `integral_retained pi L`, bounded by\n`X L_upper` when a valid global upper likelihood bound is available.\nUsing the maximum observed live likelihood as that scale is a heuristic\nunless it is independently known to bound the entire remaining region.\nEven a rigorous remainder bound does not control errors in shell weights\nor quadrature contributions that have already been accumulated.\n\nIn Stage-7B DNS reconstruction the deepest region is included in the\nimportance-sampling target and proposal support. The analogous quantity is\nits terminal integral T_J, not the whole residual `Z-Zhat_J`. A small T_J\ncan justify a contour-resolution budget or hypothetical truncation; it\ncannot alone certify the accuracy of the full importance estimator.\n\n**It is intended to bound remaining unresolved target evidence, not the\nentire accumulated Monte Carlo error of the evidence estimate.** In this\nDNS implementation \u201cremaining\u201d describes a resolution budget, because\nthat region is already accounted for in expectation.\n\n## 7. Independent validation responsibilities and failure classification\n\n**Reconstruction validity:** The estimator, calibrated masses and actual\nsampling must give sufficiently accurate evidence and posterior inference.\nStage 7B validated this on its declared toy designs and tolerances; it did\nnot prove accuracy for every future model or budget.\n\n**Termination validity:** Stopping further ladder refinement must respect\na predeclared terminal-resolution budget, and held-out continuation must\nshow sufficiently small practical inference changes. This requires its\nown validation. These are separate acceptance responsibilities, not a\nclaim of statistical independence: mass calibration affects both.\n\nOne terminal-integral bound cannot certify both responsibilities because\nB, C/D and E persist outside the terminal contour. Conversely, a tiny\nstopped/deeper difference does not certify reconstruction accuracy when\nthe estimates share calibration and retained data.\n\n**Primary classification: validation-target mismatch.** The original\nStage-8 test required a terminal-cap estimate to cover total evidence error\nto analytic truth. It failed that test for both toys, and therefore remains\nFAIL. However, its uncertainty-expanded caps covered the actual terminal\nintegrals and the observed continuation changes. Saved log Z errors of\n0.0677338 and 0.0352706 coexist with continuation changes of only\n0.0000832315 and 0.0000120889. All recorded posterior-stability and restart\nchecks pass. These observations support target mismatch rather than a\ndemonstrated premature-stop failure on these particular trajectories.\nThey do not establish universal correctness of a stopping rule or identify\nthe exact source of the remaining estimator error.\n\n## 8. Exactly one corrected candidate for future validation\n\nThe single proposed candidate is a **terminal-cap fraction relative to a\nlower bound on already resolved evidence**. No second posterior stopping\ncondition is proposed. Posterior stability remains a validation requirement.\n\nRequire a justified global L_upper and mass envelopes\n`X_i_lower <= X_i <= X_i_upper`. Set\n\n\\[\n U_J=X_J^{\\mathrm{upper}}L_{\\mathrm{upper}},\\qquad\n D_J=\\sum_{i=1}^J X_i^{\\mathrm{lower}}(\\ell_i-\\ell_{i-1}),\n \\qquad B_J=D_J-U_J.\n\\]\n\nThe layer-cake bound gives `D_J<=Z`. Since `T_J<=U_J`,\n`Z_out,J=Z-T_J>=D_J-U_J=B_J`. If B_J<=0, do not stop. Otherwise\n\n\\[\n \\rho_{\\mathrm{tail}}(J)=U_J/B_J,\\qquad\n \\boxed{\\mathrm{stop\\ when}\\quad \\rho_{\\mathrm{tail}}(J)\\le\\epsilon_{\\mathrm{stop}}.}\n\\]\n\nThis is one criterion with a positive-normalization prerequisite. It bounds\n`T_J/Z_out,J`, and therefore gives the actual truncation statements\n\n\\[\n \\log Z-\\log Z_{\\mathrm{out},J}\n \\le\\log(1+\\rho_{\\mathrm{tail}}),\\qquad\n \\mathrm{TV}(P,P_{\\mathrm{out},J})\n \\le\\rho_{\\mathrm{tail}}/(1+\\rho_{\\mathrm{tail}}).\n\\]\n\nThe second result follows because deleting a region changes the posterior\nby its posterior probability `T_J/Z`. Bounded observables inherit a bound\nusing their range. Means and variances on unbounded domains, and quantiles\nwithout additional density assumptions, still require empirical checks.\n\nThis normalization matters: Stage 8 used D_J, which bounds total evidence,\nnot necessarily resolved evidence. In general `log(1+U_J/D_J)` is not a\nbound on the log error caused by deleting C_J. Using B_J supplies that\nmissing distinction. This audit neither evaluates the new criterion on\nthe observed Stage-8 toys nor changes their existing tolerance or decision.\n\nWith descriptive two-SE envelopes, the formula is a candidate diagnostic\nwhose mathematical bounds are conditional on envelope validity. They are\nnot automatically certified confidence bounds. A rigorous production\nclaim would require justified mass coverage as well as the global\nlikelihood bound. The candidate is not represented as a theorem bounding\n`|Zhat_K-Zhat_J|` or total estimator error.\n\n## 9. One held-out validation: protocol frozen here, not executed\n\n**Exactly one held-out toy validation is justified and authorized for a\nfuture execution. No execution is authorized within this read-only audit.**\nIt comprises one model, its continuous branch, one deeper reference and\none fresh-process restart branch. No alternative toy, seed search, trajectory\nretry, tolerance tuning or fallback validation is included. A failed gate,\ninvalid bound, numerical ambiguity or exhausted budget is FAIL.\n\nThis is an empirical held-out test of the conditional candidate, not a\nproduction certification of mass uncertainty. Neither of the observed\nStage-8 toy runs can independently validate it.\n\n### Model and fixed execution design\n\n| Item | Frozen value |\n|---|---|\n| Identifier | Stage-8R-heldout-trimodal-1 |\n| Prior | u distributed N(0,I_54); theta=2.5*u[0] |\n| Likelihood | sum_k c_k NormalPDF(theta; mu_k, s_k) |\n| Component weights c | [0.30, 0.40, 0.30] |\n| Component centers mu | [-3.0, 0.2, 3.4] |\n| Component widths s | [0.40, 0.60, 0.85] |\n| Global L_upper | sum_k c_k/(sqrt(2*pi)*s_k), fixed analytically |\n| Construction seed | 81301 |\n| Reconstruction seed | 81302 |\n| RNG recipes | Existing frozen SeedSequence-v1 schedules, PCG64 and threefry2x32 |\n| Walkers | 8 in each construction bank and each reconstruction stratum |\n| Initial bank histories | 16 independent prior states per walker in each bank; existing initial-state SeedSequence construction |\n| Construction budget per attempt | burn-in 256; retained 1024; block size 64 |\n| Frozen construction gates | target compression exp(-1); minimum ESS 20 |\n| Reconstruction budget per included level | burn-in 512; retained 1024; block size 64 |\n| Maximum automatic stopping level | 12 accepted levels beyond level zero |\n| Deeper reference | Exactly 3 additional accepted levels after automatic stop |\n| Restart point | Checkpoint after first accepted level, with saved reconstruction prefix |\n| Numerical environment | Frozen CPU/float64/x64; JAX 0.10.0, jaxlib 0.10.0, NumPy 2.4.4; same interpreter/environment as Stage 8 |\n| Kernel/promotion/estimator | Frozen Stage-7B implementations; only this new analytic likelihood callback |\n| Allocation | Equal retained counts at every included fixed-contour level, including level zero |\n| Mass envelope | Products of clip(r_i +/- 2*SE_i, 1e-12, 1-1e-12), using recorded calibration SE |\n| Decision | The single rho_tail=U/(D-U) criterion above; B<=0 means continue |\n| epsilon_stop | 0.01, a predeclared 1% terminal-to-resolved-evidence budget |\n| Allowed absolute continuation log Z change | log(1.01) |\n\nAll existing kernel settings and source versions are pinned to the Stage-8\ndesign with SHA-256\n`70a7f1acf763e76b6311e7683aaf3270e975f773c48928f52b2d3c777da4b898`;\nthe new model parameters above are the only likelihood change. The two\nconstruction banks remain independent selection and calibration banks.\n\nThe 1% budget is an explicit future accuracy policy, not a fit to Stage-8\nstop levels, errors or deeper-reference outcomes. It is frozen before this\nheld-out model is evaluated. It does not alter Stage 8's 5% criterion.\n\nReconstruction starts at level zero. At each accepted level the wrapper\nappends a fresh fixed-contour reconstruction stream, invokes the frozen\nestimator and evaluates the candidate using only current information.\nThe saved initial state, stream keys, configuration and reconstruction\nprefix must be portable to the restart branch. Since B_1<=0 for valid\nbounds, an accepted stop cannot precede the prescribed level-1 restart\ncheckpoint. The deeper reference is generated only after stopping and\nmust not influence the stop decision.\n\nAnalytic normal-product identities provide exact evidence, posterior\ncomponent probabilities, mean and variance; deterministic CDF inversion\nprovides quantiles. These references are diagnostics only. Origin-contour\nmass and terminal-integral calculations use independent deterministic\ncontour bracketing/integration, with verified absolute numerical uncertainty\nat most 1e-10 in each mass or evidence integral. If that uncertainty cannot\nbe justified, the experiment cannot PASS. No exact mass or reference value\nis fed back into the stopping decision or reconstruction estimator.\n\n### Predeclared PASS/FAIL responsibilities\n\nAll following conditions are required; there is no criterion selection\nbased on the held-out outcome.\n\n1. **Automatic behavior:** Stop by level 12 without manual intervention,\n   gate changes or repeated attempts. Retain all required deepest-level\n   samples and valid origin, stream and event metadata. Complete all three\n   deeper levels under the same frozen gates.\n2. **Reconstruction validity, separately:** Stopped absolute log Z error\n   <=0.22, relative Z error <=0.25, mean error <=0.25, variance error\n   <=0.625, maximum q05/q16/median/q84/q95 error <=0.50, CDF discrepancy\n   <=0.10, and maximum component and region probability error <=0.08.\n   These are independent acceptance gates; none must be bounded by U_J.\n   Region boundaries are the fixed center midpoints -1.4 and 1.8. Weights\n   must be finite, nonnegative and normalized within 1e-12.\n3. **Continuation evidence:** Absolute stopped/deeper log Z difference\n   <=log(1.01), and absolute stopped/deeper Z difference <=U_J evaluated\n   at the original stop. The latter is an empirical coverage test,\n   explicitly not an implication of the cap theorem for noisy estimators.\n4. **Posterior stability:** Absolute stopped/deeper mean change <=0.05,\n   variance change <=0.125, every reported quantile change <=0.10,\n   weighted posterior CDF sup-distance <=0.02, and maximum component\n   and region probability change <=0.02. These fixed scales correspond\n   to 0.02 prior SD for mean, 0.02 prior variance for variance and 0.04\n   prior SD for quantiles. They do not drive a second stop decision.\n5. **Tail and normalization validity:** Independent terminal-integral\n   upper uncertainty endpoint <=U_J. Independently computed contour-mass\n   uncertainty intervals at all levels entering D_J and U_J must be\n   contained within their descriptive mass envelopes. Their use as true\n   mass bounds is checked on this toy, not assumed statistically universal.\n   Validate positive B_J and the resolved-evidence lower bound against\n   independent deterministic references with their stated uncertainties.\n6. **Restart identity:** A fresh interpreter reloads the level-1 checkpoint\n   and prefix records and reaches identical stopping level, thresholds,\n   calibrated log masses, decision, retained construction banks,\n   reconstruction coordinates/caches/origin and event metadata, weights\n   and summaries. Require equal dtype, shape and bytes for arrays and\n   canonical identity for metadata and decisions, with no new numerical\n   tolerance. Loading a checkpoint exactly at stop must request no new\n   construction or reconstruction samples.\n\nRecord the full protocol and its checksum before execution, including\nsource hashes and environment, and preserve every branch artifact. One\nfailed requirement yields held-out FAIL with the first failure reported;\nno reseeding, loosened tolerance or second held-out model is authorized.\nEven a PASS would establish evidence only for this single held-out design,\nnot authorize production, LISA, or modification of frozen core code.\n\n## 10. Explicit answers and disposition\n\n1. **What should termination bound?** The unresolved terminal-contour\n   evidence T_J, or its fraction relative to resolved evidence. It should\n   not purport to bound pre-existing calibration, sampling or estimator error.\n2. **What primarily failed in Stage 8?** The validation target: it tested\n   a terminal-integral bound against total evidence error. Stage 8 stays\n   FAIL under that original test; the recorded trajectories do not show a\n   genuine premature-stop failure.\n3. **Was stopping already practically stable?** Yes, for both saved\n   predeclared deeper comparisons. Log Z changes were about 8.32e-5 and\n   1.21e-5, with small posterior and mode-probability changes and exact\n   restart identity. This is finite empirical evidence, not a universal guarantee.\n4. **What single corrected criterion should be validated?** Stop when\n   `U_J/(D_J-U_J)<=epsilon_stop`, requiring positive denominator, a justified\n   global likelihood bound, and valid mass bounds. It is a terminal-resolution\n   candidate; posterior stability and reconstruction accuracy are separate\n   acceptance checks.\n5. **Is exactly one held-out validation justified?** Yes: only the newly\n   predeclared trimodal model and protocol above, in a future execution.\n   No trajectories were run for Stage 8R.\n\nOnly this audit document is added. Stage-8 results, implementation and\nexisting tolerances remain unchanged. No LISA, production, LISA level 13,\nnew numerical trajectory, estimator change, staging or commit is performed.\n",
+    "walkers": 8
+  },
+  "design_sha256": "2796a941c82c2c424b89f6fc228f45bd237f8342d8d1d8c6232e6b00055104d7",
+  "exact": {
+    "Z": 0.10509188626594806,
+    "component_means": [
+      -2.925117004680187,
+      0.18910741301059,
+      3.0476873431337395
+    ],
+    "component_probabilities": [
+      0.22291854352877752,
+      0.5888247920411369,
+      0.18825666443008562
+    ],
+    "component_variances": [
+      0.15600624024961002,
+      0.340393343419062,
+      0.6476335604159196
+    ],
+    "logZ": -2.252920204213016,
+    "mean": 0.03303576424897807,
+    "quantile_probabilities": [
+      0.05,
+      0.16,
+      0.5,
+      0.84,
+      0.95
+    ],
+    "quantiles": [
+      -3.2244144286834016,
+      -2.6975434029965633,
+      0.1459509358102303,
+      2.2166921395411046,
+      3.5516188308777346
+    ],
+    "region_probabilities": [
+      0.22480643301914888,
+      0.5966347085366868,
+      0.17855885844416441
+    ],
+    "standard_deviation": 2.0082477242903725,
+    "variance": 4.033058922117459
+  },
+  "exception": "Traceback (most recent call last):\n  File \"/tmp/dns-heldout-driver.py\", line 201, in validate\n    stopped=run_branch(d,ROOT/'continuous');result['stopped']=stopped\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/dns-heldout-driver.py\", line 169, in run_branch\n    if state.status!='ready':raise RuntimeError('Frozen construction gate failed: '+str(state.records[-1]))\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Frozen construction gate failed: b'{\"accepted\":false,\"candidate\":{\"block_size\":64,\"blocks\":128,\"ess\":12.0093475208749,\"exceeds\":3012,\"interval\":[0.03866899713035732,0.6966825653696427],\"naive_iid_se\":0.005327303606180806,\"naive_iid_wilson\":[0.3572987425141107,0.3781768629020103],\"order_index\":5178,\"ratio\":0.36767578125,\"sample_count\":8192,\"standard_error\":0.1391370252157515,\"status\":\"insufficient_tail_information\",\"threshold\":-1.2715287082049687,\"walker_fractions\":[0.0,0.0,0.7578125,0.0,0.7138671875,0.7060546875,0.0,0.763671875]},\"candidate_sha256\":\"3f1cb88a17838997afab0216d6699c093ed4039ac4de7f2a8a2d2a7f2e6ca2cc\",\"iteration\":3,\"old_threshold\":-1.3299343712381886,\"promotion\":{\"calibration\":{\"donor_ids\":[4,2,2,2,3,5,7,4],\"donor_multiplicities\":[0,0,3,1,2,1,0,1],\"duplicate_source_hashes\":{},\"duplicates\":0,\"eligible\":4510,\"eligible_fraction\":0.550537109375,\"eligible_per_donor\":[266,262,739,757,748,748,228,762],\"retained_indices\":[11,840,569,370,427,69,744,898],\"selected_flat_indices\":[92,6722,4554,2962,3419,557,5959,7188],\"selected_pool_indices\":[40,3681,2441,1541,1805,279,3258,3955],\"source_hashes\":[\"d0443c8f5be25bead979cac6b2cdd1220f359a22548343a0379cdb4756b278a1\",\"95b66060cc26cdb78580c0f547c9e26192a9d307affccd9aa3f86cc5f8889ec1\",\"d08d0cd3bf33de6f496abfa084558ba30f4f1407e7fd20ac470335012a23d5f3\",\"d4742a157823b390e0b3915447fd28c430270aa49a5630a954d20570cd26adab\",\"4a451a7111a530218c3ec0ffe0b933d0d6682ed9f821f7929e96456d80a0dbc0\",\"b0053e9442df1c75686ec4c3c165dd975cb4ca79dfad10ba53b5d82de9778656\",\"f3af6415dce5fd698cee2da15a24baa636609922ff039444d26e69f99dd55c1f\",\"780d92bb9470f7bdbc65d591a689407051a2dd61210c69065ae2351d7e15d688\"],\"source_history_hash\":\"f8eb6d7a5d132801d529490da382af9aa9febe2502a6ad634d912855db25a7a0\",\"total_retained\":8192,\"unique_promoted_states\":8},\"selection\":{\"donor_ids\":[6,5,3,7,4,3,2,4],\"donor_multiplicities\":[0,0,1,2,2,1,1,1],\"duplicate_source_hashes\":{},\"duplicates\":0,\"eligible\":3012,\"eligible_fraction\":0.36767578125,\"eligible_per_donor\":[249,356,232,734,711,250,226,254],\"retained_indices\":[457,784,378,54,1018,528,488,107],\"selected_flat_indices\":[3662,6277,3027,439,8148,4227,3906,860],\"selected_pool_indices\":[1434,2327,1213,211,2996,1625,1524,374],\"source_hashes\":[\"d33fa9815028a79e85e295de30c4ba7932d4b37dcf123dc29361d1dfd733c573\",\"2d5b64487e08faa07bd0a2ea65043ad126261f49fec269f7fa961110448046bc\",\"017ed9741346954af04197ab68f89d2199755ec8309d488621592c08bbbe1a17\",\"9bf37190282a3f617d3b95647a0b9bc07b270aae8780daf916098cc67525f78b\",\"bd8a3653d1746ab865ad38430f5c137aa780e589793e6ee753fca0f942f87705\",\"a2dedabe9d594d94ba0d2633f2c9678ebde0b9ce9c1deeb353d07b79c762bb0b\",\"3d4c31bf5fde882e9756e16c5176611b4b03fc093e8a9ec9c403172e61cecf2f\",\"172a98b1d5f2455e106715bcff01f1a79d849abad3f28d3be550f4a9fa878d7f\"],\"source_history_hash\":\"59b18588e3a70a5f65135774694b0bb66828ad38cf3af7f0b0d4897810e28b74\",\"total_retained\":8192,\"unique_promoted_states\":8}},\"selection_sampling\":{\"accepted_exchanges\":1979,\"all_constituent_checks_passed\":true,\"completed_sweeps\":1280,\"exchange_proposals\":5120,\"retained\":1024},\"stop_reason\":\"selection_gate\",\"streams\":{\"calibration\":{\"bank\":\"calibration\",\"iteration\":3,\"label_seed\":1256145819,\"mh_seed\":2944336331,\"promotion_seed\":3193035639,\"recipe\":\"SeedSequence-v1\",\"slice_seeds\":[2403816104,2655333495,1664325347,4026553938,2259835645,3842247878,3967676157,1649308908]},\"selection\":{\"bank\":\"selection\",\"iteration\":3,\"label_seed\":1900135596,\"mh_seed\":3785577865,\"promotion_seed\":272790893,\"recipe\":\"SeedSequence-v1\",\"slice_seeds\":[3038028064,278924595,168292696,2925017062,3131569763,3331458305,3067785893,691388411]}}}'\n",
+  "first_automatic_LISA_validation_authorized": false,
+  "first_failure": "automatic_construction.selection_ESS",
+  "frozen_design_and_sources_unchanged": true,
+  "heldout_verified_before_sampling": true,
+  "historical_stage8_decision": "FAIL",
+  "production_run": false,
+  "scope": {
+    "LISA_run": false,
+    "core_modified": false,
+    "no_retry": true,
+    "no_tuning": true,
+    "one_heldout_model": true,
+    "production_run": false,
+    "protocol_modified": false,
+    "post_failure_sampling_calls": 0,
+    "stochastic_continuation_retry": false,
+    "fresh_process_launched": false
+  },
+  "stage": "termination-heldout",
+  "termination_validated": false,
+  "runtime_first_failure": "Frozen construction gate failed: b'{\"accepted\":false,\"candidate\":{\"block_size\":64,\"blocks\":128,\"ess\":12.0093475208749,\"exceeds\":3012,\"interval\":[0.03866899713035732,0.6966825653696427],\"naive_iid_se\":0.005327303606180806,\"naive_iid_wilson\":[0.3572987425141107,0.3781768629020103],\"order_index\":5178,\"ratio\":0.36767578125,\"sample_count\":8192,\"standard_error\":0.1391370252157515,\"status\":\"insufficient_tail_information\",\"threshold\":-1.2715287082049687,\"walker_fractions\":[0.0,0.0,0.7578125,0.0,0.7138671875,0.7060546875,0.0,0.763671875]},\"candidate_sha256\":\"3f1cb88a17838997afab0216d6699c093ed4039ac4de7f2a8a2d2a7f2e6ca2cc\",\"iteration\":3,\"old_threshold\":-1.3299343712381886,\"promotion\":{\"calibration\":{\"donor_ids\":[4,2,2,2,3,5,7,4],\"donor_multiplicities\":[0,0,3,1,2,1,0,1],\"duplicate_source_hashes\":{},\"duplicates\":0,\"eligible\":4510,\"eligible_fraction\":0.550537109375,\"eligible_per_donor\":[266,262,739,757,748,748,228,762],\"retained_indices\":[11,840,569,370,427,69,744,898],\"selected_flat_indices\":[92,6722,4554,2962,3419,557,5959,7188],\"selected_pool_indices\":[40,3681,2441,1541,1805,279,3258,3955],\"source_hashes\":[\"d0443c8f5be25bead979cac6b2cdd1220f359a22548343a0379cdb4756b278a1\",\"95b66060cc26cdb78580c0f547c9e26192a9d307affccd9aa3f86cc5f8889ec1\",\"d08d0cd3bf33de6f496abfa084558ba30f4f1407e7fd20ac470335012a23d5f3\",\"d4742a157823b390e0b3915447fd28c430270aa49a5630a954d20570cd26adab\",\"4a451a7111a530218c3ec0ffe0b933d0d6682ed9f821f7929e96456d80a0dbc0\",\"b0053e9442df1c75686ec4c3c165dd975cb4ca79dfad10ba53b5d82de9778656\",\"f3af6415dce5fd698cee2da15a24baa636609922ff039444d26e69f99dd55c1f\",\"780d92bb9470f7bdbc65d591a689407051a2dd61210c69065ae2351d7e15d688\"],\"source_history_hash\":\"f8eb6d7a5d132801d529490da382af9aa9febe2502a6ad634d912855db25a7a0\",\"total_retained\":8192,\"unique_promoted_states\":8},\"selection\":{\"donor_ids\":[6,5,3,7,4,3,2,4],\"donor_multiplicities\":[0,0,1,2,2,1,1,1],\"duplicate_source_hashes\":{},\"duplicates\":0,\"eligible\":3012,\"eligible_fraction\":0.36767578125,\"eligible_per_donor\":[249,356,232,734,711,250,226,254],\"retained_indices\":[457,784,378,54,1018,528,488,107],\"selected_flat_indices\":[3662,6277,3027,439,8148,4227,3906,860],\"selected_pool_indices\":[1434,2327,1213,211,2996,1625,1524,374],\"source_hashes\":[\"d33fa9815028a79e85e295de30c4ba7932d4b37dcf123dc29361d1dfd733c573\",\"2d5b64487e08faa07bd0a2ea65043ad126261f49fec269f7fa961110448046bc\",\"017ed9741346954af04197ab68f89d2199755ec8309d488621592c08bbbe1a17\",\"9bf37190282a3f617d3b95647a0b9bc07b270aae8780daf916098cc67525f78b\",\"bd8a3653d1746ab865ad38430f5c137aa780e589793e6ee753fca0f942f87705\",\"a2dedabe9d594d94ba0d2633f2c9678ebde0b9ce9c1deeb353d07b79c762bb0b\",\"3d4c31bf5fde882e9756e16c5176611b4b03fc093e8a9ec9c403172e61cecf2f\",\"172a98b1d5f2455e106715bcff01f1a79d849abad3f28d3be550f4a9fa878d7f\"],\"source_history_hash\":\"59b18588e3a70a5f65135774694b0bb66828ad38cf3af7f0b0d4897810e28b74\",\"total_retained\":8192,\"unique_promoted_states\":8}},\"selection_sampling\":{\"accepted_exchanges\":1979,\"all_constituent_checks_passed\":true,\"completed_sweeps\":1280,\"exchange_proposals\":5120,\"retained\":1024},\"stop_reason\":\"selection_gate\",\"streams\":{\"calibration\":{\"bank\":\"calibration\",\"iteration\":3,\"label_seed\":1256145819,\"mh_seed\":2944336331,\"promotion_seed\":3193035639,\"recipe\":\"SeedSequence-v1\",\"slice_seeds\":[2403816104,2655333495,1664325347,4026553938,2259835645,3842247878,3967676157,1649308908]},\"selection\":{\"bank\":\"selection\",\"iteration\":3,\"label_seed\":1900135596,\"mh_seed\":3785577865,\"promotion_seed\":272790893,\"recipe\":\"SeedSequence-v1\",\"slice_seeds\":[3038028064,278924595,168292696,2925017062,3131569763,3331458305,3067785893,691388411]}}}'",
+  "failure": {
+    "reason": "Frozen selection gate rejected the candidate for requested level 4",
+    "attempt_iteration": 3,
+    "last_accepted_level": 3,
+    "candidate_status": "insufficient_tail_information",
+    "candidate_selection_ESS": 12.0093475208749,
+    "required_selection_ESS": 20.0,
+    "candidate_log_threshold": -1.2715287082049687,
+    "stop_reason": "selection_gate",
+    "walker_exceedance_fractions": [
+      0.0,
+      0.0,
+      0.7578125,
+      0.0,
+      0.7138671875,
+      0.7060546875,
+      0.0,
+      0.763671875
+    ],
+    "constituent_numerical_checks_passed": true
+  },
+  "automatic_stopping_state": {
+    "status": "NOT_REACHED",
+    "reason": "Construction selection gate failed before termination",
+    "stopping_level": null
+  },
+  "last_accepted_state": {
+    "level": 3,
+    "metric": {
+      "B_J": -0.045524693439177165,
+      "D_J": 0.05038250568540154,
+      "U_J": 0.09590719912457871,
+      "X_J": 0.06753553287126123,
+      "ell_J": 0.2644946191845924,
+      "epsilon_stop": 0.01,
+      "level": 3,
+      "likelihood_upper": 0.7059713883574373,
+      "log_D_J": -2.988111273577868,
+      "log_U_J": -2.3443742308323023,
+      "log_X_J": -2.695101406702748,
+      "log_ell_J": -1.3299343712381886,
+      "mass_envelope": {
+        "calibration_SE": [
+          0.01979698766222763,
+          0.059107679184351905,
+          0.08924557601081756
+        ],
+        "calibration_ratios": [
+          0.39501953125,
+          0.310546875,
+          0.550537109375
+        ],
+        "confidence_claim": false,
+        "log_lower": [
+          0.0,
+          -1.0344394583466805,
+          -2.6829742051246184,
+          -3.671712096191717
+        ],
+        "log_upper": [
+          0.0,
+          -0.833298133468644,
+          -1.6801508817393032,
+          -1.9961936621162943
+        ],
+        "lower": [
+          1.0,
+          0.35542555592554476,
+          0.06835953622068162,
+          0.025432889097455516
+        ],
+        "upper": [
+          1.0,
+          0.43461350657445524,
+          0.18634585773106727,
+          0.13585139668014468
+        ]
+      },
+      "reason": "D_J-U_J is not positive; continue",
+      "stop": false,
+      "stopping_ratio": null
+    },
+    "inference": {
+      "logZ": -2.2657167656185404,
+      "weight_ess": 19395.367571944596,
+      "maximum_weight": 0.0001373575312131713,
+      "entropy": 10.103624891358177,
+      "raw_samples": 32768,
+      "per_level_counts": [
+        8192,
+        8192,
+        8192,
+        8192
+      ],
+      "mass_treatment": "recorded-calibration-plugin",
+      "mean": -0.24283206151706832,
+      "variance": 3.54645121895725,
+      "standard_deviation": 1.8832023839612273,
+      "quantiles": [
+        -3.198345149608919,
+        -2.8258870241166867,
+        0.0006879154569276163,
+        1.1131432156648835,
+        3.128296797939394
+      ],
+      "component_probabilities": [
+        0.24801932763599116,
+        0.6195395963529322,
+        0.13244107601105662
+      ],
+      "region_probabilities": [
+        0.2511771813579947,
+        0.6244844158168994,
+        0.12433840282509928
+      ],
+      "cdf_discrepancy": 0.06406782135802108,
+      "errors": {
+        "logZ_absolute": 0.012796561405524542,
+        "Z_relative": 0.012715033542914908,
+        "mean_absolute": 0.2758678257660464,
+        "variance_absolute": 0.4866077031602094,
+        "standard_deviation_absolute": 0.12504534032914516,
+        "quantile_absolute": [
+          0.026069279074482754,
+          0.12834362112012343,
+          0.14526302035330269,
+          1.103548923876221,
+          0.4233220329383407
+        ],
+        "component_probability_absolute": [
+          0.02510078410721364,
+          0.030714804311795296,
+          0.055815588419029005
+        ],
+        "region_probability_absolute": [
+          0.02637074833884584,
+          0.027849707280212632,
+          0.05422045561906513
+        ]
+      },
+      "weights_finite": true,
+      "weights_nonnegative": true,
+      "weight_sum": 0.9999999999999998
+    },
+    "checkpoint": "/tmp/dns-termination-heldout-validation/continuous/ladder/attempt_000002/checkpoint",
+    "records": "/tmp/dns-termination-heldout-validation/continuous/level_3/records",
+    "inference_sample_count": 32768,
+    "reconstruction_accuracy_diagnostic": {
+      "logZ": true,
+      "relative_Z": true,
+      "mean": false,
+      "variance": true,
+      "quantiles": false,
+      "cdf": true,
+      "components": true,
+      "regions": true,
+      "weights": true
+    }
+  },
+  "trimodal_probabilities": {
+    "status": "PARTIAL_DIAGNOSTIC_ONLY_NO_AUTOMATIC_STOP",
+    "exact": [
+      0.22291854352877752,
+      0.5888247920411369,
+      0.18825666443008562
+    ],
+    "last_accepted": [
+      0.24801932763599116,
+      0.6195395963529322,
+      0.13244107601105662
+    ],
+    "absolute_errors": [
+      0.02510078410721364,
+      0.030714804311795296,
+      0.055815588419029005
+    ],
+    "deeper_reference": null,
+    "exact_regions": [
+      0.22480643301914888,
+      0.5966347085366868,
+      0.17855885844416441
+    ],
+    "last_accepted_regions": [
+      0.2511771813579947,
+      0.6244844158168994,
+      0.12433840282509928
+    ]
+  },
+  "deeper_reference": {
+    "status": "NOT_REACHED",
+    "reason": "Predeclared construction-gate FAIL before automatic stop; no additional trajectories authorized"
+  },
+  "tail_continuation_comparison": {
+    "status": "NOT_REACHED",
+    "reason": "Predeclared construction-gate FAIL before automatic stop; no additional trajectories authorized"
+  },
+  "fresh_process_restart": {
+    "status": "NOT_REACHED",
+    "reason": "Predeclared construction-gate FAIL before automatic stop; no additional trajectories authorized"
+  },
+  "restart_checkpoint": {
+    "status": "SAVED_BUT_NOT_RESTARTED",
+    "checkpoint": "/tmp/dns-termination-heldout-validation/continuous/ladder/attempt_000000/checkpoint",
+    "records": "/tmp/dns-termination-heldout-validation/continuous/level_1/records"
+  },
+  "checks": {
+    "automatic_stop": false,
+    "construction_gates": false,
+    "reconstruction_at_stop": null,
+    "deeper_continuation": null,
+    "tail_conservativeness": null,
+    "trimodal_preservation_at_stop": null,
+    "fresh_process_restart": null
+  },
+  "partial_independent_references": [
+    {
+      "mass": [
+        1.0,
+        1.0
+      ],
+      "terminal": [
+        0.10509188626594806,
+        0.10509188626594809
+      ],
+      "uncertainty": 2.7755575615628914e-17,
+      "classified_boxes": 0,
+      "mass_enclosed": true
+    },
+    {
+      "mass": [
+        0.3943458103197609,
+        0.39434581032017957
+      ],
+      "terminal": [
+        0.07873564120460398,
+        0.07873564120489951
+      ],
+      "uncertainty": 4.1866510258614653e-13,
+      "classified_boxes": 531,
+      "unresolved_boxes": 6,
+      "method": "90-digit outward Decimal intervals; CDF series/Mills bounds; interval contour subdivision",
+      "mass_enclosed": true
+    },
+    {
+      "mass": [
+        0.13616525623506937,
+        0.1361652562354046
+      ],
+      "terminal": [
+        0.03575007016597357,
+        0.0357500701662102
+      ],
+      "uncertainty": 3.35231842285566e-13,
+      "classified_boxes": 349,
+      "unresolved_boxes": 4,
+      "method": "90-digit outward Decimal intervals; CDF series/Mills bounds; interval contour subdivision",
+      "mass_enclosed": true
+    },
+    {
+      "mass": [
+        0.05177128772452178,
+        0.0517712877248583
+      ],
+      "terminal": [
+        0.014420797502996055,
+        0.014420797503233619
+      ],
+      "uncertainty": 3.3651553765778885e-13,
+      "classified_boxes": 343,
+      "unresolved_boxes": 4,
+      "method": "90-digit outward Decimal intervals; CDF series/Mills bounds; interval contour subdivision",
+      "mass_enclosed": true
+    }
+  ],
+  "consequence": "Termination not validated; no tuning or further held-out trajectories in this study; stop before LISA production",
+  "report_note": "Post-failure diagnostics consume saved level-3 records only; interval widths are reported directly from stored lower/upper endpoints.",
+  "failure_classification": "Frozen automatic-construction selection information gate failed before any termination decision triggered",
+  "sampling_summary": {
+    "accepted_new_levels": 3,
+    "attempted_next_level": 4,
+    "reconstruction_levels_completed": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "retained_reconstruction_events": 32768,
+    "continuous_runs": 1,
+    "deeper_reference_runs": 0,
+    "fresh_process_restart_runs": 0,
+    "stochastic_retries": 0,
+    "post_failure_sampling_calls": 0
+  },
+  "termination_implementation_semantics_frozen_as_validated": false
+}
