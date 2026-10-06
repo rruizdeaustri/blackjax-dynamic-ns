@@ -1,0 +1,2582 @@
+{
+  "LISA_model_calls": 0,
+  "decision": "FAIL",
+  "design": {
+    "deeper_additional_levels": 2,
+    "deeper_tolerances": {
+      "cdf": 0.04,
+      "logZ": 0.05,
+      "mean": 0.08,
+      "mode_probability": 0.04,
+      "quantile": 0.15,
+      "variance": 0.15
+    },
+    "diagnostic_fractions": [
+      0.2,
+      0.005
+    ],
+    "frozen_sha256": {
+      "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+      "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+      "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+      "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+      "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+      "blackjax/ns/dns_reconstruction.py": "a4afacbe41194b875c44ecd9a98d4fbf12a086d23e68d3a227da49d2b3e23b66",
+      "examples/dns_inference_reconstruction.py": "f6022dbf0938936a2268163085a267ee71ff4f6229d0d833dd9193a7e9c6be9a",
+      "examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+      "examples/lisa_dns_stage4/numerical_cache_contract.py": "331f2fa62080e5bfb860be9ff68940be183dd852f7bb9fd91ffb83cd78d5b1d7",
+      "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026"
+    },
+    "mass_SE_multiplier": 2.0,
+    "max_level": 12,
+    "models": {
+      "gaussian": {
+        "sigma_likelihood": 0.7,
+        "sigma_prior": 1.5,
+        "y": 1.0
+      },
+      "mixture": {
+        "centers": [
+          -2.0,
+          2.2
+        ],
+        "component_weights": [
+          0.65,
+          0.35
+        ],
+        "sigma_prior": 2.0,
+        "widths": [
+          0.45,
+          0.7
+        ]
+      }
+    },
+    "production_candidate_fraction": 0.05,
+    "reconstruction": {
+      "allocation": "equal counts at every included level",
+      "block_size": 64,
+      "burn_in": 512,
+      "estimator": "deterministic-mixture importance sampling; plug-in calibrated X",
+      "levels": "0..3",
+      "repeat_all_on_restarted_ladder": true,
+      "retained": 1024,
+      "sample_source": "fresh independent fixed-contour streams after ladder freeze",
+      "walkers": 8
+    },
+    "remainder_validation": "Absolute evidence error to truth and deeper reference <= mass-envelope cap; exact terminal integral <= cap",
+    "restart_level": 3,
+    "seeds": {
+      "gaussian": 7101,
+      "mass_sensitivity": 7301,
+      "mixture": 7102,
+      "reconstruction_gaussian": 7201,
+      "reconstruction_mixture": 7202
+    },
+    "source": "/tmp/dns-stage7b-validation",
+    "stage": "8",
+    "tolerances": {
+      "Z_relative": 0.25,
+      "gaussian_cdf": 0.1,
+      "gaussian_mean_absolute": 0.18,
+      "gaussian_quantile_absolute": 0.3,
+      "gaussian_variance_absolute": 0.16,
+      "logZ_absolute": 0.22,
+      "mixture_cdf": 0.1,
+      "mixture_component_probability_absolute": 0.08,
+      "mixture_mean_absolute": 0.3,
+      "mixture_quantile_absolute": 0.5,
+      "mixture_region_probability_absolute": 0.08,
+      "mixture_variance_absolute": 0.8,
+      "weight_sum_absolute": 1e-12
+    },
+    "uncertainty": "Products of ratio +/- 2 recorded SE, clipped to (0,1); descriptive, not simultaneous confidence bounds"
+  },
+  "design_sha256": "70a7f1acf763e76b6311e7683aaf3270e975f773c48928f52b2d3c777da4b898",
+  "frozen_hashes_unchanged": true,
+  "models": {
+    "gaussian": {
+      "checks": {
+        "automatic_stop": true,
+        "cdf": true,
+        "deeper_stable": true,
+        "logZ": true,
+        "mean": true,
+        "quantiles": true,
+        "relative_Z": true,
+        "remainder_conservative": false,
+        "restart": true,
+        "variance": true,
+        "weights": true
+      },
+      "decision": "FAIL",
+      "deep_changes": {
+        "cdf": 8.068371513880734e-05,
+        "logZ": 8.323154054679094e-05,
+        "mean": 1.5261828865242855e-05,
+        "mode_probability": 6.661338147750939e-16,
+        "quantile": 0.0,
+        "variance": 3.1428758758389463e-05
+      },
+      "deeper": {
+        "final_checkpoint": "/tmp/dns-stage8-validation/gaussian/deeper/ladder/attempt_000007/checkpoint",
+        "log_masses": [
+          0.0,
+          -0.9156195704346408,
+          -1.9544117887922743,
+          -2.884468716430577,
+          -3.946643608896256,
+          -4.980274969420395,
+          -5.966326166413273,
+          -6.910718023222568,
+          -7.901032220604886
+        ],
+        "metric": {
+          "X_stop": 0.000370361048779356,
+          "X_upper": 0.0007552596017584729,
+          "delta_logZ": 0.004678873791254715,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 8,
+          "log_evidence_lower": -2.3883551218433463,
+          "log_remaining_evidence": -7.750712613693075,
+          "remaining_evidence": 0.0004304356968865757,
+          "remaining_fraction": 0.004689836812761188,
+          "stop": true,
+          "threshold": -0.562264401048137,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "stop_level": 6,
+        "summary": {
+          "cdf_discrepancy": 0.012414440725087017,
+          "component_probabilities": [
+            0.9999999999999988
+          ],
+          "entropy": 10.188307301500137,
+          "errors": {
+            "Z_relative": 0.06541301669739169,
+            "component_probability_absolute": [
+              1.2212453270876722e-15
+            ],
+            "logZ_absolute": 0.06765057637260341,
+            "mean_absolute": 0.004949670635555514,
+            "quantile_absolute": [
+              0.02239968726036279,
+              0.0018850444239300324,
+              0.00449317391388071,
+              0.011197982783891502,
+              0.0049492409947127225
+            ],
+            "region_probability_absolute": [
+              0.001286649170296833,
+              0.0012866491702968608
+            ],
+            "standard_deviation_absolute": 0.006930831369135637,
+            "variance_absolute": 0.008840879969472804
+          },
+          "logZ": -1.673049821602083,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00011921915639525028,
+          "mean": 0.8162182125761234,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -0.24460884120112436,
+            0.18847016174770767,
+            0.8166747092977982,
+            1.4631785430356115,
+            1.8595956793694062
+          ],
+          "raw_samples": 73728,
+          "region_probabilities": [
+            0.09902486289475068,
+            0.9009751371052493
+          ],
+          "standard_deviation": 0.6412590293658214,
+          "variance": 0.4112131427431953,
+          "weight_ess": 20217.469747000967,
+          "weight_sum": 0.9999999999999991,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        "thresholds": [
+          "-inf",
+          -1.694779510430953,
+          -0.7081386045518494,
+          -0.5815898827700305,
+          -0.564783744120233,
+          -0.5625939720638038,
+          -0.5623086258490224,
+          -0.5622696187202109,
+          -0.562264401048137
+        ],
+        "trajectory": [
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0025636425354013657,
+                "X_upper": 0.004616827967630701,
+                "delta_logZ": 0.028265263579564746,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -2.3883552425714853,
+                "log_remaining_evidence": -5.940310986056211,
+                "remaining_evidence": 0.0026312112537538635,
+                "remaining_fraction": 0.0286685165264942,
+                "stop": true,
+                "threshold": -0.5623086258490224,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0025636425354013657,
+                "X_upper": 0.004616827967630701,
+                "delta_logZ": 0.028265263579564746,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -2.3883552425714853,
+                "log_remaining_evidence": -5.940310986056211,
+                "remaining_evidence": 0.0026312112537538635,
+                "remaining_fraction": 0.0286685165264942,
+                "stop": false,
+                "threshold": -0.5623086258490224,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 6,
+            "metric": {
+              "X_stop": 0.0025636425354013657,
+              "X_upper": 0.004616827967630701,
+              "delta_logZ": 0.028265263579564746,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 6,
+              "log_evidence_lower": -2.3883552425714853,
+              "log_remaining_evidence": -5.940310986056211,
+              "remaining_evidence": 0.0026312112537538635,
+              "remaining_fraction": 0.0286685165264942,
+              "stop": true,
+              "threshold": -0.5623086258490224,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.012453157418870209,
+              "component_probabilities": [
+                0.9999999999999994
+              ],
+              "entropy": 10.183860382906055,
+              "errors": {
+                "Z_relative": 0.06549080057470608,
+                "component_probability_absolute": [
+                  5.551115123125783e-16
+                ],
+                "logZ_absolute": 0.0677338079131502,
+                "mean_absolute": 0.004964932464420757,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.0012948915051944343,
+                  0.001294891505194462
+                ],
+                "standard_deviation_absolute": 0.0069553364106416105,
+                "variance_absolute": 0.008872308728231193
+              },
+              "logZ": -1.6731330531426298,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011922907960225592,
+              "mean": 0.8162029507472581,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 57344,
+              "region_probabilities": [
+                0.09903310522964828,
+                0.9009668947703517
+              ],
+              "standard_deviation": 0.6412835344073273,
+              "variance": 0.4112445715019537,
+              "weight_ess": 20213.59714868001,
+              "weight_sum": 0.9999999999999994,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0009970416403550723,
+                "X_upper": 0.0019178452054310683,
+                "delta_logZ": 0.011838638672665656,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -2.388355127229711,
+                "log_remaining_evidence": -6.818816601284073,
+                "remaining_evidence": 0.0010930136281594642,
+                "remaining_fraction": 0.011908992713384308,
+                "stop": true,
+                "threshold": -0.5622696187202109,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0009970416403550723,
+                "X_upper": 0.0019178452054310683,
+                "delta_logZ": 0.011838638672665656,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -2.388355127229711,
+                "log_remaining_evidence": -6.818816601284073,
+                "remaining_evidence": 0.0010930136281594642,
+                "remaining_fraction": 0.011908992713384308,
+                "stop": false,
+                "threshold": -0.5622696187202109,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 7,
+            "metric": {
+              "X_stop": 0.0009970416403550723,
+              "X_upper": 0.0019178452054310683,
+              "delta_logZ": 0.011838638672665656,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 7,
+              "log_evidence_lower": -2.388355127229711,
+              "log_remaining_evidence": -6.818816601284073,
+              "remaining_evidence": 0.0010930136281594642,
+              "remaining_fraction": 0.011908992713384308,
+              "stop": true,
+              "threshold": -0.5622696187202109,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.012432909921948787,
+              "component_probabilities": [
+                0.9999999999999989
+              ],
+              "entropy": 10.186984678617211,
+              "errors": {
+                "Z_relative": 0.06545012390191035,
+                "component_probability_absolute": [
+                  1.1102230246251565e-15
+                ],
+                "logZ_absolute": 0.06769028154917933,
+                "mean_absolute": 0.004956948726764554,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.0012905810480209057,
+                  0.0012905810480209334
+                ],
+                "standard_deviation_absolute": 0.006942521927183809,
+                "variance_absolute": 0.008855873457955465
+              },
+              "logZ": -1.673089526778659,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.000119223890106882,
+              "mean": 0.8162109344849143,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 65536,
+              "region_probabilities": [
+                0.09902879477247475,
+                0.9009712052275253
+              ],
+              "standard_deviation": 0.6412707199238695,
+              "variance": 0.411228136231678,
+              "weight_ess": 20215.803632990668,
+              "weight_sum": 0.9999999999999987,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.000370361048779356,
+                "X_upper": 0.0007552596017584729,
+                "delta_logZ": 0.004678873791254715,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 8,
+                "log_evidence_lower": -2.3883551218433463,
+                "log_remaining_evidence": -7.750712613693075,
+                "remaining_evidence": 0.0004304356968865757,
+                "remaining_fraction": 0.004689836812761188,
+                "stop": true,
+                "threshold": -0.562264401048137,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.000370361048779356,
+                "X_upper": 0.0007552596017584729,
+                "delta_logZ": 0.004678873791254715,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 8,
+                "log_evidence_lower": -2.3883551218433463,
+                "log_remaining_evidence": -7.750712613693075,
+                "remaining_evidence": 0.0004304356968865757,
+                "remaining_fraction": 0.004689836812761188,
+                "stop": true,
+                "threshold": -0.562264401048137,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 8,
+            "metric": {
+              "X_stop": 0.000370361048779356,
+              "X_upper": 0.0007552596017584729,
+              "delta_logZ": 0.004678873791254715,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 8,
+              "log_evidence_lower": -2.3883551218433463,
+              "log_remaining_evidence": -7.750712613693075,
+              "remaining_evidence": 0.0004304356968865757,
+              "remaining_fraction": 0.004689836812761188,
+              "stop": true,
+              "threshold": -0.562264401048137,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.012414440725087017,
+              "component_probabilities": [
+                0.9999999999999988
+              ],
+              "entropy": 10.188307301500137,
+              "errors": {
+                "Z_relative": 0.06541301669739169,
+                "component_probability_absolute": [
+                  1.2212453270876722e-15
+                ],
+                "logZ_absolute": 0.06765057637260341,
+                "mean_absolute": 0.004949670635555514,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.001286649170296833,
+                  0.0012866491702968608
+                ],
+                "standard_deviation_absolute": 0.006930831369135637,
+                "variance_absolute": 0.008840879969472804
+              },
+              "logZ": -1.673049821602083,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011921915639525028,
+              "mean": 0.8162182125761234,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 73728,
+              "region_probabilities": [
+                0.09902486289475068,
+                0.9009751371052493
+              ],
+              "standard_deviation": 0.6412590293658214,
+              "variance": 0.4112131427431953,
+              "weight_ess": 20217.469747000967,
+              "weight_sum": 0.9999999999999991,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          }
+        ]
+      },
+      "exact": {
+        "Z": 0.20080936672222277,
+        "component_means": [
+          0.8211678832116789
+        ],
+        "component_probabilities": [
+          1.0
+        ],
+        "component_variances": [
+          0.40237226277372257
+        ],
+        "logZ": -1.6053992452294796,
+        "mean": 0.8211678832116789,
+        "quantile_probabilities": [
+          0.05,
+          0.16,
+          0.5,
+          0.84,
+          0.95
+        ],
+        "quantiles": [
+          -0.22220915394076157,
+          0.1903552061716377,
+          0.8211678832116789,
+          1.45198056025172,
+          1.864544920364119
+        ],
+        "region_probabilities": [
+          0.09773821372445385,
+          0.9022617862755462
+        ],
+        "standard_deviation": 0.6343281979966857,
+        "variance": 0.4023722627737225
+      },
+      "mass_uncertainty": {
+        "method": "Products of ratio +/- 2 recorded SE, clipped to (0,1); descriptive, not simultaneous confidence bounds",
+        "log_mass_lower": [
+          0.0,
+          -1.148575222485977,
+          -2.2992249860757097,
+          -3.3055167549960385,
+          -4.437189257189697,
+          -5.546554365571216,
+          -6.634738879298645
+        ],
+        "log_mass_upper": [
+          0.0,
+          -0.7268096956156169,
+          -1.6650072014313246,
+          -2.5242316229963184,
+          -3.5214265572502623,
+          -4.4846581755276365,
+          -5.378047396790271
+        ],
+        "nominal_stop_metric": {
+          "stop": true,
+          "level": 6,
+          "threshold": -0.5623086258490224,
+          "X_stop": 0.0025636425354013657,
+          "X_upper": 0.0025636425354013657,
+          "log_remaining_evidence": -6.528589755679214,
+          "remaining_evidence": 0.0014610648560101872,
+          "log_evidence_lower": -2.1105725773241835,
+          "remaining_fraction": 0.012058117693405566,
+          "delta_logZ": 0.011985997767113723,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound",
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error"
+        },
+        "descriptive_envelope_stop_metric": {
+          "X_stop": 0.0025636425354013657,
+          "X_upper": 0.004616827967630701,
+          "delta_logZ": 0.028265263579564746,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 6,
+          "log_evidence_lower": -2.3883552425714853,
+          "log_remaining_evidence": -5.940310986056211,
+          "remaining_evidence": 0.0026312112537538635,
+          "remaining_fraction": 0.0286685165264942,
+          "stop": true,
+          "threshold": -0.5623086258490224,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "actual_contour_mass": 0.0028296575733466334,
+        "envelope_encloses_actual_stop_mass": true,
+        "actual_cap_posterior_probability": 0.00803073736000367,
+        "terminal_bound_conservative": true,
+        "total_error_bound_conservative": false,
+        "simultaneous_confidence_guarantee": false
+      },
+      "remainder_comparison": {
+        "exact_terminal": 0.001612647283574832,
+        "to_deeper": 1.5619731144694837e-05,
+        "to_truth": 0.0131511661895381
+      },
+      "restart": {
+        "boundary_no_new_level": true,
+        "decision": true,
+        "draw": true,
+        "event_id": true,
+        "log_masses": true,
+        "loglikelihood": true,
+        "logprior": true,
+        "metadata": true,
+        "origin_level": true,
+        "position": true,
+        "stop_level": true,
+        "summaries": true,
+        "thresholds": true,
+        "walker": true,
+        "weights": true,
+        "checkpoint_payload": true,
+        "checkpoint_hash": true,
+        "retained_banks": true,
+        "boundary_decision": true,
+        "boundary_summary": true
+      },
+      "stopped": {
+        "final_checkpoint": "/tmp/dns-stage8-validation/gaussian/continuous/ladder/attempt_000005/checkpoint",
+        "log_masses": [
+          0.0,
+          -0.9156195704346408,
+          -1.9544117887922743,
+          -2.884468716430577,
+          -3.946643608896256,
+          -4.980274969420395,
+          -5.966326166413273
+        ],
+        "metric": {
+          "X_stop": 0.0025636425354013657,
+          "X_upper": 0.004616827967630701,
+          "delta_logZ": 0.028265263579564746,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 6,
+          "log_evidence_lower": -2.3883552425714853,
+          "log_remaining_evidence": -5.940310986056211,
+          "remaining_evidence": 0.0026312112537538635,
+          "remaining_fraction": 0.0286685165264942,
+          "stop": true,
+          "threshold": -0.5623086258490224,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "stop_level": 6,
+        "summary": {
+          "cdf_discrepancy": 0.012453157418870209,
+          "component_probabilities": [
+            0.9999999999999994
+          ],
+          "entropy": 10.183860382906055,
+          "errors": {
+            "Z_relative": 0.06549080057470608,
+            "component_probability_absolute": [
+              5.551115123125783e-16
+            ],
+            "logZ_absolute": 0.0677338079131502,
+            "mean_absolute": 0.004964932464420757,
+            "quantile_absolute": [
+              0.02239968726036279,
+              0.0018850444239300324,
+              0.00449317391388071,
+              0.011197982783891502,
+              0.0049492409947127225
+            ],
+            "region_probability_absolute": [
+              0.0012948915051944343,
+              0.001294891505194462
+            ],
+            "standard_deviation_absolute": 0.0069553364106416105,
+            "variance_absolute": 0.008872308728231193
+          },
+          "logZ": -1.6731330531426298,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00011922907960225592,
+          "mean": 0.8162029507472581,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -0.24460884120112436,
+            0.18847016174770767,
+            0.8166747092977982,
+            1.4631785430356115,
+            1.8595956793694062
+          ],
+          "raw_samples": 57344,
+          "region_probabilities": [
+            0.09903310522964828,
+            0.9009668947703517
+          ],
+          "standard_deviation": 0.6412835344073273,
+          "variance": 0.4112445715019537,
+          "weight_ess": 20213.59714868001,
+          "weight_sum": 0.9999999999999994,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        "thresholds": [
+          "-inf",
+          -1.694779510430953,
+          -0.7081386045518494,
+          -0.5815898827700305,
+          -0.564783744120233,
+          -0.5625939720638038,
+          -0.5623086258490224
+        ],
+        "trajectory": [
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0558844721526839,
+                "X_upper": 0.08011985139261649,
+                "delta_logZ": 0.40422810807267634,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 3,
+                "log_evidence_lower": -2.3896324316027786,
+                "log_remaining_evidence": -3.0864952122622586,
+                "remaining_evidence": 0.045661708885706184,
+                "remaining_fraction": 0.4981456471005253,
+                "stop": false,
+                "threshold": -0.5815898827700305,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0558844721526839,
+                "X_upper": 0.08011985139261649,
+                "delta_logZ": 0.40422810807267634,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 3,
+                "log_evidence_lower": -2.3896324316027786,
+                "log_remaining_evidence": -3.0864952122622586,
+                "remaining_evidence": 0.045661708885706184,
+                "remaining_fraction": 0.4981456471005253,
+                "stop": false,
+                "threshold": -0.5815898827700305,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 3,
+            "metric": {
+              "X_stop": 0.0558844721526839,
+              "X_upper": 0.08011985139261649,
+              "delta_logZ": 0.40422810807267634,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 3,
+              "log_evidence_lower": -2.3896324316027786,
+              "log_remaining_evidence": -3.0864952122622586,
+              "remaining_evidence": 0.045661708885706184,
+              "remaining_fraction": 0.4981456471005253,
+              "stop": false,
+              "threshold": -0.5815898827700305,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011820178693278671,
+              "component_probabilities": [
+                0.9999999999999994
+              ],
+              "entropy": 10.09608254241913,
+              "errors": {
+                "Z_relative": 0.06421748621910349,
+                "component_probability_absolute": [
+                  5.551115123125783e-16
+                ],
+                "logZ_absolute": 0.06637218657532351,
+                "mean_absolute": 0.0045743541334473115,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0016291009265135825,
+                  0.004298220834523692,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.001160137678624898,
+                  0.001160137678624995
+                ],
+                "standard_deviation_absolute": 0.006596177548022664,
+                "variance_absolute": 0.008411792393651918
+              },
+              "logZ": -1.6717714318048031,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011906684521934418,
+              "mean": 0.8165935290782316,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18872610524512412,
+                0.8168696623771552,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 32768,
+              "region_probabilities": [
+                0.09889835140307875,
+                0.9011016485969212
+              ],
+              "standard_deviation": 0.6409243755447084,
+              "variance": 0.41078405516737443,
+              "weight_ess": 20031.93937606276,
+              "weight_sum": 0.9999999999999996,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.019319436662158296,
+                "X_upper": 0.02955723998312878,
+                "delta_logZ": 0.168516622661551,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 4,
+                "log_evidence_lower": -2.3884105385529857,
+                "log_remaining_evidence": -4.0836901465162025,
+                "remaining_evidence": 0.016845189601774002,
+                "remaining_fraction": 0.18354790039752253,
+                "stop": true,
+                "threshold": -0.564783744120233,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.019319436662158296,
+                "X_upper": 0.02955723998312878,
+                "delta_logZ": 0.168516622661551,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 4,
+                "log_evidence_lower": -2.3884105385529857,
+                "log_remaining_evidence": -4.0836901465162025,
+                "remaining_evidence": 0.016845189601774002,
+                "remaining_fraction": 0.18354790039752253,
+                "stop": false,
+                "threshold": -0.564783744120233,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 4,
+            "metric": {
+              "X_stop": 0.019319436662158296,
+              "X_upper": 0.02955723998312878,
+              "delta_logZ": 0.168516622661551,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 4,
+              "log_evidence_lower": -2.3884105385529857,
+              "log_remaining_evidence": -4.0836901465162025,
+              "remaining_evidence": 0.016845189601774002,
+              "remaining_fraction": 0.18354790039752253,
+              "stop": false,
+              "threshold": -0.564783744120233,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.01238185514512391,
+              "component_probabilities": [
+                1.0000000000000004
+              ],
+              "entropy": 10.15491855299302,
+              "errors": {
+                "Z_relative": 0.0653475405147664,
+                "component_probability_absolute": [
+                  4.440892098500626e-16
+                ],
+                "logZ_absolute": 0.06758051987673319,
+                "mean_absolute": 0.004942653845827483,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.001279712078395348,
+                  0.0012797120783953897
+                ],
+                "standard_deviation_absolute": 0.006908464660081104,
+                "variance_absolute": 0.00881219476146572
+              },
+              "logZ": -1.6729797651062128,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011921080461146419,
+              "mean": 0.8162252293658514,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 40960,
+              "region_probabilities": [
+                0.0990179258028492,
+                0.9009820741971508
+              ],
+              "standard_deviation": 0.6412366626567668,
+              "variance": 0.41118445753518823,
+              "weight_ess": 20190.83790964433,
+              "weight_sum": 1.0000000000000009,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.006872172660342926,
+                "X_upper": 0.011280742895760467,
+                "delta_logZ": 0.06770418567785695,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 5,
+                "log_evidence_lower": -2.388357570245433,
+                "log_remaining_evidence": -5.046921764793577,
+                "remaining_evidence": 0.0064290932792242005,
+                "remaining_fraction": 0.07004872591773771,
+                "stop": true,
+                "threshold": -0.5625939720638038,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.006872172660342926,
+                "X_upper": 0.011280742895760467,
+                "delta_logZ": 0.06770418567785695,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 5,
+                "log_evidence_lower": -2.388357570245433,
+                "log_remaining_evidence": -5.046921764793577,
+                "remaining_evidence": 0.0064290932792242005,
+                "remaining_fraction": 0.07004872591773771,
+                "stop": false,
+                "threshold": -0.5625939720638038,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 5,
+            "metric": {
+              "X_stop": 0.006872172660342926,
+              "X_upper": 0.011280742895760467,
+              "delta_logZ": 0.06770418567785695,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 5,
+              "log_evidence_lower": -2.388357570245433,
+              "log_remaining_evidence": -5.046921764793577,
+              "remaining_evidence": 0.0064290932792242005,
+              "remaining_fraction": 0.07004872591773771,
+              "stop": false,
+              "threshold": -0.5625939720638038,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.012421022670207171,
+              "component_probabilities": [
+                1.0
+              ],
+              "entropy": 10.17629288559384,
+              "errors": {
+                "Z_relative": 0.06542624108538707,
+                "component_probability_absolute": [
+                  0.0
+                ],
+                "logZ_absolute": 0.06766472645364985,
+                "mean_absolute": 0.004952866656637078,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.0012880503900460083,
+                  0.0012880503900460916
+                ],
+                "standard_deviation_absolute": 0.006934826889152923,
+                "variance_absolute": 0.008846004312013156
+              },
+              "logZ": -1.6730639716831295,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011922084336791072,
+              "mean": 0.8162150165550418,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 49152,
+              "region_probabilities": [
+                0.09902626411449986,
+                0.9009737358855001
+              ],
+              "standard_deviation": 0.6412630248858386,
+              "variance": 0.41121826708573567,
+              "weight_ess": 20213.01745235893,
+              "weight_sum": 1.0000000000000002,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0025636425354013657,
+                "X_upper": 0.004616827967630701,
+                "delta_logZ": 0.028265263579564746,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -2.3883552425714853,
+                "log_remaining_evidence": -5.940310986056211,
+                "remaining_evidence": 0.0026312112537538635,
+                "remaining_fraction": 0.0286685165264942,
+                "stop": true,
+                "threshold": -0.5623086258490224,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0025636425354013657,
+                "X_upper": 0.004616827967630701,
+                "delta_logZ": 0.028265263579564746,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -2.3883552425714853,
+                "log_remaining_evidence": -5.940310986056211,
+                "remaining_evidence": 0.0026312112537538635,
+                "remaining_fraction": 0.0286685165264942,
+                "stop": false,
+                "threshold": -0.5623086258490224,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 6,
+            "metric": {
+              "X_stop": 0.0025636425354013657,
+              "X_upper": 0.004616827967630701,
+              "delta_logZ": 0.028265263579564746,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 6,
+              "log_evidence_lower": -2.3883552425714853,
+              "log_remaining_evidence": -5.940310986056211,
+              "remaining_evidence": 0.0026312112537538635,
+              "remaining_fraction": 0.0286685165264942,
+              "stop": true,
+              "threshold": -0.5623086258490224,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.012453157418870209,
+              "component_probabilities": [
+                0.9999999999999994
+              ],
+              "entropy": 10.183860382906055,
+              "errors": {
+                "Z_relative": 0.06549080057470608,
+                "component_probability_absolute": [
+                  5.551115123125783e-16
+                ],
+                "logZ_absolute": 0.0677338079131502,
+                "mean_absolute": 0.004964932464420757,
+                "quantile_absolute": [
+                  0.02239968726036279,
+                  0.0018850444239300324,
+                  0.00449317391388071,
+                  0.011197982783891502,
+                  0.0049492409947127225
+                ],
+                "region_probability_absolute": [
+                  0.0012948915051944343,
+                  0.001294891505194462
+                ],
+                "standard_deviation_absolute": 0.0069553364106416105,
+                "variance_absolute": 0.008872308728231193
+              },
+              "logZ": -1.6731330531426298,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00011922907960225592,
+              "mean": 0.8162029507472581,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -0.24460884120112436,
+                0.18847016174770767,
+                0.8166747092977982,
+                1.4631785430356115,
+                1.8595956793694062
+              ],
+              "raw_samples": 57344,
+              "region_probabilities": [
+                0.09903310522964828,
+                0.9009668947703517
+              ],
+              "standard_deviation": 0.6412835344073273,
+              "variance": 0.4112445715019537,
+              "weight_ess": 20213.59714868001,
+              "weight_sum": 0.9999999999999994,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          }
+        ]
+      },
+      "restart_execution": {
+        "fresh_process": true,
+        "start_checkpoint": "/tmp/dns-stage7b-validation/gaussian/continuous/attempt_000002/checkpoint",
+        "start_records": "/tmp/dns-stage7b-validation/gaussian/inference/records",
+        "configuration_sha256": "70a7f1acf763e76b6311e7683aaf3270e975f773c48928f52b2d3c777da4b898",
+        "boundary_added_levels": 0,
+        "command": [
+          "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+          "-m",
+          "examples.dns_automatic_termination",
+          "--worker",
+          "gaussian",
+          "--output",
+          "/tmp/dns-stage8-validation/gaussian/restarted",
+          "--design",
+          "/tmp/dns-stage8-validation/design.json"
+        ]
+      },
+      "likelihood_upper": {
+        "log_value": -0.5622635892659402,
+        "value": 0.5699175434306182,
+        "justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound",
+        "observed_maximum_is_not_a_certificate": true
+      },
+      "mode_representation": {
+        "retained_negative": 4556,
+        "retained_nonnegative": 52788,
+        "per_origin_level": [
+          {
+            "level": 0,
+            "negative": 4328,
+            "nonnegative": 3864
+          },
+          {
+            "level": 1,
+            "negative": 228,
+            "nonnegative": 7964
+          },
+          {
+            "level": 2,
+            "negative": 0,
+            "nonnegative": 8192
+          },
+          {
+            "level": 3,
+            "negative": 0,
+            "nonnegative": 8192
+          },
+          {
+            "level": 4,
+            "negative": 0,
+            "nonnegative": 8192
+          },
+          {
+            "level": 5,
+            "negative": 0,
+            "nonnegative": 8192
+          },
+          {
+            "level": 6,
+            "negative": 0,
+            "nonnegative": 8192
+          }
+        ],
+        "component_probabilities": [
+          0.9999999999999994
+        ],
+        "region_probabilities": [
+          0.09903310522964828,
+          0.9009668947703517
+        ],
+        "explanation": "Lower fixed-contour strata retain secondary-mode support even when the deepest contour excludes it."
+      },
+      "diagnostic_first_trigger": {
+        "0.2": 4,
+        "0.005": 8
+      }
+    },
+    "mixture": {
+      "checks": {
+        "automatic_stop": true,
+        "cdf": true,
+        "components": true,
+        "deeper_stable": true,
+        "logZ": true,
+        "mean": true,
+        "quantiles": true,
+        "regions": true,
+        "relative_Z": true,
+        "remainder_conservative": false,
+        "restart": true,
+        "variance": true,
+        "weights": true
+      },
+      "decision": "FAIL",
+      "deep_changes": {
+        "cdf": 2.0993057814389093e-05,
+        "logZ": 1.2088906309770664e-05,
+        "mean": 1.6457319869989107e-05,
+        "mode_probability": 4.0145407739222705e-06,
+        "quantile": 0.0,
+        "variance": 2.060519021851448e-05
+      },
+      "deeper": {
+        "final_checkpoint": "/tmp/dns-stage8-validation/mixture/deeper/ladder/attempt_000008/checkpoint",
+        "log_masses": [
+          0.0,
+          -1.0498918813959193,
+          -2.622421698630901,
+          -3.642081116069991,
+          -4.662079000257955,
+          -5.622607894470223,
+          -6.68231408527654,
+          -7.637117773010768,
+          -8.620228271919746,
+          -9.66143803592038
+        ],
+        "metric": {
+          "X_stop": 6.369286341777067e-05,
+          "X_upper": 0.0002121148615346768,
+          "delta_logZ": 0.004014515786718449,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 9,
+          "log_evidence_lower": -3.1965142494168908,
+          "log_remaining_evidence": -8.712344859932275,
+          "remaining_evidence": 0.00016454197388159617,
+          "remaining_fraction": 0.004022584749265283,
+          "stop": true,
+          "threshold": -0.5512139113993145,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "stop_level": 7,
+        "summary": {
+          "cdf_discrepancy": 0.011697688126046657,
+          "component_probabilities": [
+            0.6679173087738633,
+            0.33208269122612666
+          ],
+          "entropy": 10.15132378355992,
+          "errors": {
+            "Z_relative": 0.03464420256671769,
+            "component_probability_absolute": [
+              0.0036305329686856513,
+              0.0036305329686757704
+            ],
+            "logZ_absolute": 0.03525854359363079,
+            "mean_absolute": 0.0042918027206607645,
+            "quantile_absolute": [
+              0.012996703512770935,
+              0.002520653116280247,
+              0.001523709326084699,
+              0.020521520393974146,
+              0.05260085448287022
+            ],
+            "region_probability_absolute": [
+              0.003648074931338119,
+              0.003648074931338119
+            ],
+            "standard_deviation_absolute": 0.0019909359463656795,
+            "variance_absolute": 0.007514574218976833
+          },
+          "logZ": -2.1805569646604646,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00012559714757681746,
+          "mean": -0.6389326403128412,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -2.5503103468847965,
+            -2.2187019706554802,
+            -1.6165235902763542,
+            1.9607019525962188,
+            2.5857966837885242
+          ],
+          "raw_samples": 81920,
+          "region_probabilities": [
+            0.6683897033094021,
+            0.33161029669059794
+          ],
+          "standard_deviation": 1.886200911371552,
+          "variance": 3.557753878058874,
+          "weight_ess": 19026.076357549904,
+          "weight_sum": 1.0000000000000007,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        "thresholds": [
+          "-inf",
+          -2.151669488653418,
+          -0.8018929445174949,
+          -0.5811231188756006,
+          -0.555091544549026,
+          -0.5517355915950845,
+          -0.5512787019476405,
+          -0.5512234399883631,
+          -0.5512149993509268,
+          -0.5512139113993145
+        ],
+        "trajectory": [
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0004822163078971016,
+                "X_upper": 0.0013797017824009321,
+                "delta_logZ": 0.02582846989200815,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -3.196514252262991,
+                "log_remaining_evidence": -6.8398501324868235,
+                "remaining_evidence": 0.0010702637853929567,
+                "remaining_fraction": 0.026164915197649026,
+                "stop": true,
+                "threshold": -0.5512234399883631,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0004822163078971016,
+                "X_upper": 0.0013797017824009321,
+                "delta_logZ": 0.02582846989200815,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -3.196514252262991,
+                "log_remaining_evidence": -6.8398501324868235,
+                "remaining_evidence": 0.0010702637853929567,
+                "remaining_fraction": 0.026164915197649026,
+                "stop": false,
+                "threshold": -0.5512234399883631,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 7,
+            "metric": {
+              "X_stop": 0.0004822163078971016,
+              "X_upper": 0.0013797017824009321,
+              "delta_logZ": 0.02582846989200815,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 7,
+              "log_evidence_lower": -3.196514252262991,
+              "log_remaining_evidence": -6.8398501324868235,
+              "remaining_evidence": 0.0010702637853929567,
+              "remaining_fraction": 0.026164915197649026,
+              "stop": true,
+              "threshold": -0.5512234399883631,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011692965418362067,
+              "component_probabilities": [
+                0.667913294233111,
+                0.3320867057669006
+              ],
+              "entropy": 10.150019008135741,
+              "errors": {
+                "Z_relative": 0.034655872591969394,
+                "component_probability_absolute": [
+                  0.0036345475094380353,
+                  0.0036345475094496926
+                ],
+                "logZ_absolute": 0.03527063249994056,
+                "mean_absolute": 0.004275345400790775,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002520653116280247,
+                  0.001523709326084699,
+                  0.020521520393974146,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.0036520837613788215,
+                  0.0036520837613788215
+                ],
+                "standard_deviation_absolute": 0.0019854738664091265,
+                "variance_absolute": 0.007493969028758318
+              },
+              "logZ": -2.1805690535667743,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012559866591814505,
+              "mean": -0.6389161829929713,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2187019706554802,
+                -1.6165235902763542,
+                1.9607019525962188,
+                2.5857966837885242
+              ],
+              "raw_samples": 65536,
+              "region_probabilities": [
+                0.6683856944793614,
+                0.33161430552063864
+              ],
+              "standard_deviation": 1.8862063734515087,
+              "variance": 3.5577744832490925,
+              "weight_ess": 19025.573050625633,
+              "weight_sum": 0.9999999999999992,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.00018041906539362977,
+                "X_upper": 0.0005568650804646373,
+                "delta_logZ": 0.01050511802028181,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 8,
+                "log_evidence_lower": -3.196514249531372,
+                "log_remaining_evidence": -7.74714980236739,
+                "remaining_evidence": 0.0004319719932042856,
+                "remaining_fraction": 0.010560490500877394,
+                "stop": true,
+                "threshold": -0.5512149993509268,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.00018041906539362977,
+                "X_upper": 0.0005568650804646373,
+                "delta_logZ": 0.01050511802028181,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 8,
+                "log_evidence_lower": -3.196514249531372,
+                "log_remaining_evidence": -7.74714980236739,
+                "remaining_evidence": 0.0004319719932042856,
+                "remaining_fraction": 0.010560490500877394,
+                "stop": false,
+                "threshold": -0.5512149993509268,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 8,
+            "metric": {
+              "X_stop": 0.00018041906539362977,
+              "X_upper": 0.0005568650804646373,
+              "delta_logZ": 0.01050511802028181,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 8,
+              "log_evidence_lower": -3.196514249531372,
+              "log_remaining_evidence": -7.74714980236739,
+              "remaining_evidence": 0.0004319719932042856,
+              "remaining_fraction": 0.010560490500877394,
+              "stop": true,
+              "threshold": -0.5512149993509268,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011698229917889824,
+              "component_probabilities": [
+                0.6679177693243654,
+                0.3320822306755329
+              ],
+              "entropy": 10.151001738419563,
+              "errors": {
+                "Z_relative": 0.0346428637564323,
+                "component_probability_absolute": [
+                  0.003630072418183583,
+                  0.0036300724180819977
+                ],
+                "logZ_absolute": 0.03525715673775798,
+                "mean_absolute": 0.004293689425431957,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002520653116280247,
+                  0.001523709326084699,
+                  0.020521520393974146,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.0036476150359696646,
+                  0.0036476150359696646
+                ],
+                "standard_deviation_absolute": 0.001991563499462945,
+                "variance_absolute": 0.007516941601031668
+              },
+              "logZ": -2.1805555778045917,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012559697339179675,
+              "mean": -0.6389345270176124,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2187019706554802,
+                -1.6165235902763542,
+                1.9607019525962188,
+                2.5857966837885242
+              ],
+              "raw_samples": 73728,
+              "region_probabilities": [
+                0.6683901632047705,
+                0.3316098367952295
+              ],
+              "standard_deviation": 1.8862002838184548,
+              "variance": 3.557751510676819,
+              "weight_ess": 19026.123793737133,
+              "weight_sum": 1.0000000000000007,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 6.369286341777067e-05,
+                "X_upper": 0.0002121148615346768,
+                "delta_logZ": 0.004014515786718449,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 9,
+                "log_evidence_lower": -3.1965142494168908,
+                "log_remaining_evidence": -8.712344859932275,
+                "remaining_evidence": 0.00016454197388159617,
+                "remaining_fraction": 0.004022584749265283,
+                "stop": true,
+                "threshold": -0.5512139113993145,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 6.369286341777067e-05,
+                "X_upper": 0.0002121148615346768,
+                "delta_logZ": 0.004014515786718449,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 9,
+                "log_evidence_lower": -3.1965142494168908,
+                "log_remaining_evidence": -8.712344859932275,
+                "remaining_evidence": 0.00016454197388159617,
+                "remaining_fraction": 0.004022584749265283,
+                "stop": true,
+                "threshold": -0.5512139113993145,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 9,
+            "metric": {
+              "X_stop": 6.369286341777067e-05,
+              "X_upper": 0.0002121148615346768,
+              "delta_logZ": 0.004014515786718449,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 9,
+              "log_evidence_lower": -3.1965142494168908,
+              "log_remaining_evidence": -8.712344859932275,
+              "remaining_evidence": 0.00016454197388159617,
+              "remaining_fraction": 0.004022584749265283,
+              "stop": true,
+              "threshold": -0.5512139113993145,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011697688126046657,
+              "component_probabilities": [
+                0.6679173087738633,
+                0.33208269122612666
+              ],
+              "entropy": 10.15132378355992,
+              "errors": {
+                "Z_relative": 0.03464420256671769,
+                "component_probability_absolute": [
+                  0.0036305329686856513,
+                  0.0036305329686757704
+                ],
+                "logZ_absolute": 0.03525854359363079,
+                "mean_absolute": 0.0042918027206607645,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002520653116280247,
+                  0.001523709326084699,
+                  0.020521520393974146,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.003648074931338119,
+                  0.003648074931338119
+                ],
+                "standard_deviation_absolute": 0.0019909359463656795,
+                "variance_absolute": 0.007514574218976833
+              },
+              "logZ": -2.1805569646604646,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012559714757681746,
+              "mean": -0.6389326403128412,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2187019706554802,
+                -1.6165235902763542,
+                1.9607019525962188,
+                2.5857966837885242
+              ],
+              "raw_samples": 81920,
+              "region_probabilities": [
+                0.6683897033094021,
+                0.33161029669059794
+              ],
+              "standard_deviation": 1.886200911371552,
+              "variance": 3.557753878058874,
+              "weight_ess": 19026.076357549904,
+              "weight_sum": 1.0000000000000007,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          }
+        ]
+      },
+      "exact": {
+        "Z": 0.11703310668785585,
+        "component_means": [
+          -1.9036287923854849,
+          1.9599109131403119
+        ],
+        "component_probabilities": [
+          0.671547841742549,
+          0.3284521582574509
+        ],
+        "component_variances": [
+          0.19274241522903038,
+          0.43652561247216026
+        ],
+        "logZ": -2.1452984210668338,
+        "mean": -0.6346408375921805,
+        "quantile_probabilities": [
+          0.05,
+          0.16,
+          0.5,
+          0.84,
+          0.95
+        ],
+        "quantiles": [
+          -2.5373136433720256,
+          -2.2161813175392,
+          -1.6149998809502695,
+          1.981223472990193,
+          2.6383975382713944
+        ],
+        "region_probabilities": [
+          0.6720377782407402,
+          0.3279622217592598
+        ],
+        "standard_deviation": 1.8881918473179178,
+        "variance": 3.565268452277851
+      },
+      "mass_uncertainty": {
+        "method": "Products of ratio +/- 2 recorded SE, clipped to (0,1); descriptive, not simultaneous confidence bounds",
+        "log_mass_lower": [
+          0.0,
+          -1.188814950449884,
+          -4.212218614540382,
+          -5.326239256687353,
+          -6.421031615591412,
+          -7.4525290523196634,
+          -8.587111427966986,
+          -9.616070053722243
+        ],
+        "log_mass_upper": [
+          0.0,
+          -0.9279353256687543,
+          -1.931954969898725,
+          -2.865394494736659,
+          -3.8158049195298194,
+          -4.710069776572736,
+          -5.700117788595624,
+          -6.5858879028754
+        ],
+        "nominal_stop_metric": {
+          "stop": true,
+          "level": 7,
+          "threshold": -0.5512234399883631,
+          "X_stop": 0.0004822163078971016,
+          "X_upper": 0.0004822163078971016,
+          "log_remaining_evidence": -7.891080002622192,
+          "remaining_evidence": 0.00037406536517627884,
+          "log_evidence_lower": -2.690108466061311,
+          "remaining_fraction": 0.005511207479389107,
+          "delta_logZ": 0.005496076343875807,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound",
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error"
+        },
+        "descriptive_envelope_stop_metric": {
+          "X_stop": 0.0004822163078971016,
+          "X_upper": 0.0013797017824009321,
+          "delta_logZ": 0.02582846989200815,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 7,
+          "log_evidence_lower": -3.196514252262991,
+          "log_remaining_evidence": -6.8398501324868235,
+          "remaining_evidence": 0.0010702637853929567,
+          "remaining_fraction": 0.026164915197649026,
+          "stop": true,
+          "threshold": -0.5512234399883631,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "actual_contour_mass": 0.00047940340291402483,
+        "envelope_encloses_actual_stop_mass": true,
+        "actual_cap_posterior_probability": 0.002360488487392229,
+        "terminal_bound_conservative": true,
+        "total_error_bound_conservative": false,
+        "simultaneous_confidence_guarantee": false
+      },
+      "remainder_comparison": {
+        "exact_terminal": 0.00027625530098043024,
+        "to_deeper": 1.3657793103277749e-06,
+        "to_truth": 0.004055884434416693
+      },
+      "restart": {
+        "boundary_no_new_level": true,
+        "decision": true,
+        "draw": true,
+        "event_id": true,
+        "log_masses": true,
+        "loglikelihood": true,
+        "logprior": true,
+        "metadata": true,
+        "origin_level": true,
+        "position": true,
+        "stop_level": true,
+        "summaries": true,
+        "thresholds": true,
+        "walker": true,
+        "weights": true,
+        "checkpoint_payload": true,
+        "checkpoint_hash": true,
+        "retained_banks": true,
+        "boundary_decision": true,
+        "boundary_summary": true
+      },
+      "stopped": {
+        "final_checkpoint": "/tmp/dns-stage8-validation/mixture/continuous/ladder/attempt_000006/checkpoint",
+        "log_masses": [
+          0.0,
+          -1.0498918813959193,
+          -2.622421698630901,
+          -3.642081116069991,
+          -4.662079000257955,
+          -5.622607894470223,
+          -6.68231408527654,
+          -7.637117773010768
+        ],
+        "metric": {
+          "X_stop": 0.0004822163078971016,
+          "X_upper": 0.0013797017824009321,
+          "delta_logZ": 0.02582846989200815,
+          "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+          "level": 7,
+          "log_evidence_lower": -3.196514252262991,
+          "log_remaining_evidence": -6.8398501324868235,
+          "remaining_evidence": 0.0010702637853929567,
+          "remaining_fraction": 0.026164915197649026,
+          "stop": true,
+          "threshold": -0.5512234399883631,
+          "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+        },
+        "stop_level": 7,
+        "summary": {
+          "cdf_discrepancy": 0.011692965418362067,
+          "component_probabilities": [
+            0.667913294233111,
+            0.3320867057669006
+          ],
+          "entropy": 10.150019008135741,
+          "errors": {
+            "Z_relative": 0.034655872591969394,
+            "component_probability_absolute": [
+              0.0036345475094380353,
+              0.0036345475094496926
+            ],
+            "logZ_absolute": 0.03527063249994056,
+            "mean_absolute": 0.004275345400790775,
+            "quantile_absolute": [
+              0.012996703512770935,
+              0.002520653116280247,
+              0.001523709326084699,
+              0.020521520393974146,
+              0.05260085448287022
+            ],
+            "region_probability_absolute": [
+              0.0036520837613788215,
+              0.0036520837613788215
+            ],
+            "standard_deviation_absolute": 0.0019854738664091265,
+            "variance_absolute": 0.007493969028758318
+          },
+          "logZ": -2.1805690535667743,
+          "mass_treatment": "recorded-calibration-plugin",
+          "maximum_weight": 0.00012559866591814505,
+          "mean": -0.6389161829929713,
+          "per_level_counts": [
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192,
+            8192
+          ],
+          "quantiles": [
+            -2.5503103468847965,
+            -2.2187019706554802,
+            -1.6165235902763542,
+            1.9607019525962188,
+            2.5857966837885242
+          ],
+          "raw_samples": 65536,
+          "region_probabilities": [
+            0.6683856944793614,
+            0.33161430552063864
+          ],
+          "standard_deviation": 1.8862063734515087,
+          "variance": 3.5577744832490925,
+          "weight_ess": 19025.573050625633,
+          "weight_sum": 0.9999999999999992,
+          "weights_finite": true,
+          "weights_nonnegative": true
+        },
+        "thresholds": [
+          "-inf",
+          -2.151669488653418,
+          -0.8018929445174949,
+          -0.5811231188756006,
+          -0.555091544549026,
+          -0.5517355915950845,
+          -0.5512787019476405,
+          -0.5512234399883631
+        ],
+        "trajectory": [
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.026197766601399056,
+                "X_upper": 0.05696065602017225,
+                "delta_logZ": 0.7327895713248155,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 3,
+                "log_evidence_lower": -3.197129726849335,
+                "log_remaining_evidence": -3.1193567243480826,
+                "remaining_evidence": 0.04418558278915106,
+                "remaining_fraction": 1.080877274382589,
+                "stop": false,
+                "threshold": -0.5811231188756006,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.026197766601399056,
+                "X_upper": 0.05696065602017225,
+                "delta_logZ": 0.7327895713248155,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 3,
+                "log_evidence_lower": -3.197129726849335,
+                "log_remaining_evidence": -3.1193567243480826,
+                "remaining_evidence": 0.04418558278915106,
+                "remaining_fraction": 1.080877274382589,
+                "stop": false,
+                "threshold": -0.5811231188756006,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 3,
+            "metric": {
+              "X_stop": 0.026197766601399056,
+              "X_upper": 0.05696065602017225,
+              "delta_logZ": 0.7327895713248155,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 3,
+              "log_evidence_lower": -3.197129726849335,
+              "log_remaining_evidence": -3.1193567243480826,
+              "remaining_evidence": 0.04418558278915106,
+              "remaining_fraction": 1.080877274382589,
+              "stop": false,
+              "threshold": -0.5811231188756006,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.010481342553336437,
+              "component_probabilities": [
+                0.6668833534282026,
+                0.3331166465717971
+              ],
+              "entropy": 10.06395546394938,
+              "errors": {
+                "Z_relative": 0.03764055478513664,
+                "component_probability_absolute": [
+                  0.004664488314346404,
+                  0.004664488314346238
+                ],
+                "logZ_absolute": 0.03836725442935096,
+                "mean_absolute": 5.2581173719423724e-05,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.0037894913107234807,
+                  0.00106230829030185,
+                  0.014873546825211026,
+                  0.04909522559784163
+                ],
+                "region_probability_absolute": [
+                  0.004680559470333412,
+                  0.004680559470333412
+                ],
+                "standard_deviation_absolute": 0.0005898451815007366,
+                "variance_absolute": 0.002227133808440307
+              },
+              "logZ": -2.1836656754961847,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012598820031043,
+              "mean": -0.6346934187658999,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2199708088499235,
+                -1.6160621892405713,
+                1.966349926164982,
+                2.589302312673553
+              ],
+              "raw_samples": 32768,
+              "region_probabilities": [
+                0.6673572187704068,
+                0.33264278122959323
+              ],
+              "standard_deviation": 1.887602002136417,
+              "variance": 3.5630413184694105,
+              "weight_ess": 18775.109561377674,
+              "weight_sum": 0.9999999999999999,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.009446802067936135,
+                "X_upper": 0.02201998300404096,
+                "delta_logZ": 0.3489673503808947,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 4,
+                "log_evidence_lower": -3.196542864058442,
+                "log_remaining_evidence": -4.069767149141243,
+                "remaining_evidence": 0.017081365455063953,
+                "remaining_fraction": 0.4176029053914937,
+                "stop": false,
+                "threshold": -0.555091544549026,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.009446802067936135,
+                "X_upper": 0.02201998300404096,
+                "delta_logZ": 0.3489673503808947,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 4,
+                "log_evidence_lower": -3.196542864058442,
+                "log_remaining_evidence": -4.069767149141243,
+                "remaining_evidence": 0.017081365455063953,
+                "remaining_fraction": 0.4176029053914937,
+                "stop": false,
+                "threshold": -0.555091544549026,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 4,
+            "metric": {
+              "X_stop": 0.009446802067936135,
+              "X_upper": 0.02201998300404096,
+              "delta_logZ": 0.3489673503808947,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 4,
+              "log_evidence_lower": -3.196542864058442,
+              "log_remaining_evidence": -4.069767149141243,
+              "remaining_evidence": 0.017081365455063953,
+              "remaining_fraction": 0.4176029053914937,
+              "stop": false,
+              "threshold": -0.555091544549026,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011089667546673843,
+              "component_probabilities": [
+                0.6674004604845922,
+                0.3325995395154053
+              ],
+              "entropy": 10.117980204881972,
+              "errors": {
+                "Z_relative": 0.03614433242548061,
+                "component_probability_absolute": [
+                  0.004147381257956773,
+                  0.004147381257954386
+                ],
+                "logZ_absolute": 0.03681371801418498,
+                "mean_absolute": 0.002170675596787186,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.0030766027713520216,
+                  0.001337756815800839,
+                  0.017338825872412755,
+                  0.04909522559784163
+                ],
+                "region_probability_absolute": [
+                  0.004164188001246405,
+                  0.004164188001246405
+                ],
+                "standard_deviation_absolute": 0.001290749820028081,
+                "variance_absolute": 0.004872700539110042
+              },
+              "logZ": -2.1821121390810188,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012579262500937702,
+              "mean": -0.6368115131889677,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.219257920310552,
+                -1.6163376377660703,
+                1.9638846471177802,
+                2.589302312673553
+              ],
+              "raw_samples": 40960,
+              "region_probabilities": [
+                0.6678735902394938,
+                0.3321264097605062
+              ],
+              "standard_deviation": 1.8869010974978897,
+              "variance": 3.560395751738741,
+              "weight_ess": 18950.93264077818,
+              "weight_sum": 0.9999999999999992,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.003615200742551244,
+                "X_upper": 0.009004149281839196,
+                "delta_logZ": 0.15765015196712703,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 5,
+                "log_evidence_lower": -3.196515504168177,
+                "log_remaining_evidence": -4.964032006184159,
+                "remaining_evidence": 0.006984708592500821,
+                "remaining_fraction": 0.1707565361815767,
+                "stop": true,
+                "threshold": -0.5517355915950845,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.003615200742551244,
+                "X_upper": 0.009004149281839196,
+                "delta_logZ": 0.15765015196712703,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 5,
+                "log_evidence_lower": -3.196515504168177,
+                "log_remaining_evidence": -4.964032006184159,
+                "remaining_evidence": 0.006984708592500821,
+                "remaining_fraction": 0.1707565361815767,
+                "stop": false,
+                "threshold": -0.5517355915950845,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 5,
+            "metric": {
+              "X_stop": 0.003615200742551244,
+              "X_upper": 0.009004149281839196,
+              "delta_logZ": 0.15765015196712703,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 5,
+              "log_evidence_lower": -3.196515504168177,
+              "log_remaining_evidence": -4.964032006184159,
+              "remaining_evidence": 0.006984708592500821,
+              "remaining_fraction": 0.1707565361815767,
+              "stop": false,
+              "threshold": -0.5517355915950845,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011565796419474306,
+              "component_probabilities": [
+                0.6678051941428798,
+                0.33219480585711914
+              ],
+              "entropy": 10.139739083746178,
+              "errors": {
+                "Z_relative": 0.03497000691049686,
+                "component_probability_absolute": [
+                  0.0037426475996692465,
+                  0.0037426475996682473
+                ],
+                "logZ_absolute": 0.035596097204388055,
+                "mean_absolute": 0.0038326809002614537,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002808957937465717,
+                  0.001523709326084699,
+                  0.02018936408308214,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.0037600300787196117,
+                  0.0037600300787196117
+                ],
+                "standard_deviation_absolute": 0.0018381072452997582,
+                "variance_absolute": 0.006938019591896438
+              },
+              "logZ": -2.180894518271222,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012563955050371074,
+              "mean": -0.6384735184924419,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2189902754766657,
+                -1.6165235902763542,
+                1.9610341089071108,
+                2.5857966837885242
+              ],
+              "raw_samples": 49152,
+              "region_probabilities": [
+                0.6682777481620206,
+                0.33172225183797943
+              ],
+              "standard_deviation": 1.886353740072618,
+              "variance": 3.5583304326859544,
+              "weight_ess": 19011.015362415896,
+              "weight_sum": 0.9999999999999999,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0012528753549930398,
+                "X_upper": 0.003345571364109338,
+                "delta_logZ": 0.06151460335884469,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -3.1965143041481716,
+                "log_remaining_evidence": -5.954080018207048,
+                "remaining_evidence": 0.0025952303013068276,
+                "remaining_fraction": 0.06344602629933996,
+                "stop": true,
+                "threshold": -0.5512787019476405,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0012528753549930398,
+                "X_upper": 0.003345571364109338,
+                "delta_logZ": 0.06151460335884469,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 6,
+                "log_evidence_lower": -3.1965143041481716,
+                "log_remaining_evidence": -5.954080018207048,
+                "remaining_evidence": 0.0025952303013068276,
+                "remaining_fraction": 0.06344602629933996,
+                "stop": false,
+                "threshold": -0.5512787019476405,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 6,
+            "metric": {
+              "X_stop": 0.0012528753549930398,
+              "X_upper": 0.003345571364109338,
+              "delta_logZ": 0.06151460335884469,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 6,
+              "log_evidence_lower": -3.1965143041481716,
+              "log_remaining_evidence": -5.954080018207048,
+              "remaining_evidence": 0.0025952303013068276,
+              "remaining_fraction": 0.06344602629933996,
+              "stop": false,
+              "threshold": -0.5512787019476405,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011689849936604157,
+              "component_probabilities": [
+                0.6679106459158356,
+                0.33208935408416823
+              ],
+              "entropy": 10.147558855629692,
+              "errors": {
+                "Z_relative": 0.03466357093447286,
+                "component_probability_absolute": [
+                  0.003637195826713402,
+                  0.003637195826717343
+                ],
+                "logZ_absolute": 0.03527860724488496,
+                "mean_absolute": 0.004264567331082714,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002520653116280247,
+                  0.001523709326084699,
+                  0.020521520393974146,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.003654728311429878,
+                  0.003654728311429878
+                ],
+                "standard_deviation_absolute": 0.0019818140732608125,
+                "variance_absolute": 0.007480162765041154
+              },
+              "logZ": -2.1805770283117187,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012559966753946492,
+              "mean": -0.6389054049232632,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2187019706554802,
+                -1.6165235902763542,
+                1.9607019525962188,
+                2.5857966837885242
+              ],
+              "raw_samples": 57344,
+              "region_probabilities": [
+                0.6683830499293103,
+                0.3316169500706897
+              ],
+              "standard_deviation": 1.886210033244657,
+              "variance": 3.5577882895128097,
+              "weight_ess": 19024.99074220273,
+              "weight_sum": 0.9999999999999999,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          },
+          {
+            "diagnostic_metrics": [
+              {
+                "X_stop": 0.0004822163078971016,
+                "X_upper": 0.0013797017824009321,
+                "delta_logZ": 0.02582846989200815,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -3.196514252262991,
+                "log_remaining_evidence": -6.8398501324868235,
+                "remaining_evidence": 0.0010702637853929567,
+                "remaining_fraction": 0.026164915197649026,
+                "stop": true,
+                "threshold": -0.5512234399883631,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              },
+              {
+                "X_stop": 0.0004822163078971016,
+                "X_upper": 0.0013797017824009321,
+                "delta_logZ": 0.02582846989200815,
+                "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+                "level": 7,
+                "log_evidence_lower": -3.196514252262991,
+                "log_remaining_evidence": -6.8398501324868235,
+                "remaining_evidence": 0.0010702637853929567,
+                "remaining_fraction": 0.026164915197649026,
+                "stop": false,
+                "threshold": -0.5512234399883631,
+                "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+              }
+            ],
+            "level": 7,
+            "metric": {
+              "X_stop": 0.0004822163078971016,
+              "X_upper": 0.0013797017824009321,
+              "delta_logZ": 0.02582846989200815,
+              "interpretation": "Terminal-cap bound; excludes Monte Carlo and mass estimation error",
+              "level": 7,
+              "log_evidence_lower": -3.196514252262991,
+              "log_remaining_evidence": -6.8398501324868235,
+              "remaining_evidence": 0.0010702637853929567,
+              "remaining_fraction": 0.026164915197649026,
+              "stop": true,
+              "threshold": -0.5512234399883631,
+              "upper_bound_justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound"
+            },
+            "summary": {
+              "cdf_discrepancy": 0.011692965418362067,
+              "component_probabilities": [
+                0.667913294233111,
+                0.3320867057669006
+              ],
+              "entropy": 10.150019008135741,
+              "errors": {
+                "Z_relative": 0.034655872591969394,
+                "component_probability_absolute": [
+                  0.0036345475094380353,
+                  0.0036345475094496926
+                ],
+                "logZ_absolute": 0.03527063249994056,
+                "mean_absolute": 0.004275345400790775,
+                "quantile_absolute": [
+                  0.012996703512770935,
+                  0.002520653116280247,
+                  0.001523709326084699,
+                  0.020521520393974146,
+                  0.05260085448287022
+                ],
+                "region_probability_absolute": [
+                  0.0036520837613788215,
+                  0.0036520837613788215
+                ],
+                "standard_deviation_absolute": 0.0019854738664091265,
+                "variance_absolute": 0.007493969028758318
+              },
+              "logZ": -2.1805690535667743,
+              "mass_treatment": "recorded-calibration-plugin",
+              "maximum_weight": 0.00012559866591814505,
+              "mean": -0.6389161829929713,
+              "per_level_counts": [
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192,
+                8192
+              ],
+              "quantiles": [
+                -2.5503103468847965,
+                -2.2187019706554802,
+                -1.6165235902763542,
+                1.9607019525962188,
+                2.5857966837885242
+              ],
+              "raw_samples": 65536,
+              "region_probabilities": [
+                0.6683856944793614,
+                0.33161430552063864
+              ],
+              "standard_deviation": 1.8862063734515087,
+              "variance": 3.5577744832490925,
+              "weight_ess": 19025.573050625633,
+              "weight_sum": 0.9999999999999992,
+              "weights_finite": true,
+              "weights_nonnegative": true
+            }
+          }
+        ]
+      },
+      "restart_execution": {
+        "fresh_process": true,
+        "start_checkpoint": "/tmp/dns-stage7b-validation/mixture/continuous/attempt_000002/checkpoint",
+        "start_records": "/tmp/dns-stage7b-validation/mixture/inference/records",
+        "configuration_sha256": "70a7f1acf763e76b6311e7683aaf3270e975f773c48928f52b2d3c777da4b898",
+        "boundary_added_levels": 0,
+        "command": [
+          "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+          "-m",
+          "examples.dns_automatic_termination",
+          "--worker",
+          "mixture",
+          "--output",
+          "/tmp/dns-stage8-validation/mixture/restarted",
+          "--design",
+          "/tmp/dns-stage8-validation/design.json"
+        ]
+      },
+      "likelihood_upper": {
+        "log_value": -0.25396222961142373,
+        "value": 0.7757211007805636,
+        "justification": "Sum of component weights / (sqrt(2*pi)*component widths), a global Gaussian-density bound",
+        "observed_maximum_is_not_a_certificate": true
+      },
+      "mode_representation": {
+        "retained_negative": 57645,
+        "retained_nonnegative": 7891,
+        "per_origin_level": [
+          {
+            "level": 0,
+            "negative": 4397,
+            "nonnegative": 3795
+          },
+          {
+            "level": 1,
+            "negative": 4096,
+            "nonnegative": 4096
+          },
+          {
+            "level": 2,
+            "negative": 8192,
+            "nonnegative": 0
+          },
+          {
+            "level": 3,
+            "negative": 8192,
+            "nonnegative": 0
+          },
+          {
+            "level": 4,
+            "negative": 8192,
+            "nonnegative": 0
+          },
+          {
+            "level": 5,
+            "negative": 8192,
+            "nonnegative": 0
+          },
+          {
+            "level": 6,
+            "negative": 8192,
+            "nonnegative": 0
+          },
+          {
+            "level": 7,
+            "negative": 8192,
+            "nonnegative": 0
+          }
+        ],
+        "component_probabilities": [
+          0.667913294233111,
+          0.3320867057669006
+        ],
+        "region_probabilities": [
+          0.6683856944793614,
+          0.33161430552063864
+        ],
+        "explanation": "Lower fixed-contour strata retain secondary-mode support even when the deepest contour excludes it."
+      },
+      "diagnostic_first_trigger": {
+        "0.2": 5,
+        "0.005": 9
+      }
+    }
+  },
+  "stage": "8",
+  "predeclared_design_unchanged": true,
+  "second_posterior_criterion_introduced": false,
+  "interpretation": "A terminal-contour integral bound is not a bound on calibration or finite-sample deterministic-mixture reconstruction error. Do not promote the candidate to production if any required check fails.",
+  "tests": {
+    "status": "PASS",
+    "count": 53,
+    "command": "python -m pytest tests/ns/test_dns_reconstruction.py tests/ns/test_dns_termination.py -q",
+    "full_suite_rerun": false
+  },
+  "scope": {
+    "analytic_toys_only": true,
+    "production_run": false,
+    "LISA_level_13_constructed": false,
+    "frozen_ladder_modified": false,
+    "promotion_modified": false,
+    "population_kernel_modified": false,
+    "numerical_contract_modified": false,
+    "reconstruction_estimator_modified": false,
+    "record_format_modified": false,
+    "ESS_gate_tuned": false,
+    "tolerances_tuned": false
+  }
+}
