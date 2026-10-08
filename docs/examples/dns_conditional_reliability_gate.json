@@ -1,0 +1,3364 @@
+{
+  "stage": "9F DEVELOPMENT ONLY",
+  "phase": "thresholds frozen before classification",
+  "rule": {
+    "compression_ess_min": 20,
+    "quota_per_walker": 2048,
+    "burn_in_unchanged": 1024,
+    "rank_rhat_max_exclusive": 1.01,
+    "bulk_and_tail_ess_per_walker_min": 100,
+    "gate_rhat_ess_observables": "log likelihood, nonconstant log prior, at most two fixed projections: sum(theta)/sqrt(d), alternating-sign sum(theta)/sqrt(d); duplicate projections removed",
+    "coordinate_multiplicity": "Holm familywise alpha=0.05 across all coordinates, log likelihood, nonconstant log prior and fixed projections, for paired walker mean differences between physical halves",
+    "physical_time": "split [1024, collector completion) into equal deterministic windows; condition on assigned j=J, include every occupation event; paired t test of walker window means",
+    "composite": "compression ESS>=20 AND all eight first-K quotas AND all fixed-budget observable Rhat/ESS checks pass AND no Holm physical-window rejection",
+    "constant_assigned_top_index": "report constant; evaluate assigned-level Rhat/ESS on uncensored physical trace, descriptive only",
+    "additional_observables": "optional predeclared scalar callbacks, Holm family extended before evaluation; supplement generic gate",
+    "threshold_rationale": "Stan Rhat<1.01 and approximately 100 bulk/tail effective samples per chain; conventional familywise alpha .05, Holm correction. Projection budget fixed independently of dimension. Paired-t calibration is approximate and requires regular independent walker-level differences.",
+    "two_sample_distances": "KS and Euclidean energy distance descriptive only: no IID p-values for correlated draws",
+    "decision_priority": "B if at least half of stationary controls rejected; otherwise C if historical failure passes; otherwise D if dimension interpretation cannot be defended; otherwise E unless A requirements are established",
+    "no_threshold_retuning": true
+  },
+  "sources": [
+    "https://mc-stan.org/learn-stan/diagnostics-warnings.html",
+    "https://arxiv.org/abs/1903.08008"
+  ],
+  "results": {
+    "stage9d_failed_calibration": {
+      "path": "/tmp/dns-stage9d-heldout/original/attempt_000004/calibration_trace.npz",
+      "sha256": "6411b2e74a0a9f80f6e28ffaf2955e4b411456e2f94b6635f71a18aa439f1e3e",
+      "quota": true,
+      "horizon": 11750,
+      "physical_split": 6387,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0130470029964929,
+            "bulk_ess": 381.86313772882477,
+            "tail_ess": 1459.297205173533,
+            "between_within_ratio": 35.28321744212749
+          },
+          "physical_balanced": {
+            "rhat": 1.0297356806343916,
+            "bulk_ess": 344.3678085717108,
+            "tail_ess": 1374.2583062842837,
+            "between_within_ratio": 37.943927196263026
+          },
+          "physical_counts": [
+            [
+              1069,
+              1035,
+              945,
+              1022,
+              942,
+              1219,
+              1015,
+              1228
+            ],
+            [
+              1149,
+              1070,
+              1103,
+              1119,
+              1172,
+              1285,
+              1097,
+              1168
+            ]
+          ],
+          "physical_paired_t_p": 0.7906175039716653,
+          "physical_mean_differences": [
+            0.7654694386965112,
+            0.8632518095303768,
+            -0.7699996405041505,
+            -0.6109201410216325,
+            1.0295506746132412,
+            -0.5470036712861557,
+            0.5595535469887691,
+            -0.6730477825246416
+          ],
+          "retained_half_ks": 0.0595703125,
+          "physical_half_ks": 0.033034175858597664,
+          "walker_pair_ks_max": 0.19482421875,
+          "first_second_K_ks": 0.1107177734375
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 0.9999723844618532,
+            "bulk_ess": 15892.646593613903,
+            "tail_ess": 16156.368734050975,
+            "between_within_ratio": 0.9677276997237714
+          },
+          "physical_balanced": {
+            "rhat": 1.000015875524145,
+            "bulk_ess": 14679.33787864169,
+            "tail_ess": 14830.931836059155,
+            "between_within_ratio": 1.0334782176231863
+          },
+          "physical_counts": [
+            [
+              1069,
+              1035,
+              945,
+              1022,
+              942,
+              1219,
+              1015,
+              1228
+            ],
+            [
+              1149,
+              1070,
+              1103,
+              1119,
+              1172,
+              1285,
+              1097,
+              1168
+            ]
+          ],
+          "physical_paired_t_p": 0.3408645882349434,
+          "physical_mean_differences": [
+            -1.0091977728388102e-05,
+            0.00017630298288939805,
+            -0.00010861048606058965,
+            3.620717492613945e-05,
+            9.192858199036369e-05,
+            0.0001051545640530227,
+            -5.658536870112307e-05,
+            3.140345561225555e-05
+          ],
+          "retained_half_ks": 0.0184326171875,
+          "physical_half_ks": 0.015411242534020849,
+          "walker_pair_ks_max": 0.0517578125,
+          "first_second_K_ks": 0.00701904296875
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0130470029964929,
+            "bulk_ess": 381.86313772882477,
+            "tail_ess": 1459.297205173533,
+            "between_within_ratio": 35.28321744212749
+          },
+          "physical_balanced": {
+            "rhat": 1.0297356806343916,
+            "bulk_ess": 344.3678085717108,
+            "tail_ess": 1374.2583062842837,
+            "between_within_ratio": 37.943927196263026
+          },
+          "physical_counts": [
+            [
+              1069,
+              1035,
+              945,
+              1022,
+              942,
+              1219,
+              1015,
+              1228
+            ],
+            [
+              1149,
+              1070,
+              1103,
+              1119,
+              1172,
+              1285,
+              1097,
+              1168
+            ]
+          ],
+          "physical_paired_t_p": 0.7906175039716653,
+          "physical_mean_differences": [
+            0.7654694386965112,
+            0.8632518095303768,
+            -0.7699996405041505,
+            -0.6109201410216325,
+            1.0295506746132412,
+            -0.5470036712861557,
+            0.5595535469887691,
+            -0.6730477825246416
+          ],
+          "retained_half_ks": 0.0595703125,
+          "physical_half_ks": 0.033034175858597664,
+          "walker_pair_ks_max": 0.19482421875,
+          "first_second_K_ks": 0.1107177734375
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0017845445382298,
+          "bulk_ess": 2627.098172238936,
+          "tail_ess": 4065.1436687376295,
+          "between_within_ratio": 20.22941013736396
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.010091653412451773,
+      "visit_energy_distance": 0.012306186044824585,
+      "compression_ess": 13329.007831709318,
+      "pass": false
+    },
+    "stage9d_selection": {
+      "path": "/tmp/dns-stage9d-heldout/original/attempt_000004/selection_trace.npz",
+      "sha256": "5cac0afbd1995aa6c72bdc2af82e77dc4f83213eb067f6117cfac7850716cab0",
+      "quota": true,
+      "horizon": 12192,
+      "physical_split": 6608,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.025965219983597,
+            "bulk_ess": 276.0236928945016,
+            "tail_ess": 1685.305759152684,
+            "between_within_ratio": 65.0560908198635
+          },
+          "physical_balanced": {
+            "rhat": 1.0577626707971528,
+            "bulk_ess": 211.30734862382147,
+            "tail_ess": 1753.430673657578,
+            "between_within_ratio": 69.80898064745541
+          },
+          "physical_counts": [
+            [
+              1298,
+              1009,
+              1101,
+              1287,
+              1086,
+              1046,
+              1141,
+              1263
+            ],
+            [
+              1124,
+              1363,
+              947,
+              1135,
+              1100,
+              1223,
+              1141,
+              1235
+            ]
+          ],
+          "physical_paired_t_p": 0.5982187509629318,
+          "physical_mean_differences": [
+            -0.42977841459962285,
+            -0.6680520762444448,
+            -0.5256088100226703,
+            -0.911995188689169,
+            0.16750902493823394,
+            0.6868856750477784,
+            -0.5133427418359522,
+            1.086173441179534
+          ],
+          "retained_half_ks": 0.076416015625,
+          "physical_half_ks": 0.05977076781539676,
+          "walker_pair_ks_max": 0.181640625,
+          "first_second_K_ks": 0.03497314453125
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0000884225669633,
+            "bulk_ess": 15487.605931082917,
+            "tail_ess": 15939.644044866087,
+            "between_within_ratio": 0.9442663521492751
+          },
+          "physical_balanced": {
+            "rhat": 1.000089415726302,
+            "bulk_ess": 14953.410557082807,
+            "tail_ess": 14980.42857214064,
+            "between_within_ratio": 0.8272677568955558
+          },
+          "physical_counts": [
+            [
+              1298,
+              1009,
+              1101,
+              1287,
+              1086,
+              1046,
+              1141,
+              1263
+            ],
+            [
+              1124,
+              1363,
+              947,
+              1135,
+              1100,
+              1223,
+              1141,
+              1235
+            ]
+          ],
+          "physical_paired_t_p": 0.614763639468544,
+          "physical_mean_differences": [
+            0.00011412429332557927,
+            4.6003246320536206e-05,
+            -5.6165652904893726e-05,
+            4.21858384365148e-05,
+            0.00010831184491955081,
+            5.18358451484513e-06,
+            -5.428792171813246e-05,
+            -9.083024930434114e-05
+          ],
+          "retained_half_ks": 0.013427734375,
+          "physical_half_ks": 0.012551507892636449,
+          "walker_pair_ks_max": 0.044921875,
+          "first_second_K_ks": 0.01080322265625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.025965219983597,
+            "bulk_ess": 276.0236928945016,
+            "tail_ess": 1685.305759152684,
+            "between_within_ratio": 65.0560908198635
+          },
+          "physical_balanced": {
+            "rhat": 1.0577626707971528,
+            "bulk_ess": 211.30734862382147,
+            "tail_ess": 1753.430673657578,
+            "between_within_ratio": 69.80898064745541
+          },
+          "physical_counts": [
+            [
+              1298,
+              1009,
+              1101,
+              1287,
+              1086,
+              1046,
+              1141,
+              1263
+            ],
+            [
+              1124,
+              1363,
+              947,
+              1135,
+              1100,
+              1223,
+              1141,
+              1235
+            ]
+          ],
+          "physical_paired_t_p": 0.5982187509629318,
+          "physical_mean_differences": [
+            -0.42977841459962285,
+            -0.6680520762444448,
+            -0.5256088100226703,
+            -0.911995188689169,
+            0.16750902493823394,
+            0.6868856750477784,
+            -0.5133427418359522,
+            1.086173441179534
+          ],
+          "retained_half_ks": 0.076416015625,
+          "physical_half_ks": 0.05977076781539676,
+          "walker_pair_ks_max": 0.181640625,
+          "first_second_K_ks": 0.03497314453125
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0024381339032016,
+          "bulk_ess": 3029.5823368311612,
+          "tail_ess": 4504.402401695804,
+          "between_within_ratio": 28.439276566129436
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.041630538430320385,
+      "visit_energy_distance": 0.05431266004612745,
+      "compression_ess": 14763.718574670895,
+      "pass": false
+    },
+    "910701_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910701_exact_joint_stationary.npz",
+      "sha256": "6bac76d7f30e21f5049b8be0d59ae13fc86677caf3c478d57add4e420bea58dc",
+      "quota": true,
+      "horizon": 11780,
+      "physical_split": 6402,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.028899849234465,
+            "bulk_ess": 299.8611677695242,
+            "tail_ess": 2181.7363085022994,
+            "between_within_ratio": 74.78989414640698
+          },
+          "physical_balanced": {
+            "rhat": 1.046685814054965,
+            "bulk_ess": 275.6319721547323,
+            "tail_ess": 2039.7474327675345,
+            "between_within_ratio": 55.321115864451905
+          },
+          "physical_counts": [
+            [
+              1031,
+              1034,
+              1272,
+              960,
+              1010,
+              1069,
+              1274,
+              1273
+            ],
+            [
+              1093,
+              1062,
+              938,
+              1115,
+              1038,
+              1038,
+              942,
+              1102
+            ]
+          ],
+          "physical_paired_t_p": 0.987815541978691,
+          "physical_mean_differences": [
+            -1.0040464716649677,
+            -1.0929247063899763,
+            -0.00060765668658469,
+            1.1655631755141702,
+            -1.2436792793154132,
+            -0.11558569660175089,
+            1.1059965235658549,
+            1.2327255394240118
+          ],
+          "retained_half_ks": 0.0855712890625,
+          "physical_half_ks": 0.0628511537981641,
+          "walker_pair_ks_max": 0.29833984375,
+          "first_second_K_ks": 0.0244140625
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0000886494600918,
+            "bulk_ess": 16021.862666905492,
+            "tail_ess": 16414.373752705673,
+            "between_within_ratio": 0.829185052348465
+          },
+          "physical_balanced": {
+            "rhat": 1.0002160499143082,
+            "bulk_ess": 14598.05555885912,
+            "tail_ess": 14965.121626636967,
+            "between_within_ratio": 1.0542303126447112
+          },
+          "physical_counts": [
+            [
+              1031,
+              1034,
+              1272,
+              960,
+              1010,
+              1069,
+              1274,
+              1273
+            ],
+            [
+              1093,
+              1062,
+              938,
+              1115,
+              1038,
+              1038,
+              942,
+              1102
+            ]
+          ],
+          "physical_paired_t_p": 0.9923477384424794,
+          "physical_mean_differences": [
+            -0.00015715659361148493,
+            -0.00011004390804303377,
+            8.413072475610406e-05,
+            -0.00010319610030196102,
+            -4.571654136531489e-05,
+            0.00010937892125417736,
+            0.00032888334349701065,
+            -0.00011089940380448748
+          ],
+          "retained_half_ks": 0.0123291015625,
+          "physical_half_ks": 0.012531229669830786,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00830078125
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.028899849234465,
+            "bulk_ess": 299.8611677695242,
+            "tail_ess": 2181.7363085022994,
+            "between_within_ratio": 74.78989414640698
+          },
+          "physical_balanced": {
+            "rhat": 1.046685814054965,
+            "bulk_ess": 275.6319721547323,
+            "tail_ess": 2039.7474327675345,
+            "between_within_ratio": 55.321115864451905
+          },
+          "physical_counts": [
+            [
+              1031,
+              1034,
+              1272,
+              960,
+              1010,
+              1069,
+              1274,
+              1273
+            ],
+            [
+              1093,
+              1062,
+              938,
+              1115,
+              1038,
+              1038,
+              942,
+              1102
+            ]
+          ],
+          "physical_paired_t_p": 0.987815541978691,
+          "physical_mean_differences": [
+            -1.0040464716649677,
+            -1.0929247063899763,
+            -0.00060765668658469,
+            1.1655631755141702,
+            -1.2436792793154132,
+            -0.11558569660175089,
+            1.1059965235658549,
+            1.2327255394240118
+          ],
+          "retained_half_ks": 0.0855712890625,
+          "physical_half_ks": 0.0628511537981641,
+          "walker_pair_ks_max": 0.29833984375,
+          "first_second_K_ks": 0.0244140625
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0032770575875556,
+          "bulk_ess": 2959.511654590364,
+          "tail_ess": 4347.156033532047,
+          "between_within_ratio": 37.23892191628939
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.02222972726186523,
+      "visit_energy_distance": 0.047708033201261824,
+      "compression_ess": 14024.456795636504,
+      "pass": false
+    },
+    "910701_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910701_saved_promoted_start.npz",
+      "sha256": "26bb0a39719ee5ee068e4361e8b697aa29cf96e4b01d3680c8b12143207216a2",
+      "quota": true,
+      "horizon": 12899,
+      "physical_split": 6961,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.030264166107068,
+            "bulk_ess": 280.68922057991483,
+            "tail_ess": 1813.7192718195495,
+            "between_within_ratio": 82.50385664396813
+          },
+          "physical_balanced": {
+            "rhat": 1.055236587014168,
+            "bulk_ess": 219.9873436722026,
+            "tail_ess": 1709.242452036889,
+            "between_within_ratio": 69.20597778199539
+          },
+          "physical_counts": [
+            [
+              1045,
+              1163,
+              1370,
+              1051,
+              1091,
+              1300,
+              1258,
+              1413
+            ],
+            [
+              1200,
+              1207,
+              1114,
+              1220,
+              957,
+              1302,
+              1205,
+              1206
+            ]
+          ],
+          "physical_paired_t_p": 0.20312815457401753,
+          "physical_mean_differences": [
+            -0.9929595512621394,
+            -1.2619740632090473,
+            -0.8978531347066154,
+            0.26844091347358406,
+            -0.4524367186619113,
+            -0.9873674340424132,
+            0.4467833820138182,
+            0.782762411483932
+          ],
+          "retained_half_ks": 0.1474609375,
+          "physical_half_ks": 0.09848268570335425,
+          "walker_pair_ks_max": 0.25830078125,
+          "first_second_K_ks": 0.050537109375
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 0.9999704607246328,
+            "bulk_ess": 16085.775202362529,
+            "tail_ess": 16290.088033518012,
+            "between_within_ratio": 0.3565204431483928
+          },
+          "physical_balanced": {
+            "rhat": 1.0003718916210735,
+            "bulk_ess": 15008.67393076781,
+            "tail_ess": 15238.713388481357,
+            "between_within_ratio": 0.6370803850826111
+          },
+          "physical_counts": [
+            [
+              1045,
+              1163,
+              1370,
+              1051,
+              1091,
+              1300,
+              1258,
+              1413
+            ],
+            [
+              1200,
+              1207,
+              1114,
+              1220,
+              957,
+              1302,
+              1205,
+              1206
+            ]
+          ],
+          "physical_paired_t_p": 0.6476741328967996,
+          "physical_mean_differences": [
+            2.505927799967278e-05,
+            3.179468420411169e-05,
+            0.00013272800039720867,
+            -0.00014019775823592706,
+            -3.563678279761007e-05,
+            4.710731002399715e-05,
+            -2.9423862535016276e-05,
+            8.058955390677358e-05
+          ],
+          "retained_half_ks": 0.0111083984375,
+          "physical_half_ks": 0.013023497148927686,
+          "walker_pair_ks_max": 0.03369140625,
+          "first_second_K_ks": 0.0079345703125
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.030264166107068,
+            "bulk_ess": 280.68922057991483,
+            "tail_ess": 1813.7192718195495,
+            "between_within_ratio": 82.50385664396813
+          },
+          "physical_balanced": {
+            "rhat": 1.055236587014168,
+            "bulk_ess": 219.9873436722026,
+            "tail_ess": 1709.242452036889,
+            "between_within_ratio": 69.20597778199539
+          },
+          "physical_counts": [
+            [
+              1045,
+              1163,
+              1370,
+              1051,
+              1091,
+              1300,
+              1258,
+              1413
+            ],
+            [
+              1200,
+              1207,
+              1114,
+              1220,
+              957,
+              1302,
+              1205,
+              1206
+            ]
+          ],
+          "physical_paired_t_p": 0.20312815457401753,
+          "physical_mean_differences": [
+            -0.9929595512621394,
+            -1.2619740632090473,
+            -0.8978531347066154,
+            0.26844091347358406,
+            -0.4524367186619113,
+            -0.9873674340424132,
+            0.4467833820138182,
+            0.782762411483932
+          ],
+          "retained_half_ks": 0.1474609375,
+          "physical_half_ks": 0.09848268570335425,
+          "walker_pair_ks_max": 0.25830078125,
+          "first_second_K_ks": 0.050537109375
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0028606624203233,
+          "bulk_ess": 3234.0223421877354,
+          "tail_ess": 4764.427454831231,
+          "between_within_ratio": 34.89180210163951
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.058985560506155554,
+      "visit_energy_distance": 0.19590317618627262,
+      "compression_ess": 15835.975839598403,
+      "pass": false
+    },
+    "910702_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910702_exact_joint_stationary.npz",
+      "sha256": "082341a5275f45214faa72b26322bfc0f8fb0ee3acb7ec06ef8ef820609e72c7",
+      "quota": true,
+      "horizon": 12259,
+      "physical_split": 6641,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0203245616477696,
+            "bulk_ess": 301.37111641256513,
+            "tail_ess": 1815.614096888671,
+            "between_within_ratio": 51.18146343132524
+          },
+          "physical_balanced": {
+            "rhat": 1.04842377036894,
+            "bulk_ess": 299.68873565043833,
+            "tail_ess": 1823.0964526655746,
+            "between_within_ratio": 38.62047195640325
+          },
+          "physical_counts": [
+            [
+              1050,
+              1252,
+              1286,
+              943,
+              1136,
+              1114,
+              1020,
+              1161
+            ],
+            [
+              1062,
+              1162,
+              1265,
+              1105,
+              1160,
+              1114,
+              1040,
+              1159
+            ]
+          ],
+          "physical_paired_t_p": 0.4908645174425073,
+          "physical_mean_differences": [
+            -0.6154496026908243,
+            0.6927892810229028,
+            -0.6658532242068625,
+            -0.41850795769192606,
+            0.5760599803561127,
+            0.3106813036153114,
+            -0.9963968210623102,
+            -0.1650371283144345
+          ],
+          "retained_half_ks": 0.07373046875,
+          "physical_half_ks": 0.03552189166680429,
+          "walker_pair_ks_max": 0.251953125,
+          "first_second_K_ks": 0.04461669921875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.00027077242377,
+            "bulk_ess": 15505.863153051845,
+            "tail_ess": 15981.457785779405,
+            "between_within_ratio": 1.3238477359356022
+          },
+          "physical_balanced": {
+            "rhat": 1.0004821512340636,
+            "bulk_ess": 14265.289351942754,
+            "tail_ess": 14686.983395471625,
+            "between_within_ratio": 1.3162993711403512
+          },
+          "physical_counts": [
+            [
+              1050,
+              1252,
+              1286,
+              943,
+              1136,
+              1114,
+              1020,
+              1161
+            ],
+            [
+              1062,
+              1162,
+              1265,
+              1105,
+              1160,
+              1114,
+              1040,
+              1159
+            ]
+          ],
+          "physical_paired_t_p": 0.9713940780599948,
+          "physical_mean_differences": [
+            -2.010675296870712e-05,
+            -0.00018623756044722217,
+            1.7373881499249677e-05,
+            3.369004078990212e-05,
+            7.558257689210812e-05,
+            0.00025844913506056777,
+            -8.49863845651111e-05,
+            -7.985429778878395e-05
+          ],
+          "retained_half_ks": 0.01123046875,
+          "physical_half_ks": 0.008130563251917149,
+          "walker_pair_ks_max": 0.05029296875,
+          "first_second_K_ks": 0.00885009765625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0203245616477696,
+            "bulk_ess": 301.37111641256513,
+            "tail_ess": 1815.614096888671,
+            "between_within_ratio": 51.18146343132524
+          },
+          "physical_balanced": {
+            "rhat": 1.04842377036894,
+            "bulk_ess": 299.68873565043833,
+            "tail_ess": 1823.0964526655746,
+            "between_within_ratio": 38.62047195640325
+          },
+          "physical_counts": [
+            [
+              1050,
+              1252,
+              1286,
+              943,
+              1136,
+              1114,
+              1020,
+              1161
+            ],
+            [
+              1062,
+              1162,
+              1265,
+              1105,
+              1160,
+              1114,
+              1040,
+              1159
+            ]
+          ],
+          "physical_paired_t_p": 0.4908645174425073,
+          "physical_mean_differences": [
+            -0.6154496026908243,
+            0.6927892810229028,
+            -0.6658532242068625,
+            -0.41850795769192606,
+            0.5760599803561127,
+            0.3106813036153114,
+            -0.9963968210623102,
+            -0.1650371283144345
+          ],
+          "retained_half_ks": 0.07373046875,
+          "physical_half_ks": 0.03552189166680429,
+          "walker_pair_ks_max": 0.251953125,
+          "first_second_K_ks": 0.04461669921875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0021686472482594,
+          "bulk_ess": 3076.393780046785,
+          "tail_ess": 4614.40122534572,
+          "between_within_ratio": 25.369289593451835
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.006433807038109585,
+      "visit_energy_distance": 0.03158704311119154,
+      "compression_ess": 11437.790095078884,
+      "pass": false
+    },
+    "910702_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910702_saved_promoted_start.npz",
+      "sha256": "b148b985ff00decdb9ceaeb33433dc7d91863b8a5ba4a816e9a1b00b645027ad",
+      "quota": true,
+      "horizon": 12314,
+      "physical_split": 6669,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.020421491818932,
+            "bulk_ess": 367.84159875653165,
+            "tail_ess": 2111.332656239645,
+            "between_within_ratio": 41.78876054848636
+          },
+          "physical_balanced": {
+            "rhat": 1.0458899206787218,
+            "bulk_ess": 332.7712813780059,
+            "tail_ess": 2006.222887626766,
+            "between_within_ratio": 39.966844094483626
+          },
+          "physical_counts": [
+            [
+              1131,
+              1207,
+              1217,
+              986,
+              1262,
+              1283,
+              958,
+              1065
+            ],
+            [
+              1171,
+              1139,
+              1177,
+              1161,
+              1063,
+              1094,
+              1090,
+              1184
+            ]
+          ],
+          "physical_paired_t_p": 0.25420737110807107,
+          "physical_mean_differences": [
+            -1.0729313393726585,
+            0.35896962960343126,
+            -0.10759340349202329,
+            0.012044942572638391,
+            0.17250704451204407,
+            0.17831277182016625,
+            -0.6131465929916629,
+            -0.7445141949567027
+          ],
+          "retained_half_ks": 0.069091796875,
+          "physical_half_ks": 0.06059166842189352,
+          "walker_pair_ks_max": 0.23828125,
+          "first_second_K_ks": 0.058837890625
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0001636926197877,
+            "bulk_ess": 15807.461852336337,
+            "tail_ess": 15834.535901431334,
+            "between_within_ratio": 1.1340192910151312
+          },
+          "physical_balanced": {
+            "rhat": 0.9999232814915827,
+            "bulk_ess": 14966.403851410487,
+            "tail_ess": 14977.116930616727,
+            "between_within_ratio": 0.9693550576514981
+          },
+          "physical_counts": [
+            [
+              1131,
+              1207,
+              1217,
+              986,
+              1262,
+              1283,
+              958,
+              1065
+            ],
+            [
+              1171,
+              1139,
+              1177,
+              1161,
+              1063,
+              1094,
+              1090,
+              1184
+            ]
+          ],
+          "physical_paired_t_p": 0.10538172757169864,
+          "physical_mean_differences": [
+            5.040163807057407e-05,
+            -8.565780432767678e-05,
+            -8.573664217936816e-05,
+            -0.0002050652894646232,
+            5.736238730036369e-05,
+            -0.00010533855077865528,
+            -8.747110393769741e-05,
+            -2.1916671956168088e-06
+          ],
+          "retained_half_ks": 0.009765625,
+          "physical_half_ks": 0.016860528394403277,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00616455078125
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.020421491818932,
+            "bulk_ess": 367.84159875653165,
+            "tail_ess": 2111.332656239645,
+            "between_within_ratio": 41.78876054848636
+          },
+          "physical_balanced": {
+            "rhat": 1.0458899206787218,
+            "bulk_ess": 332.7712813780059,
+            "tail_ess": 2006.222887626766,
+            "between_within_ratio": 39.966844094483626
+          },
+          "physical_counts": [
+            [
+              1131,
+              1207,
+              1217,
+              986,
+              1262,
+              1283,
+              958,
+              1065
+            ],
+            [
+              1171,
+              1139,
+              1177,
+              1161,
+              1063,
+              1094,
+              1090,
+              1184
+            ]
+          ],
+          "physical_paired_t_p": 0.25420737110807107,
+          "physical_mean_differences": [
+            -1.0729313393726585,
+            0.35896962960343126,
+            -0.10759340349202329,
+            0.012044942572638391,
+            0.17250704451204407,
+            0.17831277182016625,
+            -0.6131465929916629,
+            -0.7445141949567027
+          ],
+          "retained_half_ks": 0.069091796875,
+          "physical_half_ks": 0.06059166842189352,
+          "walker_pair_ks_max": 0.23828125,
+          "first_second_K_ks": 0.058837890625
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0015160104934464,
+          "bulk_ess": 3176.1033847310264,
+          "tail_ess": 4798.847943388505,
+          "between_within_ratio": 17.78238702996053
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.03217170990624085,
+      "visit_energy_distance": 0.05555129536072956,
+      "compression_ess": 16119.143631490922,
+      "pass": false
+    },
+    "910703_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910703_exact_joint_stationary.npz",
+      "sha256": "39de5cdb18646a771b5403caf0713f325b7d71a627b241913e8bbb82bd309b14",
+      "quota": true,
+      "horizon": 12719,
+      "physical_split": 6871,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0165937976423287,
+            "bulk_ess": 326.98912326491705,
+            "tail_ess": 2189.7583629519086,
+            "between_within_ratio": 45.86526590787342
+          },
+          "physical_balanced": {
+            "rhat": 1.0408659454407436,
+            "bulk_ess": 302.4899264945275,
+            "tail_ess": 2059.786236365969,
+            "between_within_ratio": 51.098835280991466
+          },
+          "physical_counts": [
+            [
+              1257,
+              1246,
+              1232,
+              916,
+              1272,
+              1321,
+              1230,
+              1198
+            ],
+            [
+              1179,
+              1320,
+              1137,
+              1132,
+              954,
+              1267,
+              1125,
+              1237
+            ]
+          ],
+          "physical_paired_t_p": 0.2854637339160753,
+          "physical_mean_differences": [
+            -0.4414533290036632,
+            -0.1430875555910498,
+            0.9563970331322917,
+            0.44714251005182926,
+            0.289624919617433,
+            0.6676838416639452,
+            -0.469003095687102,
+            0.3827960153959825
+          ],
+          "retained_half_ks": 0.04833984375,
+          "physical_half_ks": 0.040157459838294385,
+          "walker_pair_ks_max": 0.26904296875,
+          "first_second_K_ks": 0.07476806640625
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0005501155229897,
+            "bulk_ess": 16667.408337682384,
+            "tail_ess": 16373.057169518173,
+            "between_within_ratio": 1.3424133582742181
+          },
+          "physical_balanced": {
+            "rhat": 1.0004290798504973,
+            "bulk_ess": 14909.786602564749,
+            "tail_ess": 14577.7031531567,
+            "between_within_ratio": 1.0802023785154633
+          },
+          "physical_counts": [
+            [
+              1257,
+              1246,
+              1232,
+              916,
+              1272,
+              1321,
+              1230,
+              1198
+            ],
+            [
+              1179,
+              1320,
+              1137,
+              1132,
+              954,
+              1267,
+              1125,
+              1237
+            ]
+          ],
+          "physical_paired_t_p": 0.0015606639761911968,
+          "physical_mean_differences": [
+            0.00015706361659173496,
+            0.00016228280099350734,
+            6.62957724247848e-05,
+            1.7910283343303135e-05,
+            0.00023089925641606168,
+            0.0001542016656856937,
+            9.849460778577068e-05,
+            0.0002625086952173783
+          ],
+          "retained_half_ks": 0.0228271484375,
+          "physical_half_ks": 0.02334621793080609,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00665283203125
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0165937976423287,
+            "bulk_ess": 326.98912326491705,
+            "tail_ess": 2189.7583629519086,
+            "between_within_ratio": 45.86526590787342
+          },
+          "physical_balanced": {
+            "rhat": 1.0408659454407436,
+            "bulk_ess": 302.4899264945275,
+            "tail_ess": 2059.786236365969,
+            "between_within_ratio": 51.098835280991466
+          },
+          "physical_counts": [
+            [
+              1257,
+              1246,
+              1232,
+              916,
+              1272,
+              1321,
+              1230,
+              1198
+            ],
+            [
+              1179,
+              1320,
+              1137,
+              1132,
+              954,
+              1267,
+              1125,
+              1237
+            ]
+          ],
+          "physical_paired_t_p": 0.2854637339160753,
+          "physical_mean_differences": [
+            -0.4414533290036632,
+            -0.1430875555910498,
+            0.9563970331322917,
+            0.44714251005182926,
+            0.289624919617433,
+            0.6676838416639452,
+            -0.469003095687102,
+            0.3827960153959825
+          ],
+          "retained_half_ks": 0.04833984375,
+          "physical_half_ks": 0.040157459838294385,
+          "walker_pair_ks_max": 0.26904296875,
+          "first_second_K_ks": 0.07476806640625
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess",
+        "physical_Holm:log_likelihood"
+      ],
+      "holm_rejections": [
+        "log_likelihood"
+      ],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0023370443178128,
+          "bulk_ess": 3032.359684899777,
+          "tail_ess": 4430.669113964512,
+          "between_within_ratio": 28.918366835532996
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.013683499346269556,
+      "visit_energy_distance": 0.016794659004054857,
+      "compression_ess": 15738.246268656716,
+      "pass": false
+    },
+    "910703_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910703_saved_promoted_start.npz",
+      "sha256": "20bd61330dc9e8a37ebad58452a3965675e497971861463f00f667e931960587",
+      "quota": true,
+      "horizon": 12726,
+      "physical_split": 6875,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0344316941894387,
+            "bulk_ess": 288.0844342000512,
+            "tail_ess": 2160.8234396445164,
+            "between_within_ratio": 86.75471398917215
+          },
+          "physical_balanced": {
+            "rhat": 1.069451184297109,
+            "bulk_ess": 180.12268335825843,
+            "tail_ess": 1893.3224042191996,
+            "between_within_ratio": 85.51179116905146
+          },
+          "physical_counts": [
+            [
+              1199,
+              1236,
+              1198,
+              927,
+              1394,
+              1325,
+              1138,
+              1194
+            ],
+            [
+              1142,
+              1272,
+              1193,
+              1121,
+              1178,
+              1386,
+              1171,
+              1190
+            ]
+          ],
+          "physical_paired_t_p": 0.8283997945751818,
+          "physical_mean_differences": [
+            0.649065733125245,
+            -1.0444493977360878,
+            0.4298216836557799,
+            0.12646704395324804,
+            0.3585315138818137,
+            0.8558355207650361,
+            -1.0264183779239133,
+            0.10837411878081174
+          ],
+          "retained_half_ks": 0.04931640625,
+          "physical_half_ks": 0.06202223718003807,
+          "walker_pair_ks_max": 0.357421875,
+          "first_second_K_ks": 0.09710693359375
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0004257500583047,
+            "bulk_ess": 15817.641848059275,
+            "tail_ess": 16166.55759641091,
+            "between_within_ratio": 2.3431584285228015
+          },
+          "physical_balanced": {
+            "rhat": 1.0005955659277264,
+            "bulk_ess": 14469.123193385287,
+            "tail_ess": 14843.288782675176,
+            "between_within_ratio": 1.4796480596188575
+          },
+          "physical_counts": [
+            [
+              1199,
+              1236,
+              1198,
+              927,
+              1394,
+              1325,
+              1138,
+              1194
+            ],
+            [
+              1142,
+              1272,
+              1193,
+              1121,
+              1178,
+              1386,
+              1171,
+              1190
+            ]
+          ],
+          "physical_paired_t_p": 0.19439683894890816,
+          "physical_mean_differences": [
+            0.0001355288784404829,
+            0.0004068608836539367,
+            4.8217706878683764e-05,
+            2.3749838859332684e-05,
+            -1.200344607210635e-05,
+            7.09294042241515e-05,
+            -0.00016011539208582448,
+            0.00014600325201918896
+          ],
+          "retained_half_ks": 0.02001953125,
+          "physical_half_ks": 0.020392846636253223,
+          "walker_pair_ks_max": 0.060546875,
+          "first_second_K_ks": 0.0054931640625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0344316941894387,
+            "bulk_ess": 288.0844342000512,
+            "tail_ess": 2160.8234396445164,
+            "between_within_ratio": 86.75471398917215
+          },
+          "physical_balanced": {
+            "rhat": 1.069451184297109,
+            "bulk_ess": 180.12268335825843,
+            "tail_ess": 1893.3224042191996,
+            "between_within_ratio": 85.51179116905146
+          },
+          "physical_counts": [
+            [
+              1199,
+              1236,
+              1198,
+              927,
+              1394,
+              1325,
+              1138,
+              1194
+            ],
+            [
+              1142,
+              1272,
+              1193,
+              1121,
+              1178,
+              1386,
+              1171,
+              1190
+            ]
+          ],
+          "physical_paired_t_p": 0.8283997945751818,
+          "physical_mean_differences": [
+            0.649065733125245,
+            -1.0444493977360878,
+            0.4298216836557799,
+            0.12646704395324804,
+            0.3585315138818137,
+            0.8558355207650361,
+            -1.0264183779239133,
+            0.10837411878081174
+          ],
+          "retained_half_ks": 0.04931640625,
+          "physical_half_ks": 0.06202223718003807,
+          "walker_pair_ks_max": 0.357421875,
+          "first_second_K_ks": 0.09710693359375
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0013957657073749,
+          "bulk_ess": 2986.3711216200336,
+          "tail_ess": 4368.225736931195,
+          "between_within_ratio": 17.50959987054788
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.028506927987364428,
+      "visit_energy_distance": 0.01786520380973311,
+      "compression_ess": 7045.759550561797,
+      "pass": false
+    },
+    "910704_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910704_exact_joint_stationary.npz",
+      "sha256": "5abc76ff612644843ae1e1324d949ec5d385b9db1baf90c5eb2c3298c7af31c1",
+      "quota": true,
+      "horizon": 12253,
+      "physical_split": 6638,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0288287741871573,
+            "bulk_ess": 241.28369932523285,
+            "tail_ess": 1477.342329639641,
+            "between_within_ratio": 76.26132140252346
+          },
+          "physical_balanced": {
+            "rhat": 1.051924161560635,
+            "bulk_ess": 214.20991953765724,
+            "tail_ess": 1515.8929084765782,
+            "between_within_ratio": 64.62422462519926
+          },
+          "physical_counts": [
+            [
+              1076,
+              1117,
+              967,
+              1118,
+              1142,
+              1221,
+              1173,
+              1149
+            ],
+            [
+              1113,
+              1134,
+              1081,
+              947,
+              1243,
+              1071,
+              1142,
+              939
+            ]
+          ],
+          "physical_paired_t_p": 0.545339842387159,
+          "physical_mean_differences": [
+            -1.0633939961627914,
+            -0.874050077414739,
+            -0.22932878106044258,
+            0.5273419773090771,
+            -0.8142961191497647,
+            1.1688904343864617,
+            -0.5640178368598672,
+            0.4105322478921246
+          ],
+          "retained_half_ks": 0.0555419921875,
+          "physical_half_ks": 0.044958300309577204,
+          "walker_pair_ks_max": 0.2509765625,
+          "first_second_K_ks": 0.04522705078125
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0000207258889533,
+            "bulk_ess": 16540.901639011707,
+            "tail_ess": 16358.477130486808,
+            "between_within_ratio": 0.7869644691663084
+          },
+          "physical_balanced": {
+            "rhat": 1.00011713530156,
+            "bulk_ess": 15200.358345627481,
+            "tail_ess": 15137.758268950445,
+            "between_within_ratio": 0.7874357809600199
+          },
+          "physical_counts": [
+            [
+              1076,
+              1117,
+              967,
+              1118,
+              1142,
+              1221,
+              1173,
+              1149
+            ],
+            [
+              1113,
+              1134,
+              1081,
+              947,
+              1243,
+              1071,
+              1142,
+              939
+            ]
+          ],
+          "physical_paired_t_p": 0.19676644708031835,
+          "physical_mean_differences": [
+            -0.00015070232935965322,
+            6.741544559984991e-05,
+            -9.270078964329631e-05,
+            -4.5176977604421964e-05,
+            -0.00011525710758730767,
+            9.837154378811164e-05,
+            -0.00010428563859299356,
+            -1.7969315489474447e-05
+          ],
+          "retained_half_ks": 0.0135498046875,
+          "physical_half_ks": 0.011373336571044796,
+          "walker_pair_ks_max": 0.044921875,
+          "first_second_K_ks": 0.00775146484375
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0288287741871573,
+            "bulk_ess": 241.28369932523285,
+            "tail_ess": 1477.342329639641,
+            "between_within_ratio": 76.26132140252346
+          },
+          "physical_balanced": {
+            "rhat": 1.051924161560635,
+            "bulk_ess": 214.20991953765724,
+            "tail_ess": 1515.8929084765782,
+            "between_within_ratio": 64.62422462519926
+          },
+          "physical_counts": [
+            [
+              1076,
+              1117,
+              967,
+              1118,
+              1142,
+              1221,
+              1173,
+              1149
+            ],
+            [
+              1113,
+              1134,
+              1081,
+              947,
+              1243,
+              1071,
+              1142,
+              939
+            ]
+          ],
+          "physical_paired_t_p": 0.545339842387159,
+          "physical_mean_differences": [
+            -1.0633939961627914,
+            -0.874050077414739,
+            -0.22932878106044258,
+            0.5273419773090771,
+            -0.8142961191497647,
+            1.1688904343864617,
+            -0.5640178368598672,
+            0.4105322478921246
+          ],
+          "retained_half_ks": 0.0555419921875,
+          "physical_half_ks": 0.044958300309577204,
+          "walker_pair_ks_max": 0.2509765625,
+          "first_second_K_ks": 0.04522705078125
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0018854539151787,
+          "bulk_ess": 2910.032704816367,
+          "tail_ess": 4392.1734296229715,
+          "between_within_ratio": 22.92451586186053
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.013432868628709738,
+      "visit_energy_distance": 0.035821451508062374,
+      "compression_ess": 10827.813981042655,
+      "pass": false
+    },
+    "910704_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910704_saved_promoted_start.npz",
+      "sha256": "b1aa77fdea934ad09a5728c7560ee09b299063e7d9256091282ffdb0d67febca",
+      "quota": true,
+      "horizon": 12506,
+      "physical_split": 6765,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0304455605629668,
+            "bulk_ess": 229.6382175048812,
+            "tail_ess": 1508.4878203786914,
+            "between_within_ratio": 78.42568639969244
+          },
+          "physical_balanced": {
+            "rhat": 1.07052064728656,
+            "bulk_ess": 163.5679649137282,
+            "tail_ess": 1581.5483969256602,
+            "between_within_ratio": 76.91274137775473
+          },
+          "physical_counts": [
+            [
+              1261,
+              1249,
+              1111,
+              1273,
+              1202,
+              1302,
+              1150,
+              1225
+            ],
+            [
+              1232,
+              1227,
+              1133,
+              1114,
+              1239,
+              1336,
+              1105,
+              823
+            ]
+          ],
+          "physical_paired_t_p": 0.8754113026873271,
+          "physical_mean_differences": [
+            -1.5191500069124109,
+            -0.8651220171916805,
+            -0.03966065477755848,
+            1.3933025269406996,
+            -0.28308383874075604,
+            1.3285007306391956,
+            -0.46071731576058855,
+            -0.015020611513809956
+          ],
+          "retained_half_ks": 0.051025390625,
+          "physical_half_ks": 0.02231935430526619,
+          "walker_pair_ks_max": 0.23681640625,
+          "first_second_K_ks": 0.026123046875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0002195022175042,
+            "bulk_ess": 16196.618439464828,
+            "tail_ess": 16288.463177930093,
+            "between_within_ratio": 0.7637309042653639
+          },
+          "physical_balanced": {
+            "rhat": 1.000503158437456,
+            "bulk_ess": 12986.297286080066,
+            "tail_ess": 13121.601051909516,
+            "between_within_ratio": 1.183982230381436
+          },
+          "physical_counts": [
+            [
+              1261,
+              1249,
+              1111,
+              1273,
+              1202,
+              1302,
+              1150,
+              1225
+            ],
+            [
+              1232,
+              1227,
+              1133,
+              1114,
+              1239,
+              1336,
+              1105,
+              823
+            ]
+          ],
+          "physical_paired_t_p": 0.25863639391484905,
+          "physical_mean_differences": [
+            -4.4948707041414515e-05,
+            -4.94226778180451e-05,
+            -2.041311941780588e-05,
+            -3.8119990559803973e-05,
+            -4.192291907689771e-05,
+            0.00011067829158251108,
+            -0.0001190033346151198,
+            -1.944875978754368e-05
+          ],
+          "retained_half_ks": 0.012939453125,
+          "physical_half_ks": 0.014639860949537785,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00634765625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0304455605629668,
+            "bulk_ess": 229.6382175048812,
+            "tail_ess": 1508.4878203786914,
+            "between_within_ratio": 78.42568639969244
+          },
+          "physical_balanced": {
+            "rhat": 1.07052064728656,
+            "bulk_ess": 163.5679649137282,
+            "tail_ess": 1581.5483969256602,
+            "between_within_ratio": 76.91274137775473
+          },
+          "physical_counts": [
+            [
+              1261,
+              1249,
+              1111,
+              1273,
+              1202,
+              1302,
+              1150,
+              1225
+            ],
+            [
+              1232,
+              1227,
+              1133,
+              1114,
+              1239,
+              1336,
+              1105,
+              823
+            ]
+          ],
+          "physical_paired_t_p": 0.8754113026873271,
+          "physical_mean_differences": [
+            -1.5191500069124109,
+            -0.8651220171916805,
+            -0.03966065477755848,
+            1.3933025269406996,
+            -0.28308383874075604,
+            1.3285007306391956,
+            -0.46071731576058855,
+            -0.015020611513809956
+          ],
+          "retained_half_ks": 0.051025390625,
+          "physical_half_ks": 0.02231935430526619,
+          "walker_pair_ks_max": 0.23681640625,
+          "first_second_K_ks": 0.026123046875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.002619748868737,
+          "bulk_ess": 3017.1606126031033,
+          "tail_ess": 4553.656521155041,
+          "between_within_ratio": 31.517784537906703
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.0007621294018012037,
+      "visit_energy_distance": 0.025573523289186717,
+      "compression_ess": 16384.0,
+      "pass": false
+    },
+    "910705_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910705_exact_joint_stationary.npz",
+      "sha256": "abfe0547f592f7044d78d6b4ca6ea92400732d2cd155739c484178b8b86962be",
+      "quota": true,
+      "horizon": 12283,
+      "physical_split": 6653,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0175276160353506,
+            "bulk_ess": 276.7322945091824,
+            "tail_ess": 2186.005748141029,
+            "between_within_ratio": 30.223214689413467
+          },
+          "physical_balanced": {
+            "rhat": 1.0460878231301753,
+            "bulk_ess": 308.8201360771662,
+            "tail_ess": 2161.336448602106,
+            "between_within_ratio": 47.19089017756812
+          },
+          "physical_counts": [
+            [
+              1105,
+              1168,
+              987,
+              1038,
+              1221,
+              1147,
+              1173,
+              1234
+            ],
+            [
+              1252,
+              1053,
+              1062,
+              1010,
+              1010,
+              1154,
+              1068,
+              1251
+            ]
+          ],
+          "physical_paired_t_p": 0.21732174576805255,
+          "physical_mean_differences": [
+            0.6357348586481344,
+            -0.9307979286162968,
+            -0.11648810210863847,
+            0.29089898153727134,
+            -1.6460899177765453,
+            0.07804806338738035,
+            -0.2687479525442668,
+            -0.9361042405610209
+          ],
+          "retained_half_ks": 0.0604248046875,
+          "physical_half_ks": 0.06683653705248549,
+          "walker_pair_ks_max": 0.19921875,
+          "first_second_K_ks": 0.09588623046875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0001828576264458,
+            "bulk_ess": 15939.305506207313,
+            "tail_ess": 15478.13732016712,
+            "between_within_ratio": 1.3696364494580116
+          },
+          "physical_balanced": {
+            "rhat": 1.0000872465591264,
+            "bulk_ess": 15397.86814439616,
+            "tail_ess": 15184.0336978785,
+            "between_within_ratio": 0.9059499862466728
+          },
+          "physical_counts": [
+            [
+              1105,
+              1168,
+              987,
+              1038,
+              1221,
+              1147,
+              1173,
+              1234
+            ],
+            [
+              1252,
+              1053,
+              1062,
+              1010,
+              1010,
+              1154,
+              1068,
+              1251
+            ]
+          ],
+          "physical_paired_t_p": 0.4941412830742747,
+          "physical_mean_differences": [
+            6.348894069507782e-05,
+            5.646156690264359e-05,
+            4.256564968974086e-05,
+            6.419831265036535e-05,
+            0.00015803834646166415,
+            -0.0001626291333757246,
+            5.0887049264036754e-05,
+            -7.276609043560534e-05
+          ],
+          "retained_half_ks": 0.012939453125,
+          "physical_half_ks": 0.00848159361526858,
+          "walker_pair_ks_max": 0.05859375,
+          "first_second_K_ks": 0.005615234375
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0175276160353506,
+            "bulk_ess": 276.7322945091824,
+            "tail_ess": 2186.005748141029,
+            "between_within_ratio": 30.223214689413467
+          },
+          "physical_balanced": {
+            "rhat": 1.0460878231301753,
+            "bulk_ess": 308.8201360771662,
+            "tail_ess": 2161.336448602106,
+            "between_within_ratio": 47.19089017756812
+          },
+          "physical_counts": [
+            [
+              1105,
+              1168,
+              987,
+              1038,
+              1221,
+              1147,
+              1173,
+              1234
+            ],
+            [
+              1252,
+              1053,
+              1062,
+              1010,
+              1010,
+              1154,
+              1068,
+              1251
+            ]
+          ],
+          "physical_paired_t_p": 0.21732174576805255,
+          "physical_mean_differences": [
+            0.6357348586481344,
+            -0.9307979286162968,
+            -0.11648810210863847,
+            0.29089898153727134,
+            -1.6460899177765453,
+            0.07804806338738035,
+            -0.2687479525442668,
+            -0.9361042405610209
+          ],
+          "retained_half_ks": 0.0604248046875,
+          "physical_half_ks": 0.06683653705248549,
+          "walker_pair_ks_max": 0.19921875,
+          "first_second_K_ks": 0.09588623046875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.002249751171283,
+          "bulk_ess": 2906.356440503352,
+          "tail_ess": 4400.082767035736,
+          "between_within_ratio": 27.305086019338518
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.046252463253185105,
+      "visit_energy_distance": 0.021312338376466844,
+      "compression_ess": 9950.93356928941,
+      "pass": false
+    },
+    "910705_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910705_saved_promoted_start.npz",
+      "sha256": "a34786c1df5ea0bcee45803783dac08ee2cecc2e9ad8b82a94df5f11bb15ef21",
+      "quota": true,
+      "horizon": 12347,
+      "physical_split": 6685,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0379162507202968,
+            "bulk_ess": 288.93928004875784,
+            "tail_ess": 2251.944432573536,
+            "between_within_ratio": 106.29363397262418
+          },
+          "physical_balanced": {
+            "rhat": 1.0679425892069299,
+            "bulk_ess": 188.7281718190896,
+            "tail_ess": 1975.2437159303158,
+            "between_within_ratio": 87.41252094974881
+          },
+          "physical_counts": [
+            [
+              927,
+              1013,
+              1111,
+              1086,
+              1194,
+              1264,
+              1009,
+              1224
+            ],
+            [
+              1262,
+              1035,
+              1099,
+              1096,
+              1110,
+              1015,
+              1125,
+              1315
+            ]
+          ],
+          "physical_paired_t_p": 0.07653963028058719,
+          "physical_mean_differences": [
+            0.6446854186567985,
+            -0.9531725290364617,
+            -1.9196122849669974,
+            0.35144038553584345,
+            -2.8234699016461318,
+            -0.18815157294452867,
+            -0.746737345748117,
+            -1.1125915690185844
+          ],
+          "retained_half_ks": 0.1422119140625,
+          "physical_half_ks": 0.12896119971990314,
+          "walker_pair_ks_max": 0.2763671875,
+          "first_second_K_ks": 0.0701904296875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0000820042367524,
+            "bulk_ess": 16373.233717695619,
+            "tail_ess": 15977.454236404597,
+            "between_within_ratio": 0.9944855525210584
+          },
+          "physical_balanced": {
+            "rhat": 1.0002115124711717,
+            "bulk_ess": 14601.750606351397,
+            "tail_ess": 14549.999249732835,
+            "between_within_ratio": 1.024219311867515
+          },
+          "physical_counts": [
+            [
+              927,
+              1013,
+              1111,
+              1086,
+              1194,
+              1264,
+              1009,
+              1224
+            ],
+            [
+              1262,
+              1035,
+              1099,
+              1096,
+              1110,
+              1015,
+              1125,
+              1315
+            ]
+          ],
+          "physical_paired_t_p": 0.33764322901965305,
+          "physical_mean_differences": [
+            7.749641499144033e-05,
+            3.960866041197164e-05,
+            -8.432584877604565e-05,
+            0.00014073804427028325,
+            0.0001693375210874981,
+            -9.894055161585591e-05,
+            -0.0001222457013764222,
+            0.00034396183655827084
+          ],
+          "retained_half_ks": 0.01171875,
+          "physical_half_ks": 0.01241190128531484,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00830078125
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0379162507202968,
+            "bulk_ess": 288.93928004875784,
+            "tail_ess": 2251.944432573536,
+            "between_within_ratio": 106.29363397262418
+          },
+          "physical_balanced": {
+            "rhat": 1.0679425892069299,
+            "bulk_ess": 188.7281718190896,
+            "tail_ess": 1975.2437159303158,
+            "between_within_ratio": 87.41252094974881
+          },
+          "physical_counts": [
+            [
+              927,
+              1013,
+              1111,
+              1086,
+              1194,
+              1264,
+              1009,
+              1224
+            ],
+            [
+              1262,
+              1035,
+              1099,
+              1096,
+              1110,
+              1015,
+              1125,
+              1315
+            ]
+          ],
+          "physical_paired_t_p": 0.07653963028058719,
+          "physical_mean_differences": [
+            0.6446854186567985,
+            -0.9531725290364617,
+            -1.9196122849669974,
+            0.35144038553584345,
+            -2.8234699016461318,
+            -0.18815157294452867,
+            -0.746737345748117,
+            -1.1125915690185844
+          ],
+          "retained_half_ks": 0.1422119140625,
+          "physical_half_ks": 0.12896119971990314,
+          "walker_pair_ks_max": 0.2763671875,
+          "first_second_K_ks": 0.0701904296875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.002535076765674,
+          "bulk_ess": 3023.588698281657,
+          "tail_ess": 4373.13182958022,
+          "between_within_ratio": 29.94580486067006
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.19550421220742464,
+      "visit_energy_distance": 0.1927046586447636,
+      "compression_ess": 16281.188948306597,
+      "pass": false
+    },
+    "910706_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910706_exact_joint_stationary.npz",
+      "sha256": "d285ed3e478e3ed490c37e9b3d49c98941ed9567f08f604d11f0ebf450becde9",
+      "quota": true,
+      "horizon": 12526,
+      "physical_split": 6775,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0182421321636472,
+            "bulk_ess": 308.24599828287205,
+            "tail_ess": 1982.7267597273183,
+            "between_within_ratio": 40.68781776856785
+          },
+          "physical_balanced": {
+            "rhat": 1.053905388349374,
+            "bulk_ess": 273.8546448788259,
+            "tail_ess": 1793.4330345644646,
+            "between_within_ratio": 67.79585554094844
+          },
+          "physical_counts": [
+            [
+              1019,
+              1449,
+              1435,
+              937,
+              1343,
+              1110,
+              1117,
+              1152
+            ],
+            [
+              1331,
+              1335,
+              1160,
+              1111,
+              1324,
+              1045,
+              949,
+              1059
+            ]
+          ],
+          "physical_paired_t_p": 0.1358136596886685,
+          "physical_mean_differences": [
+            0.04548304950847615,
+            1.38348232069335,
+            0.4381278987772155,
+            1.4106459575559525,
+            0.0405230570188187,
+            -0.940198045056631,
+            0.6903573014622284,
+            0.5958560498572096
+          ],
+          "retained_half_ks": 0.138916015625,
+          "physical_half_ks": 0.11176274079314293,
+          "walker_pair_ks_max": 0.15234375,
+          "first_second_K_ks": 0.0389404296875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.000165116306689,
+            "bulk_ess": 16107.070630639688,
+            "tail_ess": 15756.159795761227,
+            "between_within_ratio": 0.7252272779512482
+          },
+          "physical_balanced": {
+            "rhat": 0.9999927028172833,
+            "bulk_ess": 14587.208125201776,
+            "tail_ess": 14674.016066856271,
+            "between_within_ratio": 0.723463813196062
+          },
+          "physical_counts": [
+            [
+              1019,
+              1449,
+              1435,
+              937,
+              1343,
+              1110,
+              1117,
+              1152
+            ],
+            [
+              1331,
+              1335,
+              1160,
+              1111,
+              1324,
+              1045,
+              949,
+              1059
+            ]
+          ],
+          "physical_paired_t_p": 0.19147818457995625,
+          "physical_mean_differences": [
+            0.00013337670231317045,
+            9.346858827052884e-05,
+            -3.8891831269483035e-05,
+            -0.00019879714002069004,
+            -2.590620223896778e-05,
+            -0.0001417557901541855,
+            -0.0001404625743347543,
+            -0.00021032874327753248
+          ],
+          "retained_half_ks": 0.013427734375,
+          "physical_half_ks": 0.01030569477806921,
+          "walker_pair_ks_max": 0.0390625,
+          "first_second_K_ks": 0.0166015625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0182421321636472,
+            "bulk_ess": 308.24599828287205,
+            "tail_ess": 1982.7267597273183,
+            "between_within_ratio": 40.68781776856785
+          },
+          "physical_balanced": {
+            "rhat": 1.053905388349374,
+            "bulk_ess": 273.8546448788259,
+            "tail_ess": 1793.4330345644646,
+            "between_within_ratio": 67.79585554094844
+          },
+          "physical_counts": [
+            [
+              1019,
+              1449,
+              1435,
+              937,
+              1343,
+              1110,
+              1117,
+              1152
+            ],
+            [
+              1331,
+              1335,
+              1160,
+              1111,
+              1324,
+              1045,
+              949,
+              1059
+            ]
+          ],
+          "physical_paired_t_p": 0.1358136596886685,
+          "physical_mean_differences": [
+            0.04548304950847615,
+            1.38348232069335,
+            0.4381278987772155,
+            1.4106459575559525,
+            0.0405230570188187,
+            -0.940198045056631,
+            0.6903573014622284,
+            0.5958560498572096
+          ],
+          "retained_half_ks": 0.138916015625,
+          "physical_half_ks": 0.11176274079314293,
+          "walker_pair_ks_max": 0.15234375,
+          "first_second_K_ks": 0.0389404296875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0038880309369969,
+          "bulk_ess": 2914.8644404465626,
+          "tail_ess": 4625.803392310431,
+          "between_within_ratio": 45.127468820487714
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.13285975436116626,
+      "visit_energy_distance": 0.14793505008480423,
+      "compression_ess": 16384.0,
+      "pass": false
+    },
+    "910706_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910706_saved_promoted_start.npz",
+      "sha256": "984d402b6d26e12c777420faed27294458da429a8379d1cc8f32605d8ca6c7c3",
+      "quota": true,
+      "horizon": 12676,
+      "physical_split": 6850,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0205671344543121,
+            "bulk_ess": 334.9364503476433,
+            "tail_ess": 1812.8655884840296,
+            "between_within_ratio": 47.422693029805075
+          },
+          "physical_balanced": {
+            "rhat": 1.052626376515074,
+            "bulk_ess": 272.3972385616743,
+            "tail_ess": 1710.113231424577,
+            "between_within_ratio": 67.03451954331287
+          },
+          "physical_counts": [
+            [
+              992,
+              1534,
+              1279,
+              924,
+              1360,
+              1129,
+              1114,
+              1156
+            ],
+            [
+              1426,
+              1321,
+              1232,
+              1124,
+              1264,
+              972,
+              1168,
+              1093
+            ]
+          ],
+          "physical_paired_t_p": 0.3911012449509189,
+          "physical_mean_differences": [
+            -0.4929547501481591,
+            1.373280451388107,
+            0.3317609982991263,
+            1.4967079623764694,
+            0.05794915554223967,
+            -1.0831388834423061,
+            -0.054229489248546536,
+            0.6475381917534953
+          ],
+          "retained_half_ks": 0.1318359375,
+          "physical_half_ks": 0.09441206436200113,
+          "walker_pair_ks_max": 0.17724609375,
+          "first_second_K_ks": 0.01141357421875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 0.9998859281495095,
+            "bulk_ess": 16000.96906211637,
+            "tail_ess": 16226.81861499741,
+            "between_within_ratio": 0.4812999483640824
+          },
+          "physical_balanced": {
+            "rhat": 1.0000755960448846,
+            "bulk_ess": 14636.41150724213,
+            "tail_ess": 14764.98367909601,
+            "between_within_ratio": 0.9997009563500231
+          },
+          "physical_counts": [
+            [
+              992,
+              1534,
+              1279,
+              924,
+              1360,
+              1129,
+              1114,
+              1156
+            ],
+            [
+              1426,
+              1321,
+              1232,
+              1124,
+              1264,
+              972,
+              1168,
+              1093
+            ]
+          ],
+          "physical_paired_t_p": 0.5644240068298644,
+          "physical_mean_differences": [
+            6.738442749343321e-07,
+            0.00018231596710638343,
+            -8.874381769274908e-05,
+            -7.263203112528593e-05,
+            7.440945958592238e-05,
+            5.67147866801232e-05,
+            2.474760700998946e-05,
+            -2.764900225349365e-05
+          ],
+          "retained_half_ks": 0.0123291015625,
+          "physical_half_ks": 0.010413153456998314,
+          "walker_pair_ks_max": 0.03857421875,
+          "first_second_K_ks": 0.010498046875
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0205671344543121,
+            "bulk_ess": 334.9364503476433,
+            "tail_ess": 1812.8655884840296,
+            "between_within_ratio": 47.422693029805075
+          },
+          "physical_balanced": {
+            "rhat": 1.052626376515074,
+            "bulk_ess": 272.3972385616743,
+            "tail_ess": 1710.113231424577,
+            "between_within_ratio": 67.03451954331287
+          },
+          "physical_counts": [
+            [
+              992,
+              1534,
+              1279,
+              924,
+              1360,
+              1129,
+              1114,
+              1156
+            ],
+            [
+              1426,
+              1321,
+              1232,
+              1124,
+              1264,
+              972,
+              1168,
+              1093
+            ]
+          ],
+          "physical_paired_t_p": 0.3911012449509189,
+          "physical_mean_differences": [
+            -0.4929547501481591,
+            1.373280451388107,
+            0.3317609982991263,
+            1.4967079623764694,
+            0.05794915554223967,
+            -1.0831388834423061,
+            -0.054229489248546536,
+            0.6475381917534953
+          ],
+          "retained_half_ks": 0.1318359375,
+          "physical_half_ks": 0.09441206436200113,
+          "walker_pair_ks_max": 0.17724609375,
+          "first_second_K_ks": 0.01141357421875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0038077618873993,
+          "bulk_ess": 2884.4411026738103,
+          "tail_ess": 4416.678432530029,
+          "between_within_ratio": 44.88130477752766
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.07747297321829771,
+      "visit_energy_distance": 0.12604622774725804,
+      "compression_ess": 16384.0,
+      "pass": false
+    },
+    "910707_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910707_exact_joint_stationary.npz",
+      "sha256": "96f48964aebd59708e26f75a96c65e9a1fe122efbe6765ab875ea08d8f6ca570",
+      "quota": true,
+      "horizon": 12467,
+      "physical_split": 6745,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.0270819121790469,
+            "bulk_ess": 296.987758567872,
+            "tail_ess": 1844.2449848540189,
+            "between_within_ratio": 68.99390147223605
+          },
+          "physical_balanced": {
+            "rhat": 1.07628689788567,
+            "bulk_ess": 192.85222051146545,
+            "tail_ess": 1608.9411991641473,
+            "between_within_ratio": 93.47044489431165
+          },
+          "physical_counts": [
+            [
+              1198,
+              1121,
+              1321,
+              1273,
+              993,
+              1199,
+              1091,
+              1204
+            ],
+            [
+              1155,
+              927,
+              1216,
+              1311,
+              1107,
+              1265,
+              1196,
+              1219
+            ]
+          ],
+          "physical_paired_t_p": 0.45318890105573056,
+          "physical_mean_differences": [
+            -1.6605459836361902,
+            0.7308200215623392,
+            -1.0698242202623782,
+            -0.26645677697140147,
+            -0.1484614740622771,
+            0.944217037707819,
+            -0.015477881366886798,
+            -0.44115531112295014
+          ],
+          "retained_half_ks": 0.0211181640625,
+          "physical_half_ks": 0.06812120141662817,
+          "walker_pair_ks_max": 0.27392578125,
+          "first_second_K_ks": 0.0616455078125
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0003929802935254,
+            "bulk_ess": 15304.842925124081,
+            "tail_ess": 15823.826404199035,
+            "between_within_ratio": 1.3208459442227551
+          },
+          "physical_balanced": {
+            "rhat": 1.0002184578410274,
+            "bulk_ess": 14497.936477013242,
+            "tail_ess": 14332.680284245404,
+            "between_within_ratio": 1.0186410055867874
+          },
+          "physical_counts": [
+            [
+              1198,
+              1121,
+              1321,
+              1273,
+              993,
+              1199,
+              1091,
+              1204
+            ],
+            [
+              1155,
+              927,
+              1216,
+              1311,
+              1107,
+              1265,
+              1196,
+              1219
+            ]
+          ],
+          "physical_paired_t_p": 0.7805702003170003,
+          "physical_mean_differences": [
+            0.0001207676931183066,
+            -0.0002474794564240046,
+            7.315576483424291e-05,
+            0.0001401822591606816,
+            -7.739158752950726e-05,
+            -0.0001517000259466661,
+            0.0001315124367569087,
+            0.00013618757963351769
+          ],
+          "retained_half_ks": 0.0115966796875,
+          "physical_half_ks": 0.013327989275653741,
+          "walker_pair_ks_max": 0.04296875,
+          "first_second_K_ks": 0.0068359375
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.0270819121790469,
+            "bulk_ess": 296.987758567872,
+            "tail_ess": 1844.2449848540189,
+            "between_within_ratio": 68.99390147223605
+          },
+          "physical_balanced": {
+            "rhat": 1.07628689788567,
+            "bulk_ess": 192.85222051146545,
+            "tail_ess": 1608.9411991641473,
+            "between_within_ratio": 93.47044489431165
+          },
+          "physical_counts": [
+            [
+              1198,
+              1121,
+              1321,
+              1273,
+              993,
+              1199,
+              1091,
+              1204
+            ],
+            [
+              1155,
+              927,
+              1216,
+              1311,
+              1107,
+              1265,
+              1196,
+              1219
+            ]
+          ],
+          "physical_paired_t_p": 0.45318890105573056,
+          "physical_mean_differences": [
+            -1.6605459836361902,
+            0.7308200215623392,
+            -1.0698242202623782,
+            -0.26645677697140147,
+            -0.1484614740622771,
+            0.944217037707819,
+            -0.015477881366886798,
+            -0.44115531112295014
+          ],
+          "retained_half_ks": 0.0211181640625,
+          "physical_half_ks": 0.06812120141662817,
+          "walker_pair_ks_max": 0.27392578125,
+          "first_second_K_ks": 0.0616455078125
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.001597341246866,
+          "bulk_ess": 3187.149565416529,
+          "tail_ess": 4396.080083864816,
+          "between_within_ratio": 19.427346723733688
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.021157304204986627,
+      "visit_energy_distance": 0.004848428649590009,
+      "compression_ess": 14964.554881052649,
+      "pass": false
+    },
+    "910707_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910707_saved_promoted_start.npz",
+      "sha256": "528787fa938b705b2695331d11a069f25f17f1fc8d43962ef84d3795529a9ba9",
+      "quota": true,
+      "horizon": 11720,
+      "physical_split": 6372,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.04581550063237,
+            "bulk_ess": 203.9857473945179,
+            "tail_ess": 1684.9909624834265,
+            "between_within_ratio": 122.49088008798878
+          },
+          "physical_balanced": {
+            "rhat": 1.0686676482641067,
+            "bulk_ess": 245.8353275474018,
+            "tail_ess": 1867.521454273405,
+            "between_within_ratio": 94.657357992658
+          },
+          "physical_counts": [
+            [
+              1187,
+              1024,
+              1206,
+              1071,
+              1008,
+              1269,
+              1025,
+              1196
+            ],
+            [
+              1036,
+              1024,
+              1207,
+              1179,
+              1105,
+              1104,
+              1182,
+              1109
+            ]
+          ],
+          "physical_paired_t_p": 0.04365793999195572,
+          "physical_mean_differences": [
+            -1.8439443026040425,
+            -0.7269100834155069,
+            1.062355577445148,
+            -1.3438314743822657,
+            -0.9543173119023244,
+            0.07544009372468441,
+            -1.5528978873232628,
+            -1.5263255518418632
+          ],
+          "retained_half_ks": 0.1524658203125,
+          "physical_half_ks": 0.14911152499983954,
+          "walker_pair_ks_max": 0.2705078125,
+          "first_second_K_ks": 0.03680419921875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.0003243046644525,
+            "bulk_ess": 16150.672196634803,
+            "tail_ess": 16084.31402420291,
+            "between_within_ratio": 1.078093306724299
+          },
+          "physical_balanced": {
+            "rhat": 1.000283290500567,
+            "bulk_ess": 15903.378591763285,
+            "tail_ess": 15865.480598950133,
+            "between_within_ratio": 1.255791001148877
+          },
+          "physical_counts": [
+            [
+              1187,
+              1024,
+              1206,
+              1071,
+              1008,
+              1269,
+              1025,
+              1196
+            ],
+            [
+              1036,
+              1024,
+              1207,
+              1179,
+              1105,
+              1104,
+              1182,
+              1109
+            ]
+          ],
+          "physical_paired_t_p": 0.8287199837530931,
+          "physical_mean_differences": [
+            -3.66792319934639e-05,
+            1.0874844147412688e-05,
+            -3.7450797438776107e-06,
+            0.00027588549899359993,
+            -5.282332238099041e-05,
+            -0.00024057188275050656,
+            0.0001349292843542127,
+            6.770455509452766e-06
+          ],
+          "retained_half_ks": 0.008056640625,
+          "physical_half_ks": 0.008610209119295241,
+          "walker_pair_ks_max": 0.03564453125,
+          "first_second_K_ks": 0.00836181640625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.04581550063237,
+            "bulk_ess": 203.9857473945179,
+            "tail_ess": 1684.9909624834265,
+            "between_within_ratio": 122.49088008798878
+          },
+          "physical_balanced": {
+            "rhat": 1.0686676482641067,
+            "bulk_ess": 245.8353275474018,
+            "tail_ess": 1867.521454273405,
+            "between_within_ratio": 94.657357992658
+          },
+          "physical_counts": [
+            [
+              1187,
+              1024,
+              1206,
+              1071,
+              1008,
+              1269,
+              1025,
+              1196
+            ],
+            [
+              1036,
+              1024,
+              1207,
+              1179,
+              1105,
+              1104,
+              1182,
+              1109
+            ]
+          ],
+          "physical_paired_t_p": 0.04365793999195572,
+          "physical_mean_differences": [
+            -1.8439443026040425,
+            -0.7269100834155069,
+            1.062355577445148,
+            -1.3438314743822657,
+            -0.9543173119023244,
+            0.07544009372468441,
+            -1.5528978873232628,
+            -1.5263255518418632
+          ],
+          "retained_half_ks": 0.1524658203125,
+          "physical_half_ks": 0.14911152499983954,
+          "walker_pair_ks_max": 0.2705078125,
+          "first_second_K_ks": 0.03680419921875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.001239783394471,
+          "bulk_ess": 2830.197747670151,
+          "tail_ess": 4105.454538978122,
+          "between_within_ratio": 9.090837470492255
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.2003064459843209,
+      "visit_energy_distance": 0.2469773414848042,
+      "compression_ess": 16384.0,
+      "pass": false
+    },
+    "910708_exact_joint_stationary": {
+      "path": "/tmp/dns-stage9e-stationarity/910708_exact_joint_stationary.npz",
+      "sha256": "3695f4914826b69cd6fd6ef4256017f8993cc7de90ca2b063f3fa7e9e6514085",
+      "quota": true,
+      "horizon": 12790,
+      "physical_split": 6907,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.020302111700377,
+            "bulk_ess": 268.5742059607453,
+            "tail_ess": 1997.0898216337512,
+            "between_within_ratio": 55.74325673714759
+          },
+          "physical_balanced": {
+            "rhat": 1.0579355719684307,
+            "bulk_ess": 194.79849951960216,
+            "tail_ess": 2002.164605153177,
+            "between_within_ratio": 78.22983967558044
+          },
+          "physical_counts": [
+            [
+              1399,
+              1005,
+              1291,
+              1230,
+              1060,
+              1027,
+              1293,
+              1129
+            ],
+            [
+              1238,
+              1043,
+              1303,
+              1278,
+              1203,
+              1245,
+              1249,
+              1411
+            ]
+          ],
+          "physical_paired_t_p": 0.4830365426579433,
+          "physical_mean_differences": [
+            -0.3556736537200568,
+            -0.7588401125576554,
+            -1.0787971358638404,
+            0.3631708995066723,
+            0.4513645006606802,
+            1.4516056460303859,
+            1.3851742779686633,
+            0.4794291271584366
+          ],
+          "retained_half_ks": 0.009765625,
+          "physical_half_ks": 0.040091463706361824,
+          "walker_pair_ks_max": 0.1787109375,
+          "first_second_K_ks": 0.033935546875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 0.9999865504783848,
+            "bulk_ess": 16668.676411112298,
+            "tail_ess": 16460.45870477789,
+            "between_within_ratio": 1.0502434507847165
+          },
+          "physical_balanced": {
+            "rhat": 1.0000022757705838,
+            "bulk_ess": 16487.261456859174,
+            "tail_ess": 16175.551236479738,
+            "between_within_ratio": 0.7308478163004214
+          },
+          "physical_counts": [
+            [
+              1399,
+              1005,
+              1291,
+              1230,
+              1060,
+              1027,
+              1293,
+              1129
+            ],
+            [
+              1238,
+              1043,
+              1303,
+              1278,
+              1203,
+              1245,
+              1249,
+              1411
+            ]
+          ],
+          "physical_paired_t_p": 0.1291868449940093,
+          "physical_mean_differences": [
+            0.00012130306375057742,
+            -2.7352944480751873e-05,
+            -8.936679877968867e-05,
+            -0.0002144703448413443,
+            -6.948105798787463e-05,
+            -0.00014077963026148943,
+            -8.317789711553836e-06,
+            -5.101560739562139e-05
+          ],
+          "retained_half_ks": 0.0162353515625,
+          "physical_half_ks": 0.017477384453551452,
+          "walker_pair_ks_max": 0.048828125,
+          "first_second_K_ks": 0.00921630859375
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.020302111700377,
+            "bulk_ess": 268.5742059607453,
+            "tail_ess": 1997.0898216337512,
+            "between_within_ratio": 55.74325673714759
+          },
+          "physical_balanced": {
+            "rhat": 1.0579355719684307,
+            "bulk_ess": 194.79849951960216,
+            "tail_ess": 2002.164605153177,
+            "between_within_ratio": 78.22983967558044
+          },
+          "physical_counts": [
+            [
+              1399,
+              1005,
+              1291,
+              1230,
+              1060,
+              1027,
+              1293,
+              1129
+            ],
+            [
+              1238,
+              1043,
+              1303,
+              1278,
+              1203,
+              1245,
+              1249,
+              1411
+            ]
+          ],
+          "physical_paired_t_p": 0.4830365426579433,
+          "physical_mean_differences": [
+            -0.3556736537200568,
+            -0.7588401125576554,
+            -1.0787971358638404,
+            0.3631708995066723,
+            0.4513645006606802,
+            1.4516056460303859,
+            1.3851742779686633,
+            0.4794291271584366
+          ],
+          "retained_half_ks": 0.009765625,
+          "physical_half_ks": 0.040091463706361824,
+          "walker_pair_ks_max": 0.1787109375,
+          "first_second_K_ks": 0.033935546875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0021057177465293,
+          "bulk_ess": 3139.4469939560495,
+          "tail_ess": 4964.99543683515,
+          "between_within_ratio": 25.756702083602164
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.0169661098925582,
+      "visit_energy_distance": 0.00041911303815389545,
+      "compression_ess": 7804.335320417287,
+      "pass": false
+    },
+    "910708_saved_promoted_start": {
+      "path": "/tmp/dns-stage9e-stationarity/910708_saved_promoted_start.npz",
+      "sha256": "569b61289c11be389f1f5ca108dd2dd339b4baa13f9b721bb81d52b23d733cb3",
+      "quota": true,
+      "horizon": 12948,
+      "physical_split": 6986,
+      "observables": {
+        "theta_0": {
+          "retained": {
+            "rhat": 1.028436745853296,
+            "bulk_ess": 280.12654671019845,
+            "tail_ess": 2194.7919971411816,
+            "between_within_ratio": 79.8719724744199
+          },
+          "physical_balanced": {
+            "rhat": 1.0622804292003896,
+            "bulk_ess": 187.4545621698537,
+            "tail_ess": 2140.230619183785,
+            "between_within_ratio": 86.50553238554603
+          },
+          "physical_counts": [
+            [
+              1417,
+              995,
+              1389,
+              1301,
+              1266,
+              1156,
+              1254,
+              1200
+            ],
+            [
+              1264,
+              1053,
+              1335,
+              1242,
+              1276,
+              1055,
+              1146,
+              1316
+            ]
+          ],
+          "physical_paired_t_p": 0.2568591823184893,
+          "physical_mean_differences": [
+            0.05947638518179499,
+            -0.9158192718893758,
+            -0.6043684026254441,
+            0.6936522924940276,
+            1.5007506375791622,
+            1.3018799063407076,
+            1.2721895200210476,
+            -0.08507021185381836
+          ],
+          "retained_half_ks": 0.0625,
+          "physical_half_ks": 0.07640556514514651,
+          "walker_pair_ks_max": 0.27392578125,
+          "first_second_K_ks": 0.059326171875
+        },
+        "log_likelihood": {
+          "retained": {
+            "rhat": 1.00009131779123,
+            "bulk_ess": 15953.046953390078,
+            "tail_ess": 16245.142434427818,
+            "between_within_ratio": 1.2285373624876552
+          },
+          "physical_balanced": {
+            "rhat": 1.0001041388317453,
+            "bulk_ess": 16013.280015965709,
+            "tail_ess": 15746.53651548272,
+            "between_within_ratio": 0.986490890773819
+          },
+          "physical_counts": [
+            [
+              1417,
+              995,
+              1389,
+              1301,
+              1266,
+              1156,
+              1254,
+              1200
+            ],
+            [
+              1264,
+              1053,
+              1335,
+              1242,
+              1276,
+              1055,
+              1146,
+              1316
+            ]
+          ],
+          "physical_paired_t_p": 0.16944085637431577,
+          "physical_mean_differences": [
+            6.263433908859639e-05,
+            -1.754763812311655e-05,
+            -0.0001709735503245824,
+            -0.00024989706608447015,
+            0.00018552822066453256,
+            -0.00018828097469314464,
+            -8.164011670575011e-05,
+            -0.0001828368598563168
+          ],
+          "retained_half_ks": 0.013427734375,
+          "physical_half_ks": 0.0190019777794207,
+          "walker_pair_ks_max": 0.04248046875,
+          "first_second_K_ks": 0.00836181640625
+        },
+        "projection_sum": {
+          "retained": {
+            "rhat": 1.028436745853296,
+            "bulk_ess": 280.12654671019845,
+            "tail_ess": 2194.7919971411816,
+            "between_within_ratio": 79.8719724744199
+          },
+          "physical_balanced": {
+            "rhat": 1.0622804292003896,
+            "bulk_ess": 187.4545621698537,
+            "tail_ess": 2140.230619183785,
+            "between_within_ratio": 86.50553238554603
+          },
+          "physical_counts": [
+            [
+              1417,
+              995,
+              1389,
+              1301,
+              1266,
+              1156,
+              1254,
+              1200
+            ],
+            [
+              1264,
+              1053,
+              1335,
+              1242,
+              1276,
+              1055,
+              1146,
+              1316
+            ]
+          ],
+          "physical_paired_t_p": 0.2568591823184893,
+          "physical_mean_differences": [
+            0.05947638518179499,
+            -0.9158192718893758,
+            -0.6043684026254441,
+            0.6936522924940276,
+            1.5007506375791622,
+            1.3018799063407076,
+            1.2721895200210476,
+            -0.08507021185381836
+          ],
+          "retained_half_ks": 0.0625,
+          "physical_half_ks": 0.07640556514514651,
+          "walker_pair_ks_max": 0.27392578125,
+          "first_second_K_ks": 0.059326171875
+        }
+      },
+      "triggers": [
+        "projection_sum:rhat",
+        "projection_sum:bulk_ess"
+      ],
+      "holm_rejections": [],
+      "assigned_level": {
+        "conditioned_top": {
+          "constant": true,
+          "value": 4
+        },
+        "uncensored_physical": {
+          "rhat": 1.0022804986728178,
+          "bulk_ess": 3030.8904766964883,
+          "tail_ess": 4717.068761612522,
+          "between_within_ratio": 28.78785616172583
+        }
+      },
+      "log_prior_constant": true,
+      "physical_energy_distance": 0.07271033853494302,
+      "visit_energy_distance": 0.018392351460498002,
+      "compression_ess": 10594.017253012049,
+      "pass": false
+    }
+  },
+  "implementation": {
+    "arviz_version": "0.23.4",
+    "frozen_design_sha256": "eb25fad035a9be05c91e1918b585d241fca277baed91324b3fa29176a0d2f064",
+    "driver_sha256": "c9b0674c561ec260347737f45c7de4395e5851f1e15ada066bda0b4aca1aab7f"
+  },
+  "summary": {
+    "historical_failure_detected": true,
+    "stationary_rejected": 8,
+    "stationary_total": 8,
+    "false_rejection_fraction": 1.0,
+    "promoted_rejected": 8,
+    "case": "B",
+    "heldout_validation_justified": false,
+    "development_only": true,
+    "stationary_candidate_rejections": {
+      "rhat": 8,
+      "bulk_ess": 8,
+      "tail_ess": 0
+    },
+    "physical_Holm_stationary_rejections": 1,
+    "discrimination": "No useful historical-vs-stationary discrimination; theta Rhat and bulk ESS trigger all rejections."
+  }
+}
