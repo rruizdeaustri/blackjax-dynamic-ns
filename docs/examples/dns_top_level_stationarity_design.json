@@ -1,0 +1,253 @@
+{
+  "stage": "9E DEVELOPMENT ONLY",
+  "replicate_count": 8,
+  "seeds": [
+    910701,
+    910702,
+    910703,
+    910704,
+    910705,
+    910706,
+    910707,
+    910708
+  ],
+  "arms": [
+    "saved_promoted_start",
+    "exact_joint_stationary"
+  ],
+  "paired_transition_keys": true,
+  "physical_sweeps": 32768,
+  "walkers": 8,
+  "quota": 2048,
+  "burn_in": 1024,
+  "cutpoints": [
+    1024,
+    8192,
+    16384,
+    24576
+  ],
+  "model": {
+    "centers": [
+      -3.8,
+      -0.7,
+      2.8
+    ],
+    "dimension": 1,
+    "identifier": "stage9d-three-asymmetric-weighted-normal-envelope-v1",
+    "likelihood": "max_k w_k NormalPDF(theta;mu_k,sigma_k); w_k=sigma_k/sum(sigma)",
+    "mode_definition": "geometric nearest-center regions, fixed before sampling",
+    "mode_region_boundaries": [
+      -2.25,
+      1.05
+    ],
+    "novelty": "Three asymmetric modes with unequal widths and weights; not Stage 9A, Stage 9C or Stage 8H.",
+    "prior": "Uniform[-8,8]",
+    "prior_bound": 8.0,
+    "weights": [
+      0.2755102040816327,
+      0.3979591836734694,
+      0.326530612244898
+    ],
+    "widths": [
+      0.27,
+      0.39,
+      0.32
+    ]
+  },
+  "thresholds": [
+    "-inf",
+    -5.698424514857786,
+    -1.5326205100193282,
+    -0.9827770262941096,
+    -0.9101304544651906
+  ],
+  "log_masses": [
+    0.0,
+    -1.0205057992077717,
+    -2.035438671723301,
+    -3.028220584432101,
+    -4.048218468620065
+  ],
+  "log_weights": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "candidate_threshold": -0.9003104518727859,
+  "parameter": {
+    "direction_magnitude": 0.35,
+    "max_shrinkage": 100,
+    "max_steps": 10
+  },
+  "promoted_theta": [
+    -3.7833788933968746,
+    2.777282223677756,
+    -3.7975408001949065,
+    -3.8203354937369975,
+    -0.6655966643086155,
+    2.8167579291967058,
+    -3.7876720274571833,
+    -3.818412844501471
+  ],
+  "exact_conditional_truths": [
+    {
+      "intervals": [
+        [
+          -8.0,
+          8.0
+        ]
+      ],
+      "mass": 1.0,
+      "mean": 0.0,
+      "second_moment": 21.333333333333332,
+      "mode_probabilities": [
+        0.359375,
+        0.20625,
+        0.434375
+      ]
+    },
+    {
+      "intervals": [
+        [
+          -4.6365372740362005,
+          -2.9634627259637987
+        ],
+        [
+          -1.9083316180522905,
+          0.5083316180522905
+        ],
+        [
+          1.8085484159570948,
+          3.791451584042905
+        ]
+      ],
+      "mass": 0.37954005951642455,
+      "mean": -0.411224489795918,
+      "second_moment": 7.098306942017854,
+      "mode_probabilities": [
+        0.2755102040816326,
+        0.39795918367346944,
+        0.326530612244898
+      ]
+    },
+    {
+      "intervals": [
+        [
+          -4.10400721528686,
+          -3.49599278471314
+        ],
+        [
+          -1.1391215331921307,
+          -0.26087846680786914
+        ],
+        [
+          2.4396951522526105,
+          3.160304847747389
+        ]
+      ],
+      "mass": 0.1379291995282975,
+      "mean": -0.4112244897959187,
+      "second_moment": 6.781564143636361,
+      "mode_probabilities": [
+        0.2755102040816327,
+        0.3979591836734694,
+        0.32653061224489793
+      ]
+    },
+    {
+      "intervals": [
+        [
+          -3.9106942049943636,
+          -3.689305795005636
+        ],
+        [
+          -0.8598916294363032,
+          -0.5401083705636968
+        ],
+        [
+          2.668806868154828,
+          2.9311931318451716
+        ]
+      ],
+      "mass": 0.050222370784479844,
+      "mean": -0.41122448979591864,
+      "second_moment": 6.739757336713935,
+      "mode_probabilities": [
+        0.27551020408163274,
+        0.39795918367346944,
+        0.3265306122448978
+      ]
+    },
+    {
+      "intervals": [
+        [
+          -3.8407595000788506,
+          -3.759240499921149
+        ],
+        [
+          -0.758874833447229,
+          -0.641125166552771
+        ],
+        [
+          2.7516924443509914,
+          2.8483075556490083
+        ]
+      ],
+      "mass": 0.018492736146886027,
+      "mean": -0.4112244897959155,
+      "second_moment": 6.734233726283104,
+      "mode_probabilities": [
+        0.2755102040816322,
+        0.39795918367346944,
+        0.3265306122448984
+      ]
+    }
+  ],
+  "exact_joint_level_probabilities": [
+    0.19207993147256888,
+    0.202273808121827,
+    0.20282336852589677,
+    0.1993052284985605,
+    0.2035176633811468
+  ],
+  "reference_rule": "Draw j with mass a_j X_j, then theta uniformly on merged contour intervals weighted by length. Initialization only; no reference injections during dynamics.",
+  "window_rule": "Physical disjoint [0,1024),[1024,8192),[8192,16384),[16384,24576),[24576,32768); cumulative postburn; per-walker disjoint first/second/third K visits at each cut if all quotas available; no padding.",
+  "ESS_rule": "Frozen compression diagnostic block64; diagnostic general block256/max between-walker SE and spectral initial-positive monotone pair tau, per observable. No retrospective acceptance gate.",
+  "fluctuation_rule": "Empirical independent replicate first-K KS>=historical exact KS; exact binomial 95% intervals; pair later windows, not independent extra replicates. No IID-N KS significance.",
+  "classification_rule": "A only if promoted early signed modal bias consistent across replicates and attenuates late relative stationary controls; B only if stationary controls show systematic first-K/equal-walker distortion vs physical occupation; C only if controls centered, no persistent bias, historical-size failures observed compatibly; D if reliable settling absent; E deterministic issue; otherwise F. Eight replicates limit discrimination; no significance from descriptive ESS alone.",
+  "protected_sha256": {
+    "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+    "blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+    "blackjax/ns/dns_automatic_diffusive.py": "93aa7a4b8859d2b42e01e9903ff119765f371739d64b807998d93e07443df759",
+    "blackjax/ns/dns_diagnostics.py": "64cf8bbcb0a5dd375516c9bc97ab0d04b1a758cacc1a400d62c7cc67b89cbbfb",
+    "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+    "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+    "blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+    "blackjax/ns/dns_reconstruction.py": "a4afacbe41194b875c44ecd9a98d4fbf12a086d23e68d3a227da49d2b3e23b66",
+    "blackjax/ns/dns_termination.py": "32088e8aeb190499eb319705d35d91f3e6cdd8297a22b26f26847332d0843ec7",
+    "docs/examples/dns_automatic_backtracking_audit.md": "a3e74bcdb342db45cf44b63d566412469b10b245ad56c1e85f3c53667ae6e8a7",
+    "docs/examples/dns_diffusive_ladder_design.json": "f2ad3826a900a78a46ee3269a13d0d784584c3d68e7f2b4bc1bdf30530ba5443",
+    "docs/examples/dns_diffusive_ladder_design.sha256": "f3389ce00aaf83bad04a79dacecec68cdb1c14ce2a78741e1ebf90dd00fd7eb6",
+    "docs/examples/dns_diffusive_ladder_development.json": "bc14f89f92314b328d1ba44c6086857b624d9496ad1863ce191de87f8b54a117",
+    "docs/examples/dns_diffusive_ladder_development.md": "d510a9365fcb50631ee5480d24779c606e2de1e156931979ec7d6268b4d25cd3",
+    "docs/examples/dns_inference_reconstruction_validation.json": "c2d169676d1fb0d41d3d00b328dc54e5ccc702539c3a1e3b90c53b9e9b874dd8",
+    "docs/examples/dns_ladder_robustness_design.json": "c6a3219e025a2d2e971c35d0037e07388619b3b7e4aa9ec7482db94283f92db2",
+    "docs/examples/dns_ladder_robustness_design.sha256": "ae6a03b9e1c1cf3ac157003a95c7372641ea24197329b7cafa316c5767360dbb",
+    "examples/dns_diffusive_ladder_development.py": "cb3b76fa802980cd794341d48e0f1ee06dde45db111f6644a4562eee1ebbcdfd",
+    "tests/ns/test_dns_automatic_diffusive.py": "67595013989319f7791bb2dad700de5a75833b0b1ccc7eed34133934af5d3f28",
+    "examples/dns_diffusive_ladder_heldout.py": "a7d021e9a1ac67e302cf1e01fdbd42fafc4028329e4827f706efeed5af9a9525",
+    "docs/examples/dns_diffusive_ladder_heldout.json": "5b6ff5fcd0296e29940ff305258500eb7e2ee69240a43ceacdd0026bba367012",
+    "docs/examples/dns_diffusive_ladder_heldout.md": "dc51a5ebd773102c3b0bd9c68979f3f15fb1da6a2c0aa9904f366a7efd738eee",
+    "docs/examples/dns_diffusive_ladder_heldout_design.json": "6749554b9649995174317303318315eb34cd58f3af42539d5b74bab83b880ad7",
+    "docs/examples/dns_diffusive_ladder_heldout_design.sha256": "2624c7bee9b3dbffcabb1a95dea01ef1a393a1333b414776a85ece71a7c19eae",
+    "docs/examples/dns_diffusive_heldout_failure_audit.md": "7790088c039f3d749d3254f2398a7c2004d2c96267d50eaf9580c796576a8bea"
+  },
+  "driver_sha256": "2ec2304d6e405801afa6225217ff772c46c6bd912c56cf18b24d177fa8871132",
+  "existing_analysis_sha256": "53504eede61841a96fa74471ece8c3b6a6fec8a6fe1060418aaf72ce2023cf6d",
+  "saved_trace_sha256": "6411b2e74a0a9f80f6e28ffaf2955e4b411456e2f94b6635f71a18aa439f1e3e",
+  "no_tuning": true,
+  "no_retry": true,
+  "no_validation": true
+}
