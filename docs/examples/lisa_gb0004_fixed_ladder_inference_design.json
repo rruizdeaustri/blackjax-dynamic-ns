@@ -1,0 +1,973 @@
+{
+  "stage": "10A",
+  "scope": "One gb_0004 fixed-ladder scientific reconstruction experiment; no construction, level diffusion or termination",
+  "plan_path": "docs/examples/lisa_gb0004_fixed_ladder_inference_plan.md",
+  "plan_sha256": "213fb9e3bb75d130fcbd41da26acf72725365a7a029c179bdcf73f9fa4e315f0",
+  "thresholds": [
+    "-inf",
+    -113725.65889538352,
+    -113448.99632193986,
+    -113172.84824147604,
+    -112838.36560726895,
+    -112388.10901787043,
+    -111915.6904902109,
+    -111344.96574156903,
+    -110809.82135735315,
+    -110252.99476697217,
+    -109780.28875081123,
+    -108868.60077896297,
+    -108187.99712765554
+  ],
+  "log_masses": [
+    0.0,
+    -1.0343179379627125,
+    -1.9996430044384734,
+    -3.118477930469643,
+    -4.172213954289457,
+    -5.0146408844420645,
+    -5.840204008542667,
+    -6.561075737117467,
+    -7.156607159127204,
+    -7.67544001580533,
+    -8.394305725653265,
+    -9.643899891984567,
+    -10.418392711998465
+  ],
+  "exact_ladder_recovery_receipt": "/tmp/lisa-gb0004-fixed-ladder-preflight.json",
+  "preflight_receipt_sha256": "19e75d5c35f54f9379cdb53100ec32969c031fdc79a777211b4b60a764ccf698",
+  "model_id": "gb_0004-fixed-k9-marginalized-frozen-stage6b",
+  "config_path": "/r5/home/rruiz/projects/sbi/BayesLISAx/automation/snakemake_lisa_gb/results/model_order/gb_0004/configs/k9.json",
+  "config_sha256": "bfafd9e8784bca263bd7298e10491d0010d27483222358b84bd1b4a877536670",
+  "configuration": {
+    "dtype": "float64",
+    "data": {
+      "data_mode": "sangria_obs",
+      "h5": "/r5/home/rruiz/projects/sbi/lisa/data/LDC2_sangria_training_v2.h5",
+      "decim": 1
+    },
+    "band": {
+      "band_id": "manual_00184",
+      "f_min": 0.00183,
+      "f_max": 0.00185
+    },
+    "model": {
+      "Kmax": 9,
+      "use_gates": false,
+      "order_f0": false,
+      "marg_Aphi": true,
+      "marg_mode": "integrate",
+      "use_tdi2": false,
+      "noise_preset": "MRDv1",
+      "tdi_generation": "TDI1",
+      "n_f_bins": 512,
+      "p_active_min": 0.5,
+      "log_every": 10
+    },
+    "priors": {
+      "uniform": {
+        "fdot": [
+          -1e-13,
+          1e-13
+        ],
+        "iota": [
+          -1.57079632679,
+          1.57079632679
+        ],
+        "psi": [
+          -3.14159265359,
+          3.14159265359
+        ],
+        "lam": [
+          -3.14159265359,
+          3.14159265359
+        ],
+        "beta": [
+          -1.57079632679,
+          1.57079632679
+        ]
+      }
+    },
+    "plot": {
+      "sample_repr": "fixed",
+      "dim_per": 6
+    },
+    "debug": {
+      "check_truth_loglike": false
+    }
+  },
+  "protected_sha256": {
+    "/tmp/lisa_dns_stage4_ladder_batch/checkpoint_level9.json": "c476746952ee6660f6adf8d634dfb639d5a79dc643431b3ba008b1da62e5e319",
+    "/tmp/lisa_dns_stage4_ladder_batch/report.json": "3f4fa26271c7c83adbe0824bf31e5a10f7b0ab5f635b0e3ecf05246b999689cf",
+    "examples/lisa_dns_stage4/run_ladder_batch.py": "be2e6842e7907ddc82d0f5d1603005bf491db4f7791789b5194a704d5774f53c",
+    "/tmp/lisa_dns_stage4o_hybrid/bottleneck_audit.json": "b1d6c6b1c78ca7e96ce8fd05dc06f4aa84449a85905f530887ec83c91fcfa9df",
+    "/tmp/lisa_dns_stage4h_continuation/initial_states.npz": "91ae54f5688e9bb79844dcb01475fe6fc07ff8c158b78157d152c3c5f9636254",
+    "/tmp/lisa_dns_stage4_ladder_batch/level9_selection_trace.npz": "d2fdadfc770774da659f179bccd1fcf4ac2328b16de914e0d1c1079575f22ad5",
+    "/tmp/lisa_dns_stage4_ladder_batch/level9_calibration_trace.npz": "08e951221f0263cad77a04ffb5307b2458ec93b2927c7e75ac7ae4172a3a62b4",
+    "/tmp/lisa_dns_stage4_ladder_batch/level10_selection_trace.npz": "c31383a48a32641028c5696d9d06fa3ac5c6384b1fb3bb6fbc3079bff290d433",
+    "/tmp/lisa_dns_stage4_ladder_batch/level10_calibration_trace.npz": "08c5031b8bad0c6683355b085519a333b26b13ab5c77ee28862cea37eef4dcc0",
+    "/tmp/lisa_dns_stage4h_continuation/trace.npz": "d8e3839bf0662232de7c40083e6769ce80c61144478067d3a9e3f6d5ee0288c8",
+    "/tmp/lisa_dns_stage4h_continuation/report.json": "56a1784f2d1bfd050bc8a21a34d003b71f92bdd40996a1cda11f80fe8695ac63",
+    "/tmp/lisa_dns_stage4o_hybrid/initial_states.npz": "081c3e056c7ec3c92eda52d04ba5ca1d3fa7e099b14581ecc240537242242d10",
+    "/tmp/lisa_dns_stage4o_hybrid/hybrid_pair/trace.npz": "1f6c44234d319ba1090dba36842cf3114f1cf853d9008ee14f854749b3549920",
+    "/tmp/lisa_dns_stage4o_hybrid/report.json": "bd9e77258611b30c7fe6abb72dea19e2052ee877cb61a640a005f3916931a6e0",
+    "/tmp/lisa_dns_stage4_prior_smoke/report.json": "6dd1d09b75bf6a1001300b16ee90dbb5de9177d5a444798318d535e36372a8b4",
+    "/tmp/lisa_dns_stage4t_frequency_design/design.json": "5a9f3ca4b69ba93417907d78d3a2a59cffcd7ae8c04d77f3f7fee2cb24f29f12",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/frequency_population_benchmark.py": "6ea735704f9538f0a42c478992eb8345f9560d01e0f95750b4e6d269ed15670d",
+    "examples/lisa_dns_stage4/proposals.py": "21bf44ea56cf152c834918050343e156d6f0c8721a7d5ffeaca488855fffa026",
+    "blackjax/mcmc/ss.py": "d2c9d5ac7045aecf196ab48a0d88869ac4b4c7ee159f00648d8e2526ac0a5d87",
+    "blackjax/ns/dns.py": "d4418104b4154004c3fa9487db140e15ae0f32bdf1b1aaa149e184246fde6aa1",
+    "blackjax/ns/dns_diagnostics.py": "64cf8bbcb0a5dd375516c9bc97ab0d04b1a758cacc1a400d62c7cc67b89cbbfb",
+    "blackjax/ns/dns_kernels.py": "9eaee582d565828c09b8506502c8fe3459d4626f90d3417d8989712bdea6baca",
+    "blackjax/ns/dns_levels.py": "38165933a23f25bc7bce0f8e7434f9f37ce168e99005631f96e1ea22530c470f",
+    "/r5/home/rruiz/projects/sbi/BayesLISAx/src/jax_samplers/problems/lisa_gb_transdim_problem.py": "3c5c4f429142aa4f61b5131dc52a2ad666ff58ac11ce4e627caa38e3acc1a6a3",
+    "/r5/home/rruiz/projects/sbi/BayesLISAx/automation/snakemake_lisa_gb/results/model_order/gb_0004/configs/k9.json": "bfafd9e8784bca263bd7298e10491d0010d27483222358b84bd1b4a877536670",
+    "/tmp/lisa_dns_stage4u_population/initial_states.npz": "081c3e056c7ec3c92eda52d04ba5ca1d3fa7e099b14581ecc240537242242d10",
+    "/tmp/lisa_dns_stage4u_population/random_schedule.npz": "eaaaff660979a598f7bb649ddaa89905779934c665e6469ef1c1c08009fc3113",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level10_construction.py": "af74b13d4e9f18f685fcb253916c82d9f77dc0af4ee5301458b14ba6eeaffe41",
+    "examples/lisa_dns_stage4/analyze_population_level10.py": "8c13fbd332d65106366bac6dae369f01e1c462cf72465d7d45d19c8d99dc9b85",
+    "/tmp/lisa_dns_stage4u_population/design.json": "2ced9fbc2ca9583bd66981b426f6cdfdf7299d673675dab25533fadd1e6c40f9",
+    "/tmp/lisa_dns_stage4u_population/report.json": "476be2a9a420c4dc49f0d94de8146115a26fc30d00b515c4fd39bdf83062a9ec",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/preflight.json": "8b7eed558c8ea7a5a903f8954ed17b6fa80692e34776ea0b555d3477c78bda2f",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/report.json": "374629f33e2176216044c45976ce639f00acdca77d0d3f8d7577302785d2289e",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/hybrid_level10_construction.py": "6f2d8a8c41b8f418f24013a751989d2fd39563342ed6af8c497452c989c096c2",
+    "examples/lisa_dns_stage4/analyze_frequency_exchange_design.py": "721af9cd56a6d8d6ddfd133a1e78bbaebc85dece5d18d2ea49f346a48878625e",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/selection_initial_states.npz": "ad54f980638f5676edb6d4e73668219167b323d61b973059d2b091a00ce65dc4",
+    "/tmp/lisa_dns_stage4p_hybrid_level10/calibration_initial_states.npz": "611d85aef3baccae3fbc1bf2e7191e6d97beeeb8d5be8fabf0da16d93f7952f1",
+    "/tmp/lisa_dns_stage4v_population_level10/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4v_population_level10/calibration/trace.npz": "06b0ce9536ce03169b34a3a0a77e679a36f8620a714a57fc87e7302925d9b55b",
+    "/tmp/lisa_dns_stage4v_population_level10/validation.json": "1af6e1744a79a68d7ff4a2f5e19e5028343ca24ab3bc49427ec00e1f1a3f0092",
+    "/tmp/lisa_dns_stage4u_population/comparison.json": "42b5622ad4e0d52973aedfe21f41cecbbf8af8385010d4ed0d8a824a6b0da96f",
+    "/tmp/lisa_dns_stage4u_population/trace.npz": "ce8565cda6ddaa993b8fa124ed100749161814e926177f98b207bff2afc5d16d",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level10_population_validation.py": "47e24311155531a7f3499ce2c431c15fb3b031f031a9e704c716cede811c84c8",
+    "examples/lisa_dns_stage4/analyze_level10_population.py": "922a8008bfbf062b0e3e5f7bea32ab9acb617cc420941b96bf03178f2cc1e588",
+    "/tmp/lisa_dns_stage4w_level10_validation/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4w_level10_validation/initial_states.npz": "5fa3921e2dae87dfb6ad32c880fb12d174abe3757a1a72d26ea32cce10ca5290",
+    "/tmp/lisa_dns_stage4w_level10_validation/random_schedule.npz": "9957e91765dc5e46947e630b17fe8a96c7058f6879daaf705e15768298437c7a",
+    "/tmp/lisa_dns_stage4v_population_level10/comparison.json": "0953b2985befd1d4c1355c908767da6492a6f19e45de049655e06611ff49956c",
+    "/tmp/lisa_dns_stage4w_level10_validation/validation.json": "109ff9d9893c45f1ec450dfc0f61f34f9f7b6acd808111e6eab944311e260bdd",
+    "/tmp/lisa_dns_stage4w_level10_validation/decision.json": "4dd259c16f040baafd21e16340cbdd87ea6842518b4c9ca4adac9909fe1ac7f1",
+    "/tmp/lisa_dns_stage4w_level10_validation/design.json": "c4c42a03f2c39c5afe9f9c3c7e10bd32dfe24692abb9ab50e50dd998241bb9c2",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level11_construction.py": "0e2698b7ebd2a345b1bde98ed3d3d84d114c8f00c24399cbb8e1500ac2371ec0",
+    "examples/lisa_dns_stage4/analyze_population_level11.py": "8f171d74d0c8c07bee577c4666d25ba3c7af287ca0321398f443e6dedbae8362",
+    "/tmp/lisa_dns_stage4v_population_level10/selection/trace.npz": "114da5f7a30530a6db319a55182ce284beef41a0ac2fc334669c22d115682074",
+    "/tmp/lisa_dns_stage4x_population_level11/checkpoint_level10.json": "5860e81f4f5c54237559248ea404eaa12a685d2ddd2c2c4b48ecdf1d3b9a864a",
+    "/tmp/lisa_dns_stage4x_population_level11/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4x_population_level11/calibration/trace.npz": "9427128d9711592778d3d98f9964b431f79f33a3a3c91fa8d340ea2bc2ec3576",
+    "/tmp/lisa_dns_stage4x_population_level11/validation.json": "82f49d6bc3fa84211e317467685c8ca51161b45c49bb9a2f890b1fc027810a10",
+    "/tmp/lisa_dns_stage4w_level10_validation/comparison.json": "b0fdb7c8d1ae62c1ebda4cb404de3d5ceb06c02e353b319f7743d17a71ecddac",
+    "/tmp/lisa_dns_stage4w_level10_validation/report.json": "484916be418e753f122fd867ef45e47056ca3e655bd4339fe97a1a3e4bbaba42",
+    "/tmp/lisa_dns_stage4w_level10_validation/provenance_transfers.json": "177cbffcda5d1a6db9ad7d59429677b302da800e2e9f7bbc5b734c1b3aea4703",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level11_population_validation.py": "cf7c251f63515d303827ff7164e0f10ea4c129e4d9d715a4d789a12650a9a2bc",
+    "examples/lisa_dns_stage4/analyze_level11_population.py": "17640c861c5fd30420bce25b443f0bb923647b726fccaf77bd8bc361690040a7",
+    "/tmp/lisa_dns_stage4y_level11_validation/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4y_level11_validation/initial_states.npz": "0211458c66b5810b2d4505900e1be787eb1013504a401e14ff721f8bffcc5792",
+    "/tmp/lisa_dns_stage4y_level11_validation/random_schedule.npz": "237e8b21ec0b8480063964e0427389b91ed9699620c96c9dd4d3459d5f50433c",
+    "/tmp/lisa_dns_stage4x_population_level11/comparison.json": "eecbed7c14cede24de00d28b426caa5b4a8004534f5826b735161e9a6417dddf",
+    "/tmp/lisa_dns_stage4y_level11_validation/validation.json": "6574b6b3a496fb4ed15949c080a328f1e53e99e6cf0d35d84732b5356d0a0fbb",
+    "/tmp/lisa_dns_stage4y_level11_validation/decision.json": "7e89e5c505ae88654f9821622c9d529e7e3672d15d70fc6c7df72a3c1ac6e836",
+    "/tmp/lisa_dns_stage4y_level11_validation/design.json": "b94c80a008ade2e1dbe11fcd0f620efc75740921ecba9e7994a171109dbf46b4",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level12_construction.py": "aed7e3cfa1def8d577cb861b0113162bfdb2fcd263f7d4da4171d44410a69796",
+    "examples/lisa_dns_stage4/analyze_population_level12.py": "3a887f4d1bcea58713c4a89fbd067c3381d0ba0c6521fc4fa3a12544eb051650",
+    "/tmp/lisa_dns_stage4x_population_level11/selection/trace.npz": "1d9edd611b723311d626cf14a235072a1783b221478b9166a5ac7dbc3ffc64cb",
+    "/tmp/lisa_dns_stage4z_population_level12/checkpoint_level11.json": "95025df6db0eb236038bdeec5e69a68089c06fcac73cc64151565557084de331",
+    "/tmp/lisa_dns_stage4z_population_level12/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage4z_population_level12/calibration/trace.npz": "de6a48ac5f546d5c4589d68baa2a162e564fec1926fc69d60e958578a6c173c0",
+    "/tmp/lisa_dns_stage4z_population_level12/report.json": "4f533ed12d4cd5d831805ffb2a64a33b496d5da9ae906a9f48416ff683bb2cb5",
+    "/tmp/lisa_dns_stage4z_population_level12/comparison.json": "ef5a96ec12d4e3c94803515ce5febfd58ae19f4ad069b11aff23c328f12f92e2",
+    "/tmp/lisa_dns_stage4z_population_level12/levels.npz": "8bcdad7a099832ded0cc2a2c8234c2cef874379fd938b9a0e619e3af3c26ddc5",
+    "/tmp/lisa_dns_stage4y_level11_validation/comparison.json": "a54cec56ea5150a04855ef54b39fe6397cda60a27923b12823e651c537c32d74",
+    "/tmp/lisa_dns_stage4y_level11_validation/report.json": "7b7a113e66b84823889962aa7d0c3d96b777ed731c22a40bc7c7816a6052017d",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/level12_population_validation.py": "adf9012b4fd3478834fcf23b9f79b42aca52eb6f74de0e50bf91260c8b0b4c05",
+    "examples/lisa_dns_stage4/analyze_level12_population.py": "760ffc4021538c0e9094c3edf07cfddbd17de4b29992b7cf81140084f325ce0e",
+    "/tmp/lisa_dns_stage5a_level12_validation/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage5a_level12_validation/initial_states.npz": "965e0949c7ecae72114d995fdb34a10aa3b9c5b973de645773ddbdeb2b454a5f",
+    "/tmp/lisa_dns_stage5a_level12_validation/random_schedule.npz": "0f0198bcea9e17adf0aba5cdc73ae26a07ed8909aedbb501c45aca06db0a2482",
+    "/tmp/lisa_dns_stage5a_level12_validation/validation.json": "ed844dfd6bcdbc64d2670ec038a7f7a3f223bfb6d6d31070d4fcdec87df89095",
+    "/tmp/lisa_dns_stage5a_level12_validation/decision.json": "44087f2f0947d0bd7b10512d00dae9806340d5b46eaacaef9c972dcb1d583b7f",
+    "/tmp/lisa_dns_stage5a_level12_validation/design.json": "26eaa3dfc97b2d51284e318da4df60067a7bfdc013f60e109040a0ee21f3e528",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/population_level13_construction.py": "dc2cab1c6807c0b2d05cda05fb074f62a57dfbdce1b81e29ab6c142a2e11f5d1",
+    "examples/lisa_dns_stage4/analyze_population_level13.py": "238891f54a5f0cb42bc1f67474c523825a3496f9c1fad709c1651bb7aa137fe9",
+    "/tmp/lisa_dns_stage4z_population_level12/selection/trace.npz": "0c626a84d5b0ebdde836a05a1e22ffa7108ae7a18e9fc1c9207b881ce190161c",
+    "/tmp/lisa_dns_stage5b_population_level13/checkpoint_level12.json": "0f0ac7c6294b4cd5e06de1fe28eb975f6fb590b9daf833f9ea084c6ed73ab0c4",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/initial_states.npz": "3288e6c354b05d0abe7d0c2ce1a0ffcda7d385754d5e71b19c7186853623766a",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/random_schedule.npz": "48fee2a738a9fa73ed080ef8272a1a78cea1ff4588bec86bde77ea6d11b53548",
+    "/tmp/lisa_dns_stage5b_population_level13/preflight.json": "8f18c50b3852fd989d07f44275e6383ad578e5809bd4f4f404917e294c54bb09",
+    "/tmp/lisa_dns_stage5b_population_level13/report.json": "e24b713d8ee7e5d7fa402ec7b0e4a577910a9d21a76f5ac6d03f3d72a31c1966",
+    "/tmp/lisa_dns_stage5b_population_level13/selection_candidate.json": "c5fce9bfaef12306b0d215f157dc667661a4cd7e782c0ecf22fa2d840c2fbd60",
+    "/tmp/lisa_dns_stage5b_population_level13/comparison.json": "9c974d47084743604292056ae580bb284903952b010d048ade130e647a2dbc8b",
+    "/tmp/lisa_dns_stage5b_population_level13/interpretation.json": "bae6107780db94abdae978c938823acb5a312abcc9c092f1ca6c3fb7e71c1dbd",
+    "/tmp/lisa_dns_stage5b_population_level13/tests.log": "8a8618cb4d6e816a95f8351ff543d5616b001cef4713e302b25fa4edfffff465",
+    "/tmp/lisa_dns_stage5b_population_level13/validation.json": "526b488e6bad080f91cdd300f43ec6451d05651cab8780913fb9c0e06d5c94b9",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/design.json": "f434521fd24accb383ac790314158ce0859391b8537599905367055d9afcde0e",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/report.json": "2b1b121a7749652bad77274048590cf9adc084ccb162e5aa90d36c5b7ec03724",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/provenance.json": "fafc031800e3fd6df90d94894ca31212bac2a1f0ceaff5b3d01ee6e4fecc0033",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/trace.npz": "3b17c71c933412feeb4b3a461bfb5a987a91c8cf5e3b09b2b4d82f01f18b6141",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/exchanges.npz": "48ee91636a1a6df1a24d6cefadd268a7113f304e07e6a5b4a39ab77973c53e4d",
+    "/tmp/lisa_dns_stage5b_population_level13/selection/provenance_transfers.json": "e7c4fd64a445231329ca75cae38a9dcc9965521320171141582e94ccb4034e3b",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/initial_states.npz": "965e0949c7ecae72114d995fdb34a10aa3b9c5b973de645773ddbdeb2b454a5f",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/random_schedule.npz": "052739a9912e32a6f3f79e3c3c2057fc82231833a51f91f275d80e5f571a7820",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/design.json": "f160bf2021daffbba0319bc7ce67bcd678fe565293e89c5b0b85ec3384a84d43",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/report.json": "db74f6588e31d9673dca5131b015e34129e7f912f97b9ecb8861c0ba1bcd27ab",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/provenance.json": "9e451c27954f17500caeaf53a3ab64a2fb2cf455e78c523647c4c221b40e658d",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/trace.npz": "2b4d47d3fa7a5f547cfc47ba0af8c814d4dd46800461f5dc515d417979d63b1d",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/exchanges.npz": "68fd054911115365bb866336a3adc4c89678e9ccefab5efa96f8a76680ca6db2",
+    "/tmp/lisa_dns_stage5b_population_level13/calibration/provenance_transfers.json": "8c04d2f52a2b0e0169a34ce1a966863a365a06f33c75eddfc67e1bad8e9e113a",
+    "/tmp/lisa_dns_pooled_promotion_validation/preflight.json": "7f7c674f1715bf7d0509cb0cd1ed1c0b9a11d679843bb747b73366b0b5ede7c4",
+    "/tmp/lisa_dns_pooled_promotion_validation/promotion.json": "aa830c88ef656be5f452430cd841c5f3d1e8e9bd3725823e5630ecc2c26ca98d",
+    "/tmp/lisa_dns_pooled_promotion_validation/validation.json": "5b68dd4faac4ca1245b190f19eb88cdf74ada72596c27feab9f1e047f7430edb",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/initial_states.npz": "b45d654ec96855c8947e65739bf5460b833e6d587198a613220bef4838a56092",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/random_schedule.npz": "4638358b6c45f16df420a294f45fe73cf6d739efe7da90ab5aebf0622049a74b",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/design.json": "0c633700547b8c96e36b785513cafa737f0ff5140d959f32fe213d72df82c954",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/sampling_started": "cbe26cc5c921a6dba8b18ebaf61ecdce178b82ed894cf72a1704a361d72b40b2",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/report.json": "ec3d78ff29b721aa98108e83781b560e451f446ef4a90662a42172e8f46179d1",
+    "/tmp/lisa_dns_pooled_promotion_validation/selection/provenance.json": "e3e51f04b587e2131328651afe3e722f38f3392e6b74ff82eeb77dc0943f9966",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/initial_states.npz": "c92590a0298d62d1866bfd7daf398f5acb595c439a086b870582b30d0a7debb8",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/random_schedule.npz": "f8ee5793a9aa2092cd743bcdb8e9c273b822470f6d2982e445ce6479162fadf9",
+    "/tmp/lisa_dns_pooled_promotion_validation/calibration/design.json": "7f902db11661fe00d87d799fd0807f95e893a9e12b80564c9633d7bb7364f453",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/audit_cpu_reproducibility.py": "27362383267166c069347952b3c040e4142107bc9a2719ad62c1dd533e797fd1",
+    "examples/lisa_dns_stage4/numerical_cache_contract.py": "331f2fa62080e5bfb860be9ff68940be183dd852f7bb9fd91ffb83cd78d5b1d7",
+    "/tmp/lisa_dns_stage6a_numerical_audit/contract.json": "3d349a31b043dcc3196ebfae97ec1a21d77ceb8cf8ea8d8e5a4b443f356ff3a3",
+    "/tmp/lisa_dns_stage6a_numerical_audit/saved_states.npz": "aabcd856e38fad5c357ef49e71cd0dee3626f5c29ed575b52d919907b4ab7fac",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/stage6b_pooled_promotion_validation.py": "0b302dace307c9745680a7db5f4506475c678ab9bf38bf212a10170ae2447c52",
+    "examples/lisa_dns_stage4/frequency_population_benchmark.py": "6ea735704f9538f0a42c478992eb8345f9560d01e0f95750b4e6d269ed15670d",
+    "examples/lisa_dns_stage4/level12_population_validation.py": "adf9012b4fd3478834fcf23b9f79b42aca52eb6f74de0e50bf91260c8b0b4c05",
+    "examples/lisa_dns_stage4/audit.py": "350edcffe1de3adb783bec9918c8e0f57e599b39ad0cfc49119f879d577cb5c9",
+    "/tmp/lisa_dns_stage5a_level12_validation/comparison.json": "843efd098f218420be2d96b9c744c0e61b0cd1d3c49050fa61c50a119d00bff7",
+    "/tmp/lisa_dns_stage5a_level12_validation/report.json": "1e5f0225c217c826ce0a86f3c1b564e9bc25b98c8c2a0ba1dc0247b329a4043a",
+    "examples/lisa_dns_stage4/analyze_stage6b_pooled_promotion.py": "a8a2ac58137fd960f10a99e80439a7a10f5f05c86e737acae7c3ce05ff197337",
+    "/tmp/lisa_dns_stage6a_numerical_audit/results.json": "98afc03dd4c6cb5fa603aa561d0076750149fddbe28341760688cbe946d60439",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/blackjax/ns/dns_reconstruction.py": "a4afacbe41194b875c44ecd9a98d4fbf12a086d23e68d3a227da49d2b3e23b66",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/blackjax/ns/dns_automatic.py": "52d8bb65c160c27dd6199a85ac925fa752ef91242a4b5d79293c22bbaa78efc0",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/blackjax/ns/dns_population.py": "be09ce41053fc16a8d3b0401babb6f8a05adcdf25b790c41ea581008bfa15b99",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/automatic_ladder_integration.py": "c633e8fb81924796bf185f96c640e49f4a7d4c64a1ea96538dd02d86fd3a5e39",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/examples/lisa_dns_stage4/diagnose_source_permutations.py": "a9d86dadde14a64a5808b7affe00c1e8508154711045729ef18bd3d9b855ed6a",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/docs/examples/lisa_gb0004_fixed_ladder_inference_plan.md": "213fb9e3bb75d130fcbd41da26acf72725365a7a029c179bdcf73f9fa4e315f0",
+    "/r5/home/rruiz/projects/sbi/blackjax-dns/docs/examples/dns_methodology_status.md": "388a21b582859c346fbd574a23bf38255263ce8d5d835ec94c4e1724b70ee10c",
+    "/tmp/lisa_dns_stage4_audit/audit.json": "8fc60d1adad864052cafcd054b5c08884217448da5f6d851c4a91ed5e50b8693",
+    "/tmp/lisa_dns_stage4_rejection/report.json": "dbea8901306058bffb7d7aa24838cfe1cb27b324816be7e5b3333436c90effa7",
+    "/r5/home/rruiz/projects/sbi/lisa/data/LDC2_sangria_training_v2.h5": "f54ca61355d0c6208fbea5fc1b2dcce7332025de264fef33ebe87dea657c7ee6"
+  },
+  "data_identity": {
+    "path": "/r5/home/rruiz/projects/sbi/lisa/data/LDC2_sangria_training_v2.h5",
+    "sha256": "f54ca61355d0c6208fbea5fc1b2dcce7332025de264fef33ebe87dea657c7ee6",
+    "bytes": 3082321484
+  },
+  "physical_bounds": {
+    "f0": [
+      0.001830003805175038,
+      0.0018500126839167937
+    ],
+    "fdot": [
+      -1e-13,
+      1e-13
+    ],
+    "iota": [
+      -1.57079632679,
+      1.57079632679
+    ],
+    "psi": [
+      -3.14159265359,
+      3.14159265359
+    ],
+    "lam": [
+      -3.14159265359,
+      3.14159265359
+    ],
+    "beta": [
+      -1.57079632679,
+      1.57079632679
+    ]
+  },
+  "numerical_contract": {
+    "backend": "cpu",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_ENABLE_X64": "1",
+    "dtype": "float64",
+    "rtol": 0,
+    "prior_atol": 1e-09,
+    "likelihood_atol": 1e-07,
+    "coordinates": "byte-exact copied/evaluation inputs",
+    "finite": true,
+    "strict_cached_recomputed_contour": true,
+    "L0_threshold": "-inf"
+  },
+  "environment": {
+    "backend": "cpu",
+    "x64": true,
+    "jax_version": "0.10.0",
+    "devices": [
+      "cpu:0"
+    ],
+    "python": "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+    "numpy": "2.4.4",
+    "jaxlib": "0.10.0"
+  },
+  "model_before_sampling_assertions": {
+    "K": 9,
+    "dimension": 54,
+    "marg_Aphi": true,
+    "marg_mode": "integrate",
+    "order_f0": false,
+    "use_gates": false
+  },
+  "sets": [
+    "R1",
+    "R2"
+  ],
+  "reconstruction_population_count": 2,
+  "fixed_contour_population_stream_count": 26,
+  "walkers": 8,
+  "burn_in": 512,
+  "retained_sweeps": 1024,
+  "frozen_levels": 13,
+  "thinning": 1,
+  "primary_retained_total": 212992,
+  "streams": {
+    "R1": {
+      "root_seed": 10600401,
+      "prior_initialization_seed": 2290667065,
+      "levels": {
+        "0": {
+          "bank": "calibration",
+          "iteration": 0,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 978484407,
+          "slice_seeds": [
+            2389939636,
+            2119710285,
+            4232714638,
+            456455331,
+            2017358521,
+            2596058697,
+            1100368962,
+            2803062308
+          ],
+          "label_seed": 1459730591,
+          "mh_seed": 2646004984
+        },
+        "1": {
+          "bank": "calibration",
+          "iteration": 1,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 3805596111,
+          "slice_seeds": [
+            1208428925,
+            245049904,
+            600634715,
+            3800448050,
+            91951473,
+            1791925509,
+            2475004722,
+            2861364808
+          ],
+          "label_seed": 1866173890,
+          "mh_seed": 3312055969
+        },
+        "2": {
+          "bank": "calibration",
+          "iteration": 2,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 2654235211,
+          "slice_seeds": [
+            640814100,
+            4153593421,
+            753946519,
+            1957611328,
+            2634728284,
+            3438338223,
+            3924927190,
+            2378642521
+          ],
+          "label_seed": 3896580901,
+          "mh_seed": 622281747
+        },
+        "3": {
+          "bank": "calibration",
+          "iteration": 3,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 4172303203,
+          "slice_seeds": [
+            3273246123,
+            1725063769,
+            3719876859,
+            4285479944,
+            301511994,
+            2330244751,
+            42616393,
+            722332842
+          ],
+          "label_seed": 730838055,
+          "mh_seed": 3530511103
+        },
+        "4": {
+          "bank": "calibration",
+          "iteration": 4,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 3977481669,
+          "slice_seeds": [
+            1125669045,
+            2991481077,
+            3362418462,
+            3444644138,
+            1897230872,
+            3071648814,
+            673221700,
+            4072709947
+          ],
+          "label_seed": 1170237972,
+          "mh_seed": 877282169
+        },
+        "5": {
+          "bank": "calibration",
+          "iteration": 5,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 3467669568,
+          "slice_seeds": [
+            4246002763,
+            41917478,
+            2350637915,
+            519517793,
+            3545214608,
+            3349273016,
+            2975254598,
+            2489382054
+          ],
+          "label_seed": 1383078726,
+          "mh_seed": 2842462394
+        },
+        "6": {
+          "bank": "calibration",
+          "iteration": 6,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1538879385,
+          "slice_seeds": [
+            1326669024,
+            4273832244,
+            1616479742,
+            2121280469,
+            2713579502,
+            1257728798,
+            1320460883,
+            1325147353
+          ],
+          "label_seed": 3540754729,
+          "mh_seed": 3800541181
+        },
+        "7": {
+          "bank": "calibration",
+          "iteration": 7,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1269801169,
+          "slice_seeds": [
+            286323525,
+            3133989210,
+            4228024642,
+            1992960014,
+            164330942,
+            3208588025,
+            2254800245,
+            2062741702
+          ],
+          "label_seed": 4248576303,
+          "mh_seed": 3453471468
+        },
+        "8": {
+          "bank": "calibration",
+          "iteration": 8,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 337908080,
+          "slice_seeds": [
+            3177967734,
+            2469674496,
+            2595022993,
+            2917959628,
+            573435056,
+            15393358,
+            2803062190,
+            2965771830
+          ],
+          "label_seed": 2853491686,
+          "mh_seed": 2671483441
+        },
+        "9": {
+          "bank": "calibration",
+          "iteration": 9,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1426299554,
+          "slice_seeds": [
+            4060257074,
+            3079755223,
+            4039220299,
+            2703496771,
+            2147260476,
+            3857043955,
+            1888212465,
+            1624841086
+          ],
+          "label_seed": 3282795768,
+          "mh_seed": 1158221659
+        },
+        "10": {
+          "bank": "calibration",
+          "iteration": 10,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 2536472540,
+          "slice_seeds": [
+            1209395271,
+            2501733629,
+            333276768,
+            1884843171,
+            3499348145,
+            1705447351,
+            1729165101,
+            207270945
+          ],
+          "label_seed": 1605815614,
+          "mh_seed": 3703741650
+        },
+        "11": {
+          "bank": "calibration",
+          "iteration": 11,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 3626805190,
+          "slice_seeds": [
+            1307908405,
+            2825793167,
+            3657977545,
+            1553188115,
+            149569498,
+            669795213,
+            1442865697,
+            966798320
+          ],
+          "label_seed": 1177223067,
+          "mh_seed": 3158587725
+        },
+        "12": {
+          "bank": "calibration",
+          "iteration": 12,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1007586133,
+          "slice_seeds": [
+            3912141315,
+            1489346352,
+            360462335,
+            272857212,
+            1316830960,
+            3547653217,
+            655099023,
+            1283239459
+          ],
+          "label_seed": 3662622329,
+          "mh_seed": 1512364530
+        }
+      }
+    },
+    "R2": {
+      "root_seed": 10600402,
+      "prior_initialization_seed": 1065620772,
+      "levels": {
+        "0": {
+          "bank": "calibration",
+          "iteration": 0,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1848066486,
+          "slice_seeds": [
+            495540898,
+            1706297762,
+            3211709493,
+            2973898492,
+            2887934249,
+            3547041325,
+            3234867947,
+            899435858
+          ],
+          "label_seed": 1116717381,
+          "mh_seed": 3338821056
+        },
+        "1": {
+          "bank": "calibration",
+          "iteration": 1,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1474765318,
+          "slice_seeds": [
+            807158003,
+            1189225079,
+            1688028508,
+            2569789539,
+            2036434990,
+            3574703460,
+            2735567916,
+            3413999077
+          ],
+          "label_seed": 304196517,
+          "mh_seed": 3411032804
+        },
+        "2": {
+          "bank": "calibration",
+          "iteration": 2,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1702563277,
+          "slice_seeds": [
+            880084097,
+            1133797137,
+            3993686524,
+            3893483558,
+            2010828766,
+            3275358012,
+            1596084772,
+            1782300652
+          ],
+          "label_seed": 2387594388,
+          "mh_seed": 2027779470
+        },
+        "3": {
+          "bank": "calibration",
+          "iteration": 3,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1855832100,
+          "slice_seeds": [
+            589143150,
+            1493898219,
+            3872611898,
+            897030184,
+            1583350195,
+            3292570960,
+            2660022341,
+            225907208
+          ],
+          "label_seed": 584819727,
+          "mh_seed": 207971377
+        },
+        "4": {
+          "bank": "calibration",
+          "iteration": 4,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1156510534,
+          "slice_seeds": [
+            1441085671,
+            2725419906,
+            455991563,
+            4071467240,
+            1027908918,
+            3600640029,
+            4012242931,
+            1731597811
+          ],
+          "label_seed": 1583970906,
+          "mh_seed": 2653249262
+        },
+        "5": {
+          "bank": "calibration",
+          "iteration": 5,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 184031433,
+          "slice_seeds": [
+            482624338,
+            2578348005,
+            3655446123,
+            2911582134,
+            2875767438,
+            2974813563,
+            2915643315,
+            893727096
+          ],
+          "label_seed": 2890735426,
+          "mh_seed": 636514404
+        },
+        "6": {
+          "bank": "calibration",
+          "iteration": 6,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 2248457524,
+          "slice_seeds": [
+            2253706942,
+            2901689273,
+            2654990713,
+            2891705748,
+            69631164,
+            1845768073,
+            3850508532,
+            2312352604
+          ],
+          "label_seed": 590411291,
+          "mh_seed": 2713030614
+        },
+        "7": {
+          "bank": "calibration",
+          "iteration": 7,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 451746281,
+          "slice_seeds": [
+            2507675127,
+            3011669589,
+            2476526937,
+            3859196010,
+            3633751609,
+            3111572417,
+            2269442849,
+            277849811
+          ],
+          "label_seed": 1060107662,
+          "mh_seed": 2304832489
+        },
+        "8": {
+          "bank": "calibration",
+          "iteration": 8,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1453055838,
+          "slice_seeds": [
+            607265870,
+            2031830159,
+            515651052,
+            2532948329,
+            639546770,
+            2581722533,
+            2527476390,
+            1223983412
+          ],
+          "label_seed": 1524999250,
+          "mh_seed": 1331308244
+        },
+        "9": {
+          "bank": "calibration",
+          "iteration": 9,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 91302640,
+          "slice_seeds": [
+            4240630208,
+            1851040576,
+            1642490202,
+            1343399642,
+            2757553198,
+            2092679295,
+            3252143483,
+            1676396019
+          ],
+          "label_seed": 3474056485,
+          "mh_seed": 3710452173
+        },
+        "10": {
+          "bank": "calibration",
+          "iteration": 10,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 154961131,
+          "slice_seeds": [
+            529052509,
+            4033551845,
+            525422471,
+            3630818323,
+            3979774915,
+            2651828977,
+            3428582842,
+            4287969663
+          ],
+          "label_seed": 2531684436,
+          "mh_seed": 1074080431
+        },
+        "11": {
+          "bank": "calibration",
+          "iteration": 11,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 1583949822,
+          "slice_seeds": [
+            3139252392,
+            2753107444,
+            3519558077,
+            2104909920,
+            462335643,
+            2179093775,
+            330790722,
+            1280760592
+          ],
+          "label_seed": 1535221773,
+          "mh_seed": 710964124
+        },
+        "12": {
+          "bank": "calibration",
+          "iteration": 12,
+          "recipe": "SeedSequence-v1",
+          "promotion_seed": 2795068917,
+          "slice_seeds": [
+            1665166741,
+            957018683,
+            3264051406,
+            2374115839,
+            4007560747,
+            200483042,
+            2387653011,
+            283241116
+          ],
+          "label_seed": 272485347,
+          "mh_seed": 3560740251
+        }
+      }
+    }
+  },
+  "derived_seed_collisions": 0,
+  "promotion": {
+    "L0": "fresh matching-prior draws in each set with separately derived prior initialization seed",
+    "higher_levels": "Only same-set preceding fresh retained history, strict frozen-threshold survivors pooled uniformly with replacement; exact coordinate/cache copying; eight recipients; no historical initialization/estimator events, no cross-set rescue; empty pool is failure"
+  },
+  "transition": {
+    "implementation": "Protected FrozenPopulationKernel.run, observed only through subclass exchange_sweep and wrapped slice_step",
+    "direction_scales": "pi/sqrt(3) all 54",
+    "mixture": [
+      0.2,
+      0.4,
+      0.4
+    ],
+    "max_steps": 10,
+    "max_shrinkage": 100,
+    "reciprocal_exchanges_per_sweep": 4,
+    "pairing_rounds": 7,
+    "pairing_reset_at_each_level": true,
+    "f_star": 0.0018409808,
+    "sigma_f": 2.558e-07,
+    "joint_selector_MH_correction": true
+  },
+  "records": {
+    "root": "/tmp/lisa-gb0004-stage10a-fixed-ladder",
+    "raw": "Every burn-in/retained occupation/post-slice position and caches, component/labels/slice cost/acceptance, exact slice input keys, Gumbels/MH uniforms, exchange decision JSONL, lineage tokens; plus retained NPZ and unchanged Stage-7B records",
+    "events": "set/level/retained-sweep/walker; no promotion or burn-in events in estimator",
+    "pooling": "R2 pooled walker namespace offsets by 8; original per-set/raw walker identities retained; no estimator formula changes"
+  },
+  "diagnostics": {
+    "hard": "Every constituent cached/recomputed support/finite/float64/copy check from protected run; record/weight validation",
+    "cache_audit": "16 deterministic linearly spaced retained sweep indices from 0 through 1023, all eight walkers, loaded saved bytes exact then independently recomputed",
+    "block_size": 64,
+    "information": "Stage-7B population-block/ensemble ESS for logL/logprior/matched coordinates/evidence and posterior residual integrands; no IID claims",
+    "walker_temporal": "Walker and retained-half means, pairwise logL KS distances, permutation-aware catalogue distributions; descriptive only",
+    "residual_subset": "Each set/level, retained draws 0,511,1023, walker0; existing marg_diag/marg_recon outputs, fitted amplitude/phase not direct posterior coordinates"
+  },
+  "matching": {
+    "implementation": "Historical source_distances normalized six-coordinate Hungarian assignment; psi period pi, lam period 2pi; physical prior widths with angular widths replaced by periods; no fitted weights",
+    "reference_path": "/tmp/lisa_dns_stage4_audit/audit.json",
+    "primary_reference_seed": 44,
+    "alternative_reference_seeds": [
+      66,
+      88
+    ],
+    "reference_role": "Read-only scientific matching, never starts or estimator samples",
+    "circular_intervals": "Unwrap about frozen seed44 reference; preserve ambiguity/catalogue alternatives"
+  },
+  "estimator": {
+    "implementation": "blackjax.ns.dns_reconstruction unchanged",
+    "sets": [
+      "R1",
+      "R2",
+      "pooled"
+    ],
+    "all_eligible_levels_in_denominator": true,
+    "allocations": "equal fixed counts per level",
+    "mass_status": "recorded-calibration-plugin",
+    "reconstruction_target": "independent_fixed_contour_reconstruction"
+  },
+  "mass_perturbations": {
+    "count": 128,
+    "seed": 10600403,
+    "rule": "Independent logit-normal perturbations of twelve recorded compression ratios, SD s_j/[r_j(1-r_j)]; inverse logit, cumulative log masses, X0=1; same matrix R1/R2/pooled; sensitivity only, not a confidence interval",
+    "calibration_standard_errors": [
+      0.021153767292169143,
+      0.021460606692236043,
+      0.026300146597240077,
+      0.07195861880637901,
+      0.06637238993630247,
+      0.09563886525907439,
+      0.07611461904903624,
+      0.0756025451687297,
+      0.09000718315160197,
+      0.06913128436451788,
+      0.0496193565736982,
+      0.01979454229970753
+    ],
+    "outputs": "logZ and all six matched source-coordinate quantiles/means and nearest-reference catalogue weight; fixed scientific review"
+  },
+  "deep_level_sensitivity": {
+    "origin": "Per-level raw evidence fraction/log contribution, cumulative origin contributions L0..L12, per-level posterior weights, L12 fraction of both (identical under same r), maximum weight, highest-weight 1%/5%/10%, eligible-level multiplicity counts/weighted distribution",
+    "target": "Posterior/evidence fraction above highest frozen threshold separately from origin labels; no omitted-integral bound",
+    "truncation_J": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "truncation_method": "Same saved records, records.through(J), unchanged MIS; logZ_J/source summaries/weight ESS; proposal-mixture sensitivity only"
+  },
+  "restart": {
+    "set": "R1",
+    "completed_level": 6,
+    "next_level": 7,
+    "reference": "uninterrupted primary L7-L12",
+    "fresh_child": "Exactly one new CPU/x64 Python process, same saved L6 pool and frozen streams, replay L7-L12; no extra independent inference data",
+    "checkpoint": "Complete records L0..L6, full frozen table, positions/prior/logL, terminal walker key data and exchange PCG64 state, retained L6 promotion/history pool, next-level streams and numerical metadata",
+    "process_provenance": [
+      "parent_PID",
+      "child_PID",
+      "parent_process_UUID",
+      "child_process_UUID",
+      "timestamps",
+      "launch_command",
+      "Python_executable",
+      "environment"
+    ],
+    "comparison": "Exact dtype/shape/bytes for promoted starts/retained caches/coordinates/proposal and exchange provenance/RNG decisions/records/MIS inputs; exact logZ/weights and deterministic summaries",
+    "failure": "CASE D and STOP; no retry"
+  },
+  "evidence_convention": "log Z under the implemented BayesLISAx likelihood convention; amplitude/phase integration drops normalization constants; no absolute physical Bayes-factor claim, evidence convergence, negligible deep contribution or automatic termination",
+  "final_classification_criteria": {
+    "basis": "Unmodified frozen plan: Interpretation frozen before sampling; no numerical stability/ESS/evidence cutoff exists in that plan.",
+    "posterior_comparison": {
+      "quantities": [
+        "matched f0",
+        "matched fdot",
+        "matched iota",
+        "matched psi",
+        "matched lam",
+        "matched beta",
+        "catalogue assignment",
+        "residual/catalogue structure"
+      ],
+      "summary_probabilities": [
+        0.05,
+        0.16,
+        0.5,
+        0.84,
+        0.95
+      ],
+      "method": "Compare weighted medians, central 68%/90% intervals, means, distributions/structure and catalogue alternatives across R1/R2 against reported population-block variability and full perturbation response. Scientific review; no new numerical tolerance.",
+      "ess_requirement": "Report importance-weight ESS and observable-specific block/ensemble ESS. Frozen plan declares no numeric posterior ESS minimum; insufficient effective information precludes a stable conclusion and is CASE C."
+    },
+    "evidence_comparison": {
+      "method": "Report R1/R2 logZ differences separately from fixed 128 mass perturbations and L8-L12 mixture changes. No numerical evidence tolerance was frozen; scientific review may find evidence unresolved, without a termination claim.",
+      "normalization": "Implemented convention only; no externally normalized absolute physical Bayes factor."
+    },
+    "priority": [
+      "D deterministic failure/incomplete required reconstruction",
+      "C posterior unstable or insufficient information",
+      "B posterior stable with evidence unresolved",
+      "A posterior stable with only explicit evidence caveats"
+    ],
+    "CASE A": "Both sets complete; numerical contract and fresh restart pass; permutation-aware posterior conclusions reproducible and robust under all fixed mass sensitivities with adequate reported effective information. No evidence-convergence claim.",
+    "CASE B": "Posterior reproducible/robust but R1/R2 logZ discrepancy, mass sensitivity, deep-stratum importance, nonstabilized L8-L12 mixture sequence or missing normalization prevent desired evidence statement.",
+    "CASE C": "Independent posterior/catalogue/source assignments materially disagree or mass sensitivity destabilizes scientific conclusions, including insufficient information to establish stability.",
+    "CASE D": "Contract/support/records/weights/restart/protected hashes fail, forbidden historical samples enter, empty eligible pool/incomplete required schedule, or another deterministic implementation failure.",
+    "no_threshold_tuning": true,
+    "no_stochastic_retry": true
+  },
+  "forbidden": [
+    "L13",
+    "change L0-L12",
+    "automatic ladder construction",
+    "automatic termination",
+    "joint diffusion reconstruction",
+    "budget tuning",
+    "historical construction samples",
+    "rerun after classification"
+  ],
+  "driver_path": "examples/lisa_gb0004_fixed_ladder_inference.py",
+  "driver_sha256": "88737da6a019b1bfe57d85f0f5ef90fb94dda1bc5dc84e8dec403cc47f9cc6a5",
+  "deterministic_tests": "tests/examples/test_lisa_gb0004_fixed_ladder_inference.py; synthetic records only, no LISA trajectory",
+  "sampling_before_design_freeze": false
+}

@@ -1,0 +1,538 @@
+{
+  "stage": "10A",
+  "case": "D",
+  "classification": "RECONSTRUCTION / NUMERICAL FAILURE",
+  "design_sha256": "92dae65a1e86255fbb73cef634307350ced2750fbe1c24f3590a6cbe061522bc",
+  "driver_sha256": "88737da6a019b1bfe57d85f0f5ef90fb94dda1bc5dc84e8dec403cc47f9cc6a5",
+  "interpretation": "The single preregistered experiment suffered a process-level SIGBUS crash during R1 L1 burn-in. R1 L0 completed with its strict-contour and deterministic cache audit passing; R2 and the required L6 fresh-process restart were not reached. No complete thirteen-stratum inference exists, so no posterior/evidence stability conclusion is available. The cause of the signal is unresolved; no recorded cache or contour violation preceded it. The run is CASE D under the frozen deterministic reconstruction-failure criterion and has not been retried.",
+  "failure": {
+    "case": "D",
+    "label": "RECONSTRUCTION / NUMERICAL FAILURE",
+    "numerical_status": "RECONSTRUCTION-FAIL; no recorded numerical/cache contract violation",
+    "exception_type": "ProcessSignal",
+    "message": "Primary Python process terminated by SIGBUS (signal 7); shell exit status 135. R1 completed L0; last flushed L1 progress is 64/1536 sweeps. No stochastic retry.",
+    "traceback": null,
+    "process": {
+      "pid": 3,
+      "ppid": 2,
+      "process_start_uuid": "6410a63b-f6e2-446a-a2fd-b7bdc090c857",
+      "process_start_timestamp": 1791446671.5342994,
+      "timestamp": 1791446679.3843212,
+      "python": "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+      "command": [
+        "/r5/home/rruiz/software/miniconda3/envs/blackjax-ns/bin/python",
+        "examples/lisa_gb0004_fixed_ladder_inference.py",
+        "run"
+      ],
+      "environment": {
+        "JAX_PLATFORMS": "cpu",
+        "JAX_ENABLE_X64": "1"
+      }
+    },
+    "crash_recorded_timestamp": 1791446997.676381,
+    "shell_exit_status": 135,
+    "signal": "SIGBUS",
+    "signal_number": 7,
+    "crash_cause": "Unresolved; available filesystem space/inodes do not support ordinary storage exhaustion.",
+    "storage_readonly_check": {
+      "tmp_available_gib_approx": 35,
+      "tmp_available_inodes": 36534462,
+      "workspace_available_tib_approx": 3.4
+    },
+    "last_progress": {
+      "completed_sweeps": 64,
+      "elapsed_seconds": 7.794377565383911
+    },
+    "last_serialized_exchange_sweep": 75,
+    "complete_exchange_journal_rows": 76,
+    "completed_R1_levels": [
+      0
+    ],
+    "R2_started": false,
+    "fresh_restart_started": false,
+    "sampling_stopped": true,
+    "no_retry": true,
+    "design_sha256": "92dae65a1e86255fbb73cef634307350ced2750fbe1c24f3590a6cbe061522bc"
+  },
+  "sets": {
+    "R1": {
+      "complete_levels": 1,
+      "complete_all_13": false,
+      "levels": [
+        {
+          "level": 0,
+          "started": true,
+          "completed": true,
+          "completed_sweeps": 1536,
+          "saved_completed_retained_events": 8192,
+          "strict_contour_for_saved_completed_events": true,
+          "completion": {
+            "completed_sweeps": 1536,
+            "retained": 1024,
+            "exchange_proposals": 6144,
+            "accepted_exchanges": 3389,
+            "all_constituent_checks_passed": true,
+            "cache_audit_passed": true,
+            "strict_contour_passed": true,
+            "completed_at": 1791446875.5832345,
+            "cache_max_errors": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "level": 1,
+          "started": true,
+          "completed": false,
+          "completed_sweeps": 64,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 2,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 3,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 4,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 5,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 6,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 7,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 8,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 9,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 10,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 11,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 12,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        }
+      ]
+    },
+    "R2": {
+      "complete_levels": 0,
+      "complete_all_13": false,
+      "levels": [
+        {
+          "level": 0,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 1,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 2,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 3,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 4,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 5,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 6,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 7,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 8,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 9,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 10,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 11,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        },
+        {
+          "level": 12,
+          "started": false,
+          "completed": false,
+          "completed_sweeps": 0,
+          "saved_completed_retained_events": 0,
+          "strict_contour_for_saved_completed_events": null,
+          "completion": null
+        }
+      ]
+    }
+  },
+  "estimates": null,
+  "evidence_convention": "log Z under the implemented BayesLISAx likelihood convention; amplitude/phase integration drops normalization constants; no absolute physical Bayes-factor claim, evidence convergence, negligible deep contribution or automatic termination",
+  "no_retry": true,
+  "historical_samples_used": false,
+  "construction_or_termination_invoked": false,
+  "mass_perturbations_completed": 0,
+  "authoritative_mis_estimates_computed": false,
+  "restart": {
+    "pass": null,
+    "status": "not reached"
+  },
+  "protected_hashes_unchanged": true,
+  "numerical_environment": {
+    "backend": "cpu",
+    "x64": true,
+    "jax": "0.10.0",
+    "jaxlib": "0.10.0",
+    "numpy": "2.4.4",
+    "prng": "threefry2x32",
+    "schedule": "PCG64"
+  },
+  "artifact_manifest": {
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/completed.json": {
+      "sha256": "22aea38a24b86d7d6740ee95f95e35369025433f9bd80a664f2272a7a4c5c554",
+      "bytes": 299
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/deterministic_cache_audit.npz": {
+      "sha256": "751c2b6dfa639845adf8bcd2f7f566d22a995bdc1d7ad979f1db9cb08b71d49c",
+      "bytes": 58784
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/exchange_decisions.jsonl": {
+      "sha256": "3b2c556b2634ba3d35720e8dc4eae2df4546ab3c018a2317ab53cf81ae472478",
+      "bytes": 2293409
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/exchange_gumbels.npy": {
+      "sha256": "d0481d688f839f16713d5524a729a1cbd288430d8c87e14e651860f06eb367d4",
+      "bytes": 884864
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/exchange_uniforms.npy": {
+      "sha256": "faa3515a7ae11390c4b60d0253903a503b1e2d702405797cfe3d51fdf9117d42",
+      "bytes": 49280
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/last_progress.json": {
+      "sha256": "0943f137f8383a3ed6dc1efe4346c09bfa03c420a68049582ea9864d0e94ce71",
+      "bytes": 66
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/lineage_tokens.npy": {
+      "sha256": "3a1bf45f893c65cc2c840150e9930e9ee611d58050247ee2c910972a1dbc1d13",
+      "bytes": 884864
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/loglikelihood.npy": {
+      "sha256": "674006714cae87fde181559f205fa39fc420990f04386e7568ca8a2e7ffa6996",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/logprior.npy": {
+      "sha256": "c1ba35735909dbee7e49caedaa5fccdbcd3eb1fef490c4b6b46adecd39b1201b",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/position.npy": {
+      "sha256": "54bf7cf39efc9f556163567e0e3ca4f8d34870ff21ff1fc91b8ab2da1b37d968",
+      "bytes": 5308544
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/post_slice_loglikelihood.npy": {
+      "sha256": "4763d2483fc7f01d408361c824ff908d83cc6c6940c059b05976cdf0cca1c52e",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/post_slice_logprior.npy": {
+      "sha256": "694f85d014830df18925123b9c2e4cffee8ce28273462878d20cc33ecf5cda94",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/post_slice_position.npy": {
+      "sha256": "126a4b92cdd6850bb62838dcaf221915620247d09704c1cd00ef3cbe97097576",
+      "bytes": 5308544
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/preflight.json": {
+      "sha256": "89b0d6cfce98f1d99033ca6981ada883175eeedc6d9c03e9bc6edca2babcd666",
+      "bytes": 1071
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/progress.json": {
+      "sha256": "c83ea7368b36971819103543521dee273fd81db32a88be45fc8d25c92167e03b",
+      "bytes": 72
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/retained.npz": {
+      "sha256": "8728625d120c875b9cae9c5f6348570b8702abe85e1c55e86721d33f17e41d1e",
+      "bytes": 1304073
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_accepted.npy": {
+      "sha256": "1d5959dad962824bd71c8e32ab37db81b482fa7242dd12f765114cc22956fa03",
+      "bytes": 12416
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_component.npy": {
+      "sha256": "a7bf72ebf79ed88484cc6d9da748ea3a00461e17f0816e4920cf6a9f6bb21763",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_keys.npy": {
+      "sha256": "583e144a75863e8fc6f0c517d451699c4318de74faf1dbf9d6dd7811ebd054c3",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_labels.npy": {
+      "sha256": "9ffa9a77bec2e744e90749aa6822a27000441331a8587635988d122b674c09ba",
+      "bytes": 196736
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_num_shrink.npy": {
+      "sha256": "ffd823b4bc84715822a07babe59929a6cb5976c41d595aee230c8df6975c583d",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/slice_num_steps.npy": {
+      "sha256": "a94a6ef2d5222c26b1fa790e260404c5eca20b8b79e15a3ea6f850fc49e34956",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/starts.npz": {
+      "sha256": "4a34f30e263455ed47aa04963c1d509ecf8cb9907809c8b5f690c648560a114f",
+      "bytes": 4115
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/terminal_rng.json": {
+      "sha256": "7cea3af616e5132b1cad3c82334a1505fe4cbc7e0c97b3b849d4bfd85413c79b",
+      "bytes": 550
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_00/terminal_rng.npz": {
+      "sha256": "b566b757981ed3fc0ccca72f75d8132c97bede320ccd5f1b121512c1b4fe0b49",
+      "bytes": 4447
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/exchange_decisions.jsonl": {
+      "sha256": "4835f34d9925810aa6d439403ef06472d33f47cf05da0acf38f7d80b586c9236",
+      "bytes": 112491
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/exchange_gumbels.npy": {
+      "sha256": "c37698daf201cad075d19cf240c8092b107611d096783d57189f913b62ca9ffe",
+      "bytes": 884864
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/exchange_uniforms.npy": {
+      "sha256": "5d1b9c440ed7778b929059461910c6c9e44d62f0c062b93abbb48b8cb034521b",
+      "bytes": 49280
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/lineage_tokens.npy": {
+      "sha256": "4a3b946ed421542f1fe369c01c2a285f8d62ed595d6bd699426ceb3deb7dd651",
+      "bytes": 884864
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/loglikelihood.npy": {
+      "sha256": "3e7a8e92d9eed89503d1a4b4d73bef160a755579e979d76b44cf2dbd011bb8c9",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/logprior.npy": {
+      "sha256": "dc023af0765d1adf85d9cfe5926792456aa31edb9f9e5bf398e083b52e887863",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/position.npy": {
+      "sha256": "f82db5be7d3d66ab66850b3303d95a97ba4e3481b3f03f21287d07e36854ad16",
+      "bytes": 5308544
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/post_slice_loglikelihood.npy": {
+      "sha256": "14b8167fa686a0eca357b86d3a119307162523759a7ec380e595d9c0a00da201",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/post_slice_logprior.npy": {
+      "sha256": "e1a2295d80426a1cf8f559ec31d7823f4d25ea1a6a13b1a3fea79c656a0213e3",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/post_slice_position.npy": {
+      "sha256": "348c8bdda48ae6fb07096120e2b2e4703f9a6bb132b4b4e8080f56f9c22fa785",
+      "bytes": 5308544
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/preflight.json": {
+      "sha256": "31b1ad970dfb94d2e1324d92e11e46fd5c275159f32d0d793e7f2e7fcae2539d",
+      "bytes": 2600
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/progress.json": {
+      "sha256": "e161bc145695f9dc50f4738b4f441b38b0ae390e65b20ac11448e7a95d171a2f",
+      "bytes": 69
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_accepted.npy": {
+      "sha256": "4cc32660ffe8a352983107a8ca70109ec93b1693af821938823809dcc4de7aa8",
+      "bytes": 12416
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_component.npy": {
+      "sha256": "d79267522b558788ada685d6be77ff48c0fa51a1b47389f403f7ec81595115a0",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_keys.npy": {
+      "sha256": "5848d236f12ed901c536f97eaaf68e0d08319033f4a446c97bbc212679d17adb",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_labels.npy": {
+      "sha256": "9d52ebe9d757f52d152145465b44e627a5a14d780d7bf438468f4aba35a792f9",
+      "bytes": 196736
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_num_shrink.npy": {
+      "sha256": "230818dc20aa5b0b6bc13e5b2a86a7c2dc016996f2dfccc72484afbf04465248",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/slice_num_steps.npy": {
+      "sha256": "aeb5390492f5264d9873e3564543bced217ab06f5281922986a4662b692616f4",
+      "bytes": 98432
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/R1/level_01/starts.npz": {
+      "sha256": "9a6efdb1c1463166ed068f92c7f42410f24048f62ca038cab10291ad83f3018d",
+      "bytes": 4124
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/environment.json": {
+      "sha256": "c7186541b8045abf05849ca40a52bf6417404a1f1f20befb96b8d10bd8e1c5e0",
+      "bytes": 148
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/failure.json": {
+      "sha256": "4a38dfc59d72c38ecb85db1f3610e0d1d467a0f840776990b800a0ce550897ac",
+      "bytes": 1714
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/process.json": {
+      "sha256": "107ee144ba3f62a400f02d976e2805ebb8f2a7a8275304c67981546f083f081e",
+      "bytes": 486
+    },
+    "/tmp/lisa-gb0004-stage10a-fixed-ladder/sampling_started": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "/tmp/lisa-gb0004-stage10a-run.log": {
+      "sha256": "e192236d8d8f97e6f9cfa612ddc87221c2134223fce7c19d785d157e2e916a9b",
+      "bytes": 2331
+    }
+  },
+  "raw_artifact_storage_notice": "External /tmp artifacts must be retained or copied intact for long-term audit. No large arrays committed."
+}
